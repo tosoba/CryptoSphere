@@ -10,13 +10,15 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 interface HomeComponent {
   val pages: Value<ChildPages<*, Page>>
 
+  fun selectPage(index: Int)
+
   sealed interface Page {
     class Feed(val component: FeedComponent) : Page
 
     class Prices(val component: PricesComponent) : Page
 
-    class History(val component: HistoryComponent) : Page
-
     class Search(val component: SearchComponent) : Page
+
+    class History(val component: HistoryComponent) : Page
   }
 }
