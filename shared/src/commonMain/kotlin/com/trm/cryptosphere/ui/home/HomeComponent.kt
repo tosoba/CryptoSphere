@@ -12,13 +12,13 @@ interface HomeComponent {
 
   fun selectPage(index: Int)
 
-  sealed interface Page {
-    class Feed(val component: FeedComponent) : Page
+  sealed class Page {
+    class Feed(val component: FeedComponent) : Page()
 
-    class Prices(val component: PricesComponent) : Page
+    class Prices(val component: PricesComponent) : Page()
 
-    class Search(val component: SearchComponent) : Page
+    class Search(val component: SearchComponent) : Page()
 
-    class History(val component: HistoryComponent) : Page
+    class History(val component: HistoryComponent) : Page()
   }
 }
