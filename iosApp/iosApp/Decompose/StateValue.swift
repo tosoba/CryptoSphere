@@ -1,7 +1,7 @@
-import SwiftUI
 import Shared
+import SwiftUI
 
-@propertyWrapper struct StateValue<T : AnyObject>: DynamicProperty {
+@propertyWrapper struct StateValue<T: AnyObject>: DynamicProperty {
     @ObservedObject
     private var obj: ObservableValue<T>
 
