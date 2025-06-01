@@ -2,15 +2,20 @@ package com.trm.cryptosphere.ui.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.token.TokenComponent
 
-interface RootComponent {
+interface RootComponent : BackHandlerOwner {
   val stack: Value<ChildStack<*, Child>>
 
-  sealed interface Child {
-    class Home(val component: HomeComponent) : Child
+  fun onBackClicked()
 
-    class Token(val tokenComponent: TokenComponent) : Child
+  fun onBackClicked(toIndex: Int)
+
+  sealed class Child {
+    class Home(val component: HomeComponent) : Child()
+
+    class Token(val tokenComponent: TokenComponent) : Child()
   }
 }

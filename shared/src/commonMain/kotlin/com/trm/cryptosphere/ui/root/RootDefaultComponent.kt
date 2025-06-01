@@ -4,6 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.token.TokenDefaultComponent
@@ -21,6 +23,14 @@ class RootDefaultComponent(componentContext: ComponentContext) :
       handleBackButton = true,
       childFactory = ::createChild,
     )
+
+  override fun onBackClicked() {
+    navigation.pop()
+  }
+
+  override fun onBackClicked(toIndex: Int) {
+    navigation.popTo(toIndex)
+  }
 
   private fun createChild(
     config: ChildConfig,
