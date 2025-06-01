@@ -1,7 +1,13 @@
 import Shared
 import SwiftUI
 
-struct ContentView: View {
+struct RootView: View {
+    private let root: RootComponent
+
+    init(_ root: RootComponent) {
+        self.root = root
+    }
+
     @State private var showContent = false
     var body: some View {
         VStack {
@@ -23,11 +29,5 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding()
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }
