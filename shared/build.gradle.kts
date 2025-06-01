@@ -13,12 +13,21 @@ kotlin {
     iosTarget.binaries.framework {
       baseName = "Shared"
       isStatic = true
+
+      export(libs.decompose)
+      export(libs.essenty.backHandler)
+      export(libs.essenty.lifecycle)
+      export(libs.essenty.stateKeeper)
     }
   }
 
   sourceSets {
     commonMain.dependencies {
       api(libs.decompose)
+      api(libs.essenty.lifecycle)
+      api(libs.essenty.stateKeeper)
+      api(libs.essenty.backHandler)
+
       implementation(libs.kotlinx.serialization.json)
     }
   }
