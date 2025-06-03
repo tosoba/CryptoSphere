@@ -1,12 +1,110 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
+import com.trm.cryptosphere.domain.model.NewsItem
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
-  Box(modifier = modifier, contentAlignment = Alignment.Center) { Text("Feed") }
+  val newsItem = remember(::mockNewsItem)
+  NewsItem(newsItem = newsItem, modifier = modifier)
 }
+
+@Composable
+private fun NewsItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
+  ConstraintLayout(modifier = modifier) {
+    val (backgroundImage, title, description) = createRefs()
+
+    AsyncImage(
+      model = newsItem.imgUrl,
+      contentDescription = null,
+      contentScale = ContentScale.Crop,
+      modifier =
+        Modifier.constrainAs(backgroundImage) {
+          centerTo(parent)
+          width = Dimension.matchParent
+          height = Dimension.matchParent
+        },
+    )
+
+    Text(
+      text = newsItem.title,
+      color = Color.White,
+      style =
+        MaterialTheme.typography.headlineSmall.copy(
+          shadow = Shadow(color = Color.DarkGray, offset = Offset(x = 4f, y = 4f), blurRadius = 8f)
+        ),
+      modifier =
+        Modifier.constrainAs(title) {
+            bottom.linkTo(
+              if (!newsItem.description.isNullOrBlank()) description.top else parent.bottom,
+              margin = if (!newsItem.description.isNullOrBlank()) 8.dp else 16.dp,
+            )
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+          }
+          .padding(horizontal = 16.dp),
+    )
+
+    newsItem.description?.let {
+      Text(
+        text = it,
+        color = Color.White,
+        style =
+          MaterialTheme.typography.bodyMedium.copy(
+            shadow =
+              Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f)
+          ),
+        modifier =
+          Modifier.constrainAs(description) {
+              bottom.linkTo(parent.bottom, margin = 16.dp)
+              start.linkTo(parent.start)
+              end.linkTo(parent.end)
+            }
+            .padding(horizontal = 16.dp),
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+private fun NewsItemPreview() {
+  NewsItem(newsItem = mockNewsItem())
+}
+
+private fun mockNewsItem(): NewsItem =
+  NewsItem(
+    id = "5bc8659a47bad806ac2fc1fc5dbb7387c04b263432722b17fbba325a6335602d",
+    searchKeyWords = listOf("dogecoin", "DOGE"),
+    feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+    source = "U.Today",
+    title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
+    sourceLink = "https://u.today/",
+    description = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
+    imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
+    relatedCoins =
+      listOf(
+        "dogecoin",
+        "0x4206931337dc273a630d328da6441786bfad668f_ethereum",
+        "0x1a8e39ae59e5556b56b76fcba98d22c9ae557396_cronos",
+      ),
+    link =
+      "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
+  )

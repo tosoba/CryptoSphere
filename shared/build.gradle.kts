@@ -27,8 +27,8 @@ kotlin {
       api(libs.essenty.lifecycle)
       api(libs.essenty.stateKeeper)
       api(libs.essenty.backHandler)
-
-      implementation(libs.kotlinx.serialization.json)
+      api(libs.kotlinx.datetime)
+      api(libs.kotlinx.serialization.json)
     }
   }
 }
