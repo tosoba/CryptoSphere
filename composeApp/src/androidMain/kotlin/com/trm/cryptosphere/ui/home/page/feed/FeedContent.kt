@@ -1,5 +1,7 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -7,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -23,16 +26,16 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val newsItem = remember(::mockNewsItem)
-  NewsItem(newsItem = newsItem, modifier = modifier)
+  FeedItem(item = newsItem, modifier = modifier)
 }
 
 @Composable
-private fun NewsItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
+private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
   ConstraintLayout(modifier = modifier) {
-    val (backgroundImage, title, description) = createRefs()
+    val (backgroundImage, backgroundGradient, title, description) = createRefs()
 
     AsyncImage(
-      model = newsItem.imgUrl,
+      model = item.imgUrl,
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier =
@@ -43,18 +46,29 @@ private fun NewsItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
         },
     )
 
+    Box(
+      modifier =
+        Modifier.constrainAs(backgroundGradient) {
+            bottom.linkTo(parent.bottom)
+            top.linkTo(title.top, margin = (-128).dp)
+            width = Dimension.matchParent
+            height = Dimension.fillToConstraints
+          }
+          .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
+    )
+
     Text(
-      text = newsItem.title,
+      text = item.title,
       color = Color.White,
       style =
-        MaterialTheme.typography.headlineSmall.copy(
+        MaterialTheme.typography.headlineMedium.copy(
           shadow = Shadow(color = Color.DarkGray, offset = Offset(x = 4f, y = 4f), blurRadius = 8f)
         ),
       modifier =
         Modifier.constrainAs(title) {
             bottom.linkTo(
-              if (!newsItem.description.isNullOrBlank()) description.top else parent.bottom,
-              margin = if (!newsItem.description.isNullOrBlank()) 8.dp else 16.dp,
+              if (!item.description.isNullOrBlank()) description.top else parent.bottom,
+              margin = if (!item.description.isNullOrBlank()) 8.dp else 16.dp,
             )
             start.linkTo(parent.start)
             end.linkTo(parent.end)
@@ -62,7 +76,7 @@ private fun NewsItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
           .padding(horizontal = 16.dp),
     )
 
-    newsItem.description?.let {
+    item.description?.let {
       Text(
         text = it,
         color = Color.White,
@@ -86,7 +100,7 @@ private fun NewsItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun NewsItemPreview() {
-  NewsItem(newsItem = mockNewsItem())
+  FeedItem(item = mockNewsItem())
 }
 
 private fun mockNewsItem(): NewsItem =
