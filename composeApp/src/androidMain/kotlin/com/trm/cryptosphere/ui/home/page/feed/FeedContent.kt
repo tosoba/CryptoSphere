@@ -1,9 +1,17 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,10 +40,12 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
 @Composable
 private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
   ConstraintLayout(modifier = modifier) {
-    val (backgroundImage, backgroundGradient, title, description) = createRefs()
+    val (backgroundImage, backgroundGradient, title, description, linkButton, starButton) =
+      createRefs()
+    val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
 
     AsyncImage(
-      model = item.imgUrl,
+      model = item.imgUrl, // TODO: loading/error placeholders
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier =
@@ -57,6 +67,33 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
           .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
     )
 
+    OutlinedIconButton(
+      modifier =
+        Modifier.constrainAs(starButton) {
+          bottom.linkTo(linkButton.top, margin = 24.dp)
+          end.linkTo(parent.end, margin = 16.dp)
+        },
+      colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
+      border = BorderStroke(1.dp, Color.White),
+      onClick = {},
+    ) {
+      Icon(Icons.Filled.Star, contentDescription = null) // TODO: icon depending on starred state
+    }
+
+    FloatingActionButton(
+      modifier =
+        Modifier.constrainAs(linkButton) {
+          bottom.linkTo(parent.bottom, margin = 24.dp)
+          end.linkTo(parent.end, margin = 16.dp)
+        },
+      onClick = {},
+    ) {
+      Icon(
+        Icons.Filled.Search,
+        contentDescription = null,
+      ) // TODO: open link icon (paper plane like telegram?)
+    }
+
     Text(
       text = item.title,
       color = Color.White,
@@ -71,7 +108,8 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
               margin = if (!item.description.isNullOrBlank()) 8.dp else 16.dp,
             )
             start.linkTo(parent.start)
-            end.linkTo(parent.end)
+            end.linkTo(buttonsStartBarrier)
+            width = Dimension.fillToConstraints
           }
           .padding(horizontal = 16.dp),
     )
@@ -89,7 +127,8 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
           Modifier.constrainAs(description) {
               bottom.linkTo(parent.bottom, margin = 16.dp)
               start.linkTo(parent.start)
-              end.linkTo(parent.end)
+              end.linkTo(buttonsStartBarrier)
+              width = Dimension.fillToConstraints
             }
             .padding(horizontal = 16.dp),
       )
