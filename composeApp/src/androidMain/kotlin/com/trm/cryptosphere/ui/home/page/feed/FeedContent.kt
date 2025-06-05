@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -87,7 +88,7 @@ private fun FeedItem(
     Column(
       modifier =
         Modifier.constrainAs(relatedTokensList) {
-          bottom.linkTo(starButton.top, margin = 8.dp)
+          bottom.linkTo(starButton.top)
           end.linkTo(parent.end, margin = 16.dp)
         }
     ) {
@@ -167,13 +168,18 @@ private fun FeedItem(
 }
 
 @Composable
-private fun RelatedTokenButton(imageUrl: String, modifier: Modifier = Modifier) {
-  OutlinedIconButton(modifier = modifier, border = BorderStroke(1.dp, Color.White), onClick = {}) {
+private fun RelatedTokenButton(imageUrl: String) {
+  OutlinedIconButton(
+    // TODO: proper glow effect (like in DayLighter) with color based on image's dominant color
+    border =
+      BorderStroke(2.dp, Brush.radialGradient(listOf(Color.White, Color.LightGray), radius = 500f)),
+    onClick = {},
+  ) {
     AsyncImage(
       model = imageUrl, // TODO: loading/error/null URL placeholders
       contentDescription = null,
       contentScale = ContentScale.Fit,
-      modifier = Modifier.size(24.dp),
+      modifier = Modifier.size(28.dp),
     )
   }
 }
