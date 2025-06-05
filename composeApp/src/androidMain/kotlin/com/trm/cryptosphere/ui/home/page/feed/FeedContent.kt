@@ -3,7 +3,11 @@ package com.trm.cryptosphere.ui.home.page.feed
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
@@ -27,6 +31,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.NewsItem
+import com.trm.cryptosphere.domain.model.RelatedTokenItem
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -34,13 +39,25 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val newsItem = remember(::mockNewsItem)
-  FeedItem(item = newsItem, modifier = modifier)
+  val relatedTokens = remember(::mockRelatedTokenItems)
+  FeedItem(item = newsItem, relatedTokens = relatedTokens, modifier = modifier)
 }
 
 @Composable
-private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
+private fun FeedItem(
+  item: NewsItem,
+  relatedTokens: List<RelatedTokenItem>,
+  modifier: Modifier = Modifier,
+) {
   ConstraintLayout(modifier = modifier) {
-    val (backgroundImage, backgroundGradient, title, description, linkButton, starButton) =
+    val (
+      backgroundImage,
+      backgroundGradient,
+      title,
+      description,
+      linkButton,
+      starButton,
+      relatedTokensList) =
       createRefs()
     val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
 
@@ -66,6 +83,19 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
           }
           .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
     )
+
+    Column(
+      modifier =
+        Modifier.constrainAs(relatedTokensList) {
+          bottom.linkTo(starButton.top, margin = 8.dp)
+          end.linkTo(parent.end, margin = 16.dp)
+        }
+    ) {
+      relatedTokens.forEach {
+        RelatedTokenButton(imageUrl = it.imageUrl.orEmpty())
+        Spacer(modifier = Modifier.height(16.dp))
+      }
+    }
 
     OutlinedIconButton(
       modifier =
@@ -136,10 +166,22 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
   }
 }
 
+@Composable
+private fun RelatedTokenButton(imageUrl: String, modifier: Modifier = Modifier) {
+  OutlinedIconButton(modifier = modifier, border = BorderStroke(1.dp, Color.White), onClick = {}) {
+    AsyncImage(
+      model = imageUrl, // TODO: loading/error/null URL placeholders
+      contentDescription = null,
+      contentScale = ContentScale.Fit,
+      modifier = Modifier.size(24.dp),
+    )
+  }
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun NewsItemPreview() {
-  FeedItem(item = mockNewsItem())
+  FeedItem(item = mockNewsItem(), relatedTokens = mockRelatedTokenItems())
 }
 
 private fun mockNewsItem(): NewsItem =
@@ -160,4 +202,11 @@ private fun mockNewsItem(): NewsItem =
       ),
     link =
       "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
+  )
+
+private fun mockRelatedTokenItems(): List<RelatedTokenItem> =
+  listOf(
+    RelatedTokenItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
+    RelatedTokenItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),
+    RelatedTokenItem("tether", "USDT", "https://static.coinstats.app/coins/1650455771843.png"),
   )
