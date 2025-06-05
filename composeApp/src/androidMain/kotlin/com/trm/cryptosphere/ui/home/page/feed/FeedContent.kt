@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -77,7 +77,10 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
       border = BorderStroke(1.dp, Color.White),
       onClick = {},
     ) {
-      Icon(Icons.Filled.Star, contentDescription = null) // TODO: icon depending on starred state
+      Icon(
+        Icons.Outlined.StarOutline, // TODO: icon depending on starred state
+        contentDescription = null,
+      )
     }
 
     FloatingActionButton(
@@ -88,10 +91,7 @@ private fun FeedItem(item: NewsItem, modifier: Modifier = Modifier) {
         },
       onClick = {},
     ) {
-      Icon(
-        Icons.Filled.Search,
-        contentDescription = null,
-      ) // TODO: open link icon (paper plane like telegram?)
+      Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
     }
 
     Text(

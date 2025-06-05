@@ -1,7 +1,10 @@
 package com.trm.cryptosphere.ui.home
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.PriceChange
+import androidx.compose.material.icons.filled.RssFeed
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 
@@ -9,11 +12,10 @@ import androidx.compose.runtime.Composable
 fun HomePageConfig.NavigationItemIcon() {
   Icon(
     when (this) {
-      // TODO: proper icons
-      HomePageConfig.FEED -> Icons.AutoMirrored.Filled.List
-      HomePageConfig.PRICES -> Icons.AutoMirrored.Filled.List
-      HomePageConfig.SEARCH -> Icons.AutoMirrored.Filled.List
-      HomePageConfig.HISTORY -> Icons.AutoMirrored.Filled.List
+      HomePageConfig.FEED -> Icons.Filled.RssFeed
+      HomePageConfig.PRICES -> Icons.Filled.PriceChange
+      HomePageConfig.SEARCH -> Icons.Filled.Search
+      HomePageConfig.HISTORY -> Icons.Filled.History
     },
     contentDescription = null,
   )
