@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
@@ -20,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -39,9 +40,13 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
-  val newsItem = remember(::mockNewsItem)
   val relatedTokens = remember(::mockRelatedTokenItems)
-  FeedItem(item = newsItem, relatedTokens = relatedTokens, modifier = modifier)
+  val newsItems = remember { List(3) { mockNewsItem() } }
+  val pagerState = rememberPagerState(pageCount = { newsItems.size })
+
+  VerticalPager(modifier = modifier, state = pagerState) { page ->
+    FeedItem(item = newsItems[page], relatedTokens = relatedTokens)
+  }
 }
 
 @Composable
