@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -44,8 +46,20 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = { newsItems.size })
 
-  VerticalPager(modifier = modifier, state = pagerState) { page ->
-    FeedItem(item = newsItems[page], relatedTokens = relatedTokens)
+  VerticalPager(
+    modifier = modifier,
+    state = pagerState,
+    beyondViewportPageCount = 1,
+    contentPadding = PaddingValues(vertical = 48.dp, horizontal = 16.dp),
+    pageSpacing = 16.dp,
+  ) { page ->
+    Card {
+      FeedItem(
+        item = newsItems[page],
+        relatedTokens = relatedTokens,
+        isCurrent = page == pagerState.currentPage,
+      )
+    }
   }
 }
 
@@ -53,6 +67,7 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
 private fun FeedItem(
   item: NewsItem,
   relatedTokens: List<RelatedTokenItem>,
+  isCurrent: Boolean,
   modifier: Modifier = Modifier,
 ) {
   ConstraintLayout(modifier = modifier) {
@@ -78,6 +93,8 @@ private fun FeedItem(
           height = Dimension.matchParent
         },
     )
+
+    if (!isCurrent) return@ConstraintLayout
 
     Box(
       modifier =
@@ -192,7 +209,7 @@ private fun RelatedTokenButton(imageUrl: String) {
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun NewsItemPreview() {
-  FeedItem(item = mockNewsItem(), relatedTokens = mockRelatedTokenItems())
+  FeedItem(item = mockNewsItem(), relatedTokens = mockRelatedTokenItems(), isCurrent = true)
 }
 
 private fun mockNewsItem(): NewsItem =
