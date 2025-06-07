@@ -13,9 +13,9 @@ interface RootComponent : BackHandlerOwner {
 
   fun onBackClicked(toIndex: Int)
 
-  sealed class Child {
-    class Home(val component: HomeComponent) : Child()
+  sealed interface Child {
+    class Home(val component: HomeComponent) : Child
 
-    class Token(val tokenComponent: TokenComponent) : Child()
+    class Token(val tokenComponent: TokenComponent) : Child
   }
 }

@@ -49,12 +49,11 @@ private struct ChildView: View {
     let page: HomeComponentPage
 
     var body: some View {
-        switch page { // TODO: skie for nicer switches
-        case let page as HomeComponentPage.Feed: FeedView()
-        case let page as HomeComponentPage.Prices: PricesView()
-        case let page as HomeComponentPage.Search: SearchView()
-        case let page as HomeComponentPage.History: HistoryView()
-        default: EmptyView()
+        switch onEnum(of: page) {
+        case let .feed(feedPage): FeedView()
+        case let .prices(pricesPage): PricesView()
+        case let .search(searchPage): SearchView()
+        case let .history(historyPage): HistoryView()
         }
     }
 }

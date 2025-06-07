@@ -1,9 +1,16 @@
+import co.touchlab.skie.configuration.DefaultArgumentInterop
+import co.touchlab.skie.configuration.EnumInterop
+import co.touchlab.skie.configuration.FlowInterop
+import co.touchlab.skie.configuration.SealedInterop
+import co.touchlab.skie.configuration.SuppressSkieWarning
+import co.touchlab.skie.configuration.SuspendInterop
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.kotlinMultiplatform)
   alias(libs.plugins.kotlinSerialization)
   alias(libs.plugins.androidLibrary)
+  alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -43,4 +50,19 @@ android {
   }
 
   defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
+}
+
+skie {
+  analytics { disableUpload.set(true) }
+
+  features {
+    group {
+      DefaultArgumentInterop.Enabled(false)
+      SuspendInterop.Enabled(true)
+      FlowInterop.Enabled(true)
+      EnumInterop.Enabled(true)
+      SealedInterop.Enabled(true)
+      SuppressSkieWarning.NameCollision(true)
+    }
+  }
 }

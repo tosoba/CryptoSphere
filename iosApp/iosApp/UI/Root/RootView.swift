@@ -14,10 +14,9 @@ struct RootView: View {
             getTitle: { _ in "CryptoSphere" },
             onBack: component.onBackClicked
         ) { child in
-            switch child { // TODO: skie for nicer switches
-            case let child as RootComponentChild.Home: HomeView(child.component)
-            case let child as RootComponentChild.Token: EmptyView() // TODO: TokenView
-            default: EmptyView()
+            switch onEnum(of: child) {
+            case let .home(homeChild): HomeView(homeChild.component)
+            case let .token(tokenChild): EmptyView() // TODO: TokenView
             }
         }
     }
