@@ -1,39 +1,13 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Card
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.RelatedTokenItem
 import kotlinx.datetime.Clock
@@ -46,12 +20,14 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = { newsItems.size })
 
+  // TODO: pager should be visible behind bottom navigation/status bar
+  // (status bar items should be visible as well)
   VerticalPager(
     modifier = modifier,
     state = pagerState,
     beyondViewportPageCount = 1,
-    contentPadding = PaddingValues(vertical = 48.dp, horizontal = 16.dp),
-    pageSpacing = 16.dp,
+    contentPadding = PaddingValues(vertical = 24.dp, horizontal = 16.dp),
+    pageSpacing = 8.dp,
   ) { page ->
     Card {
       FeedItem(
@@ -63,156 +39,7 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   }
 }
 
-@Composable
-private fun FeedItem(
-  item: NewsItem,
-  relatedTokens: List<RelatedTokenItem>,
-  isCurrent: Boolean,
-  modifier: Modifier = Modifier,
-) {
-  ConstraintLayout(modifier = modifier) {
-    val (
-      backgroundImage,
-      backgroundGradient,
-      title,
-      description,
-      linkButton,
-      starButton,
-      relatedTokensList) =
-      createRefs()
-    val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
-
-    AsyncImage(
-      model = item.imgUrl, // TODO: loading/error placeholders
-      contentDescription = null,
-      contentScale = ContentScale.Crop,
-      modifier =
-        Modifier.constrainAs(backgroundImage) {
-          centerTo(parent)
-          width = Dimension.matchParent
-          height = Dimension.matchParent
-        },
-    )
-
-    if (!isCurrent) return@ConstraintLayout
-
-    Box(
-      modifier =
-        Modifier.constrainAs(backgroundGradient) {
-            bottom.linkTo(parent.bottom)
-            top.linkTo(title.top, margin = (-128).dp)
-            width = Dimension.matchParent
-            height = Dimension.fillToConstraints
-          }
-          .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
-    )
-
-    Column(
-      modifier =
-        Modifier.constrainAs(relatedTokensList) {
-          bottom.linkTo(starButton.top)
-          end.linkTo(parent.end, margin = 16.dp)
-        }
-    ) {
-      relatedTokens.forEach {
-        RelatedTokenButton(imageUrl = it.imageUrl.orEmpty())
-        Spacer(modifier = Modifier.height(16.dp))
-      }
-    }
-
-    OutlinedIconButton(
-      modifier =
-        Modifier.constrainAs(starButton) {
-          bottom.linkTo(linkButton.top, margin = 24.dp)
-          end.linkTo(parent.end, margin = 16.dp)
-        },
-      colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
-      border = BorderStroke(1.dp, Color.White),
-      onClick = {},
-    ) {
-      Icon(
-        Icons.Outlined.StarOutline, // TODO: icon depending on starred state
-        contentDescription = null,
-      )
-    }
-
-    FloatingActionButton(
-      modifier =
-        Modifier.constrainAs(linkButton) {
-          bottom.linkTo(parent.bottom, margin = 24.dp)
-          end.linkTo(parent.end, margin = 16.dp)
-        },
-      onClick = {},
-    ) {
-      Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
-    }
-
-    Text(
-      text = item.title,
-      color = Color.White,
-      style =
-        MaterialTheme.typography.headlineMedium.copy(
-          shadow = Shadow(color = Color.DarkGray, offset = Offset(x = 4f, y = 4f), blurRadius = 8f)
-        ),
-      modifier =
-        Modifier.constrainAs(title) {
-            bottom.linkTo(
-              if (!item.description.isNullOrBlank()) description.top else parent.bottom,
-              margin = if (!item.description.isNullOrBlank()) 8.dp else 16.dp,
-            )
-            start.linkTo(parent.start)
-            end.linkTo(buttonsStartBarrier)
-            width = Dimension.fillToConstraints
-          }
-          .padding(horizontal = 16.dp),
-    )
-
-    item.description?.let {
-      Text(
-        text = it,
-        color = Color.White,
-        style =
-          MaterialTheme.typography.bodyMedium.copy(
-            shadow =
-              Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f)
-          ),
-        modifier =
-          Modifier.constrainAs(description) {
-              bottom.linkTo(parent.bottom, margin = 16.dp)
-              start.linkTo(parent.start)
-              end.linkTo(buttonsStartBarrier)
-              width = Dimension.fillToConstraints
-            }
-            .padding(horizontal = 16.dp),
-      )
-    }
-  }
-}
-
-@Composable
-private fun RelatedTokenButton(imageUrl: String) {
-  OutlinedIconButton(
-    // TODO: proper glow effect (like in DayLighter) with color based on image's dominant color
-    border =
-      BorderStroke(2.dp, Brush.radialGradient(listOf(Color.White, Color.LightGray), radius = 500f)),
-    onClick = {},
-  ) {
-    AsyncImage(
-      model = imageUrl, // TODO: loading/error/null URL placeholders
-      contentDescription = null,
-      contentScale = ContentScale.Fit,
-      modifier = Modifier.size(28.dp),
-    )
-  }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-@Composable
-private fun NewsItemPreview() {
-  FeedItem(item = mockNewsItem(), relatedTokens = mockRelatedTokenItems(), isCurrent = true)
-}
-
-private fun mockNewsItem(): NewsItem =
+fun mockNewsItem(): NewsItem =
   NewsItem(
     id = "5bc8659a47bad806ac2fc1fc5dbb7387c04b263432722b17fbba325a6335602d",
     searchKeyWords = listOf("dogecoin", "DOGE"),
@@ -232,7 +59,7 @@ private fun mockNewsItem(): NewsItem =
       "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
   )
 
-private fun mockRelatedTokenItems(): List<RelatedTokenItem> =
+fun mockRelatedTokenItems(): List<RelatedTokenItem> =
   listOf(
     RelatedTokenItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
     RelatedTokenItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),
