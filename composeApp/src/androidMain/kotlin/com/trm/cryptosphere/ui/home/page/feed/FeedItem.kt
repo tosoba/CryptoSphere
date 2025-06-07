@@ -2,14 +2,9 @@ package com.trm.cryptosphere.ui.home.page.feed
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
@@ -32,24 +27,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.NewsItem
-import com.trm.cryptosphere.domain.model.RelatedTokenItem
 
 @Composable
-fun FeedItem(
-  item: NewsItem,
-  relatedTokens: List<RelatedTokenItem>,
-  isCurrent: Boolean,
-  modifier: Modifier = Modifier,
-) {
+fun FeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) {
   ConstraintLayout(modifier = modifier) {
-    val (
-      backgroundImage,
-      backgroundGradient,
-      title,
-      description,
-      linkButton,
-      starButton,
-      relatedTokensList) =
+    val (backgroundImage, backgroundGradient, title, description, linkButton, starButton) =
       createRefs()
     val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
 
@@ -77,22 +59,6 @@ fun FeedItem(
           }
           .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
     )
-
-    Row(
-      modifier =
-        Modifier.constrainAs(relatedTokensList) {
-            top.linkTo(parent.top, margin = 16.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-          }
-          .horizontalScroll(rememberScrollState())
-    ) {
-      Spacer(modifier = Modifier.width(12.dp))
-      relatedTokens.forEach {
-        RelatedTokenButton(imageUrl = it.imageUrl.orEmpty())
-        Spacer(modifier = Modifier.width(12.dp))
-      }
-    }
 
     OutlinedIconButton(
       modifier =
@@ -183,5 +149,5 @@ private fun RelatedTokenButton(imageUrl: String) {
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun FeedItemPreview() {
-  FeedItem(item = mockNewsItem(), relatedTokens = mockRelatedTokenItems(), isCurrent = true)
+  FeedItem(item = mockNewsItem(), isCurrent = true)
 }

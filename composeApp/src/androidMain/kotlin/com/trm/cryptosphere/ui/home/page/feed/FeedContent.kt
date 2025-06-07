@@ -1,6 +1,9 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
@@ -8,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.trm.cryptosphere.core.ui.RelatedTokensCarousel
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.RelatedTokenItem
 import kotlinx.datetime.Clock
@@ -18,24 +22,25 @@ import kotlinx.datetime.toLocalDateTime
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val relatedTokens = remember(::mockRelatedTokenItems)
   val newsItems = remember { List(3) { mockNewsItem() } }
-  val pagerState = rememberPagerState(pageCount = { newsItems.size })
+  val pagerState = rememberPagerState(pageCount = newsItems::size)
 
-  // TODO: pager should be visible behind bottom navigation/status bar
-  // (status bar items should be visible as well)
+  Column(modifier = modifier) {
+    // TODO: figure out what to do if feed item has no related tokens
+    RelatedTokensCarousel(relatedTokens)
+    FeedContentPager(pagerState, newsItems)
+  }
+}
+
+@Composable
+private fun ColumnScope.FeedContentPager(pagerState: PagerState, newsItems: List<NewsItem>) {
   VerticalPager(
-    modifier = modifier,
+    modifier = Modifier.weight(1f),
     state = pagerState,
     beyondViewportPageCount = 1,
     contentPadding = PaddingValues(vertical = 24.dp, horizontal = 16.dp),
     pageSpacing = 8.dp,
   ) { page ->
-    Card {
-      FeedItem(
-        item = newsItems[page],
-        relatedTokens = relatedTokens,
-        isCurrent = page == pagerState.currentPage,
-      )
-    }
+    Card { FeedItem(item = newsItems[page], isCurrent = page == pagerState.currentPage) }
   }
 }
 

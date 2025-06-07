@@ -1,11 +1,11 @@
 package com.trm.cryptosphere.ui.home
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +22,25 @@ import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
 @Composable
 fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
-  Column(modifier = modifier) {
+  Scaffold(
+    modifier = modifier,
+    bottomBar = {
+      NavigationBar(modifier = Modifier.fillMaxWidth()) {
+        val pages by component.pages.subscribeAsState()
+        HomePageConfig.entries.forEachIndexed { index, config ->
+          NavigationBarItem(
+            selected = pages.selectedIndex == index,
+            onClick = { component.selectPage(index) },
+            icon = { config.NavigationItemIcon() },
+            label = {
+              // TODO: proper labels
+              Text(config.name.lowercase().capitalize(LocaleList.current))
+            },
+          )
+        }
+      }
+    },
+  ) { paddingValues ->
     val pages by component.pages.subscribeAsState()
     ChildPages(
       pages = pages,
@@ -32,11 +50,12 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
           modifier = modifier,
           state = state,
           key = key,
+          contentPadding = paddingValues,
           userScrollEnabled = false,
           pageContent = pageContent,
         )
       },
-      modifier = Modifier.fillMaxWidth().weight(1f),
+      modifier = Modifier.fillMaxWidth(),
       scrollAnimation = PagesScrollAnimation.Default,
     ) { _, page ->
       when (page) {
@@ -52,20 +71,6 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
         is HomeComponent.Page.History -> {
           HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
         }
-      }
-    }
-
-    NavigationBar(modifier = Modifier.fillMaxWidth()) {
-      HomePageConfig.entries.forEachIndexed { index, config ->
-        NavigationBarItem(
-          selected = pages.selectedIndex == index,
-          onClick = { component.selectPage(index) },
-          icon = { config.NavigationItemIcon() },
-          label = {
-            // TODO: proper labels
-            Text(config.name.lowercase().capitalize(LocaleList.current))
-          },
-        )
       }
     }
   }
