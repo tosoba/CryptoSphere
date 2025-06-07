@@ -2,12 +2,14 @@ package com.trm.cryptosphere.ui.home.page.feed
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
@@ -76,18 +78,19 @@ fun FeedItem(
           .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black)))
     )
 
-    // TODO: consider converting it to a Row on top of FeedItem instead
-    // (so its scrolling does not interfere with FeedItems scrolling)
-    Column(
+    Row(
       modifier =
         Modifier.constrainAs(relatedTokensList) {
-          bottom.linkTo(starButton.top)
-          end.linkTo(parent.end, margin = 16.dp)
-        }
+            top.linkTo(parent.top, margin = 16.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+          }
+          .horizontalScroll(rememberScrollState())
     ) {
+      Spacer(modifier = Modifier.width(12.dp))
       relatedTokens.forEach {
         RelatedTokenButton(imageUrl = it.imageUrl.orEmpty())
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.width(12.dp))
       }
     }
 

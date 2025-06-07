@@ -64,4 +64,10 @@ fun mockRelatedTokenItems(): List<RelatedTokenItem> =
     RelatedTokenItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
     RelatedTokenItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),
     RelatedTokenItem("tether", "USDT", "https://static.coinstats.app/coins/1650455771843.png"),
+    RelatedTokenItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
+    RelatedTokenItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),
+    RelatedTokenItem("tether", "USDT", "https://static.coinstats.app/coins/1650455771843.png"),
+    RelatedTokenItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
+    RelatedTokenItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),
+    RelatedTokenItem("tether", "USDT", "https://static.coinstats.app/coins/1650455771843.png"),
   )
