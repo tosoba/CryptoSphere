@@ -59,7 +59,7 @@ fun RelatedTokensCarousel(relatedTokens: List<RelatedTokenItem>) {
           text = token.symbol,
           maxLines = 1,
           textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.labelSmall,
+          style = MaterialTheme.typography.labelLarge,
           modifier = Modifier.fillMaxWidth().basicMarquee(),
         )
       }
