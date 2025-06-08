@@ -14,7 +14,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.CarouselDefaults
+import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,12 +29,14 @@ import com.trm.cryptosphere.domain.model.RelatedTokenItem
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun RelatedTokensCarousel(relatedTokens: List<RelatedTokenItem>) {
-  HorizontalMultiBrowseCarousel(
-    state = rememberCarouselState(itemCount = relatedTokens::size),
+  val carouselState = rememberCarouselState(itemCount = relatedTokens::size)
+  HorizontalUncontainedCarousel(
+    state = carouselState,
     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
-    preferredItemWidth = 128.dp,
+    itemWidth = 128.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),
+    flingBehavior = CarouselDefaults.singleAdvanceFlingBehavior(carouselState),
   ) { index ->
     // TODO: if there is a need to put any border/shadow/glow effect on the card just put it
     // behind the card with the same maskClip and make the card itself smaller
