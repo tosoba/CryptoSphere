@@ -11,6 +11,8 @@ plugins {
   alias(libs.plugins.kotlinSerialization)
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.skie)
+  alias(libs.plugins.kotlinKsp)
+  alias(libs.plugins.ktorfit)
 }
 
 kotlin {
@@ -34,8 +36,27 @@ kotlin {
       api(libs.essenty.lifecycle)
       api(libs.essenty.stateKeeper)
       api(libs.essenty.backHandler)
+
       api(libs.kotlinx.datetime)
       api(libs.kotlinx.serialization.json)
+
+      implementation(libs.ktor.client.core)
+      implementation(libs.ktor.client.contentNegotiation)
+      implementation(libs.ktor.serialization.kotlinx.json)
+      implementation(libs.ktorfit)
+    }
+
+    commonTest.dependencies {
+      implementation(libs.kotlin.test)
+      implementation(libs.kotlinx.coroutines.test)
+    }
+  }
+
+  tasks {
+    configureEach {
+      if (name.contains("kspDebugKotlinAndroid")) {
+        dependsOn("kspCommonMainKotlinMetadata")
+      }
     }
   }
 }
