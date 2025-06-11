@@ -3,6 +3,6 @@ package com.trm.cryptosphere.api.coinstats
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class CoinStatsApiTest {
+internal class CoinStatsApiTest {
   @Test fun getNews() = runTest { CoinStatsApi().getNews() }
 }

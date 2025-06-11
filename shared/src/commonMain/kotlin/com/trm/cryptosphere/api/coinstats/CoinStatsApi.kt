@@ -9,7 +9,7 @@ import de.jensklingenberg.ktorfit.http.Query
 
 interface CoinStatsApi {
   @GET("news")
-  @Headers("accept: application/json", "X-API-KEY: $COIN_STATS_API_KEY")
+  @Headers("X-API-KEY: $COIN_STATS_API_KEY")
   suspend fun getNews(@Query page: Int = 1, @Query limit: Int = 100): NetworkResult<NewsResponse>
 
   companion object {
