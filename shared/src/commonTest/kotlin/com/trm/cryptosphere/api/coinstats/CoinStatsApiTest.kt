@@ -4,5 +4,5 @@ import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class CoinStatsApiTest {
-  @Test fun getNews() = runTest { println(CoinStatsApi().getNews()) }
+  @Test fun getNews() = runTest { CoinStatsApi().getNews() }
 }
