@@ -1,15 +1,10 @@
 package com.trm.cryptosphere.api.coinstats
 
-import com.trm.cryptosphere.api.coinstats.converter.ResultConverterFactory
 import com.trm.cryptosphere.api.coinstats.model.NewsResponse
+import com.trm.cryptosphere.core.network.buildKtorfit
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.Query
-import de.jensklingenberg.ktorfit.ktorfit
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
 interface CoinStatsApi {
   @GET("news")
@@ -19,23 +14,6 @@ interface CoinStatsApi {
   companion object {
     private const val BASE_URL = "https://openapiv1.coinstats.app/"
 
-    operator fun invoke(): CoinStatsApi =
-      ktorfit {
-          baseUrl(BASE_URL)
-          httpClient(
-            HttpClient {
-              install(ContentNegotiation) {
-                json(
-                  Json {
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                  }
-                )
-              }
-            }
-          )
-          converterFactories(ResultConverterFactory())
-        }
-        .createCoinStatsApi()
+    operator fun invoke(): CoinStatsApi = buildKtorfit(BASE_URL).createCoinStatsApi()
   }
 }
