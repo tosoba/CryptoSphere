@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.core.network
 
-import com.trm.cryptosphere.api.coinstats.converter.ResultConverterFactory
 import de.jensklingenberg.ktorfit.ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -33,5 +32,5 @@ fun buildKtorfit(baseUrl: String, loggingEnabled: Boolean = true) = ktorfit {
       }
     }
   )
-  converterFactories(ResultConverterFactory())
+  converterFactories(NetworkResultConverterFactory())
 }
