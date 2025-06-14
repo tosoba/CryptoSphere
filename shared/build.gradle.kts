@@ -13,6 +13,7 @@ plugins {
   alias(libs.plugins.skie)
   alias(libs.plugins.kotlinKsp)
   alias(libs.plugins.ktorfit)
+  alias(libs.plugins.room)
 }
 
 kotlin {
@@ -37,6 +38,7 @@ kotlin {
       api(libs.essenty.stateKeeper)
       api(libs.essenty.backHandler)
 
+      api(libs.kotlinx.coroutines.core)
       api(libs.kotlinx.datetime)
       api(libs.kotlinx.serialization.json)
 
@@ -45,6 +47,9 @@ kotlin {
       implementation(libs.ktor.client.logging)
       implementation(libs.ktor.serialization.kotlinx.json)
       implementation(libs.ktorfit)
+
+      implementation(libs.androidx.room.runtime)
+      implementation(libs.store)
     }
 
     commonTest.dependencies {
@@ -73,6 +78,15 @@ android {
 
   defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
 }
+
+dependencies {
+  add("kspAndroid", libs.androidx.room.compiler)
+  add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+  add("kspIosX64", libs.androidx.room.compiler)
+  add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+room { schemaDirectory("$projectDir/schemas") }
 
 skie {
   analytics { disableUpload.set(true) }
