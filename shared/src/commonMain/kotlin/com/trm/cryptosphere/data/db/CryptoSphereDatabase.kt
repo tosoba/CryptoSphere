@@ -15,6 +15,10 @@ import com.trm.cryptosphere.data.db.entity.TokenEntity
 @TypeConverters(StringListConverter::class, TokenQuoteConverter::class)
 abstract class CryptoSphereDatabase : RoomDatabase() {
   abstract fun tokenDao(): TokenDao
+
+  companion object {
+    const val DATABASE_NAME = "cryptosphere.db"
+  }
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
