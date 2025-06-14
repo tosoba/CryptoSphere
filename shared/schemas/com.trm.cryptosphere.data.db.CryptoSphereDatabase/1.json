@@ -1,0 +1,123 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "8fe92d4c717332312847d2455bb95b16",
+    "entities": [
+      {
+        "tableName": "TokenEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `slug` TEXT NOT NULL, `numMarketPairs` INTEGER NOT NULL, `dateAdded` TEXT NOT NULL, `tags` TEXT NOT NULL, `maxSupply` REAL, `circulatingSupply` REAL NOT NULL, `totalSupply` REAL NOT NULL, `infiniteSupply` INTEGER NOT NULL, `cmcRank` INTEGER NOT NULL, `selfReportedCirculatingSupply` REAL, `selfReportedMarketCap` REAL, `tvlRatio` REAL, `lastUpdated` TEXT NOT NULL, `usdQuote` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numMarketPairs",
+            "columnName": "numMarketPairs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateAdded",
+            "columnName": "dateAdded",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxSupply",
+            "columnName": "maxSupply",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "circulatingSupply",
+            "columnName": "circulatingSupply",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalSupply",
+            "columnName": "totalSupply",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "infiniteSupply",
+            "columnName": "infiniteSupply",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cmcRank",
+            "columnName": "cmcRank",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selfReportedCirculatingSupply",
+            "columnName": "selfReportedCirculatingSupply",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "selfReportedMarketCap",
+            "columnName": "selfReportedMarketCap",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "tvlRatio",
+            "columnName": "tvlRatio",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote",
+            "columnName": "usdQuote",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fe92d4c717332312847d2455bb95b16')"
+    ]
+  }
+}

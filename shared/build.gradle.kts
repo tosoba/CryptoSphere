@@ -32,7 +32,13 @@ kotlin {
   }
 
   sourceSets {
+    androidMain.dependencies {
+      implementation(libs.androidx.room.ktx)
+    }
+
     commonMain.dependencies {
+      implementation(libs.androidx.room.runtime)
+
       api(libs.decompose)
       api(libs.essenty.lifecycle)
       api(libs.essenty.stateKeeper)
@@ -48,7 +54,6 @@ kotlin {
       implementation(libs.ktor.serialization.kotlinx.json)
       implementation(libs.ktorfit)
 
-      implementation(libs.androidx.room.runtime)
       implementation(libs.store)
     }
 
