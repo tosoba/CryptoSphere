@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8fe92d4c717332312847d2455bb95b16",
+    "identityHash": "f94b4947128c65cd150f9399beeb4a4d",
     "entities": [
       {
         "tableName": "TokenEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `slug` TEXT NOT NULL, `numMarketPairs` INTEGER NOT NULL, `dateAdded` TEXT NOT NULL, `tags` TEXT NOT NULL, `maxSupply` REAL, `circulatingSupply` REAL NOT NULL, `totalSupply` REAL NOT NULL, `infiniteSupply` INTEGER NOT NULL, `cmcRank` INTEGER NOT NULL, `selfReportedCirculatingSupply` REAL, `selfReportedMarketCap` REAL, `tvlRatio` REAL, `lastUpdated` TEXT NOT NULL, `usdQuote` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `slug` TEXT NOT NULL, `num_market_pairs` INTEGER NOT NULL, `date_added` TEXT NOT NULL, `tags` TEXT NOT NULL, `max_supply` REAL, `circulating_supply` REAL NOT NULL, `total_supply` REAL NOT NULL, `infinite_supply` INTEGER NOT NULL, `cmc_rank` INTEGER NOT NULL, `self_reported_circulating_supply` REAL, `self_reported_market_cap` REAL, `tvl_ratio` REAL, `last_updated` TEXT NOT NULL, `usd_quote_price` REAL NOT NULL, `usd_quote_volume_24h` REAL NOT NULL, `usd_quote_volume_change_24h` REAL NOT NULL, `usd_quote_percent_change_1h` REAL NOT NULL, `usd_quote_percent_change_24h` REAL NOT NULL, `usd_quote_percent_change_7d` REAL NOT NULL, `usd_quote_percent_change_30d` REAL NOT NULL, `usd_quote_percent_change_60d` REAL NOT NULL, `usd_quote_percent_change_90d` REAL NOT NULL, `usd_quote_market_cap` REAL NOT NULL, `usd_quote_market_cap_dominance` REAL NOT NULL, `usd_quote_fully_diluted_market_cap` REAL NOT NULL, `usd_quote_tvl` REAL, `usd_quote_last_updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -34,13 +34,13 @@
           },
           {
             "fieldPath": "numMarketPairs",
-            "columnName": "numMarketPairs",
+            "columnName": "num_market_pairs",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "dateAdded",
-            "columnName": "dateAdded",
+            "columnName": "date_added",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -52,57 +52,134 @@
           },
           {
             "fieldPath": "maxSupply",
-            "columnName": "maxSupply",
+            "columnName": "max_supply",
             "affinity": "REAL"
           },
           {
             "fieldPath": "circulatingSupply",
-            "columnName": "circulatingSupply",
+            "columnName": "circulating_supply",
             "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "totalSupply",
-            "columnName": "totalSupply",
+            "columnName": "total_supply",
             "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "infiniteSupply",
-            "columnName": "infiniteSupply",
+            "columnName": "infinite_supply",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "cmcRank",
-            "columnName": "cmcRank",
+            "columnName": "cmc_rank",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "selfReportedCirculatingSupply",
-            "columnName": "selfReportedCirculatingSupply",
+            "columnName": "self_reported_circulating_supply",
             "affinity": "REAL"
           },
           {
             "fieldPath": "selfReportedMarketCap",
-            "columnName": "selfReportedMarketCap",
+            "columnName": "self_reported_market_cap",
             "affinity": "REAL"
           },
           {
             "fieldPath": "tvlRatio",
-            "columnName": "tvlRatio",
+            "columnName": "tvl_ratio",
             "affinity": "REAL"
           },
           {
             "fieldPath": "lastUpdated",
-            "columnName": "lastUpdated",
+            "columnName": "last_updated",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "usdQuote",
-            "columnName": "usdQuote",
+            "fieldPath": "usdQuote.price",
+            "columnName": "usd_quote_price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.volume24h",
+            "columnName": "usd_quote_volume_24h",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.volumeChange24h",
+            "columnName": "usd_quote_volume_change_24h",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange1h",
+            "columnName": "usd_quote_percent_change_1h",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange24h",
+            "columnName": "usd_quote_percent_change_24h",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange7d",
+            "columnName": "usd_quote_percent_change_7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange30d",
+            "columnName": "usd_quote_percent_change_30d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange60d",
+            "columnName": "usd_quote_percent_change_60d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.percentChange90d",
+            "columnName": "usd_quote_percent_change_90d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.marketCap",
+            "columnName": "usd_quote_market_cap",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.marketCapDominance",
+            "columnName": "usd_quote_market_cap_dominance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.fullyDilutedMarketCap",
+            "columnName": "usd_quote_fully_diluted_market_cap",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usdQuote.tvl",
+            "columnName": "usd_quote_tvl",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "usdQuote.lastUpdated",
+            "columnName": "usd_quote_last_updated",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -117,7 +194,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fe92d4c717332312847d2455bb95b16')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f94b4947128c65cd150f9399beeb4a4d')"
     ]
   }
 }

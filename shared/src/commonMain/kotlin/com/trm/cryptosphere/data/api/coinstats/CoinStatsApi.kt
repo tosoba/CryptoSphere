@@ -1,8 +1,8 @@
-package com.trm.cryptosphere.api.coinstats
+package com.trm.cryptosphere.data.api.coinstats
 
-import com.trm.cryptosphere.api.coinstats.model.NewsResponse
 import com.trm.cryptosphere.core.network.NetworkResult
 import com.trm.cryptosphere.core.network.buildKtorfit
+import com.trm.cryptosphere.data.api.coinstats.model.NewsResponse
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.Query

@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.api.coinmarketcap.model
+package com.trm.cryptosphere.data.api.coinmarketcap.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
