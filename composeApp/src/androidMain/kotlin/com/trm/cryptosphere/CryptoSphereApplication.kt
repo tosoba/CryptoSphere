@@ -1,11 +1,10 @@
 package com.trm.cryptosphere
 
 import android.app.Application
-import com.trm.cryptosphere.data.di.DataModule
-import com.trm.cryptosphere.di.AppModule
+import com.trm.cryptosphere.di.DependencyContainer
 
 class CryptoSphereApplication : Application() {
-  val appModule by lazy { AppModule(dataModule = DataModule.create(this)) }
+  val dependencyContainer by lazy { DependencyContainer(this) }
 
   override fun onCreate() {
     super.onCreate()
