@@ -47,13 +47,4 @@ class RootDefaultComponent(componentContext: ComponentContext) :
 
     @Serializable data object Token : ChildConfig
   }
-
-  class Factory(
-    // TODO: child component factories as arguments
-    // TODO: dependencies from DependencyContainer as arguments (factory should be DI-independent)
-  ) : RootComponent.Factory {
-    override fun create(componentContext: ComponentContext): RootComponent =
-      // TODO: pass dependencies from DependencyContainer provided via Factory constructor
-      RootDefaultComponent(componentContext)
-  }
 }

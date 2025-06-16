@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.root
 
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
@@ -18,9 +17,5 @@ interface RootComponent : BackHandlerOwner {
     class Home(val component: HomeComponent) : Child
 
     class Token(val tokenComponent: TokenComponent) : Child
-  }
-
-  interface Factory {
-    fun create(componentContext: ComponentContext): RootComponent
   }
 }
