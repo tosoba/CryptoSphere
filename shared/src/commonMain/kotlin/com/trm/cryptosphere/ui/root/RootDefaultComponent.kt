@@ -7,12 +7,15 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
-import com.trm.cryptosphere.ui.home.HomeDefaultComponent
-import com.trm.cryptosphere.ui.token.TokenDefaultComponent
+import com.trm.cryptosphere.ui.home.HomeComponent
+import com.trm.cryptosphere.ui.token.TokenComponent
 import kotlinx.serialization.Serializable
 
-class RootDefaultComponent(componentContext: ComponentContext) :
-  RootComponent, ComponentContext by componentContext {
+class RootDefaultComponent(
+  componentContext: ComponentContext,
+  private val createHomeComponent: (ComponentContext) -> HomeComponent,
+  private val createTokenComponent: (ComponentContext) -> TokenComponent,
+) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
   override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -37,8 +40,8 @@ class RootDefaultComponent(componentContext: ComponentContext) :
     componentContext: ComponentContext,
   ): RootComponent.Child =
     when (config) {
-      ChildConfig.Home -> RootComponent.Child.Home(HomeDefaultComponent(componentContext))
-      is ChildConfig.Token -> RootComponent.Child.Token(TokenDefaultComponent(componentContext))
+      ChildConfig.Home -> RootComponent.Child.Home(createHomeComponent(componentContext))
+      is ChildConfig.Token -> RootComponent.Child.Token(createTokenComponent(componentContext))
     }
 
   @Serializable

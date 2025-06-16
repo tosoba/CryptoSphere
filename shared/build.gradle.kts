@@ -4,6 +4,7 @@ import co.touchlab.skie.configuration.FlowInterop
 import co.touchlab.skie.configuration.SealedInterop
 import co.touchlab.skie.configuration.SuppressSkieWarning
 import co.touchlab.skie.configuration.SuspendInterop
+import com.google.devtools.ksp.gradle.KspAATask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -31,10 +32,14 @@ kotlin {
     }
   }
 
-  sourceSets {
-    androidMain.dependencies {
-      implementation(libs.androidx.room.ktx)
+  tasks.withType<KspAATask>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+      dependsOn("kspCommonMainKotlinMetadata")
     }
+  }
+
+  sourceSets {
+    androidMain.dependencies { implementation(libs.androidx.room.ktx) }
 
     commonMain.dependencies {
       implementation(libs.androidx.room.runtime)

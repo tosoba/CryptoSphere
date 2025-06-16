@@ -6,8 +6,12 @@ import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
+import com.trm.cryptosphere.ui.home.HomeComponent
+import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
+import com.trm.cryptosphere.ui.token.TokenComponent
+import com.trm.cryptosphere.ui.token.TokenDefaultComponent
 
 /**
  * Only data layer dependencies are passed as arguments to DependencyContainer so they can be
@@ -19,7 +23,12 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  val createRootComponent: (ComponentContext) -> RootComponent = ::RootDefaultComponent,
+  val createHomeComponent: (ComponentContext) -> HomeComponent = ::HomeDefaultComponent,
+  val createTokenComponent: (ComponentContext) -> TokenComponent = ::TokenDefaultComponent,
+  val createRootComponent: (ComponentContext) -> RootComponent =
+    { componentContext: ComponentContext ->
+      RootDefaultComponent(componentContext, createHomeComponent, createTokenComponent)
+    },
 ) {
   /**
    * Default decompose components (some of them at least)/UseCases will be created inside AppModule

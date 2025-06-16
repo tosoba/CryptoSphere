@@ -16,8 +16,10 @@ struct iOSApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
 
-    lazy var root: RootComponent = RootDefaultComponent(
-        componentContext: DefaultComponentContext(
+    private lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer()
+
+    fileprivate lazy var root: RootComponent = dependencyContainer.createRootComponent(
+        DefaultComponentContext(
             lifecycle: ApplicationLifecycle(),
             stateKeeper: stateKeeper,
             instanceKeeper: nil,
