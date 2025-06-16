@@ -8,6 +8,14 @@ import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
+import com.trm.cryptosphere.ui.home.page.feed.FeedComponent
+import com.trm.cryptosphere.ui.home.page.feed.FeedDefaultComponent
+import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
+import com.trm.cryptosphere.ui.home.page.history.HistoryDefaultComponent
+import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
+import com.trm.cryptosphere.ui.home.page.prices.PricesDefaultComponent
+import com.trm.cryptosphere.ui.home.page.search.SearchComponent
+import com.trm.cryptosphere.ui.home.page.search.SearchDefaultComponent
 import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
 import com.trm.cryptosphere.ui.token.TokenComponent
@@ -23,12 +31,26 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  val createHomeComponent: (ComponentContext) -> HomeComponent = ::HomeDefaultComponent,
+  private val createFeedComponent: (ComponentContext) -> FeedComponent = ::FeedDefaultComponent,
+  private val createPricesComponent: (ComponentContext) -> PricesComponent =
+    ::PricesDefaultComponent,
+  private val createSearchComponent: (ComponentContext) -> SearchComponent =
+    ::SearchDefaultComponent,
+  private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
+    ::HistoryDefaultComponent,
+  val createHomeComponent: (ComponentContext) -> HomeComponent = { componentContext ->
+    HomeDefaultComponent(
+      componentContext,
+      createFeedComponent,
+      createPricesComponent,
+      createSearchComponent,
+      createHistoryComponent,
+    )
+  },
   val createTokenComponent: (ComponentContext) -> TokenComponent = ::TokenDefaultComponent,
-  val createRootComponent: (ComponentContext) -> RootComponent =
-    { componentContext: ComponentContext ->
-      RootDefaultComponent(componentContext, createHomeComponent, createTokenComponent)
-    },
+  val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
+    RootDefaultComponent(componentContext, createHomeComponent, createTokenComponent)
+  },
 ) {
   /**
    * Default decompose components (some of them at least)/UseCases will be created inside AppModule

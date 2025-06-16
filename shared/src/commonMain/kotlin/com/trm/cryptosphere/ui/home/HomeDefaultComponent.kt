@@ -8,13 +8,18 @@ import com.arkivanov.decompose.router.pages.PagesNavigation
 import com.arkivanov.decompose.router.pages.childPages
 import com.arkivanov.decompose.router.pages.select
 import com.arkivanov.decompose.value.Value
-import com.trm.cryptosphere.ui.home.page.feed.FeedDefaultComponent
-import com.trm.cryptosphere.ui.home.page.history.HistoryDefaultComponent
-import com.trm.cryptosphere.ui.home.page.prices.PricesDefaultComponent
-import com.trm.cryptosphere.ui.home.page.search.SearchDefaultComponent
+import com.trm.cryptosphere.ui.home.page.feed.FeedComponent
+import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
+import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
+import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 
-class HomeDefaultComponent(componentContext: ComponentContext) :
-  HomeComponent, ComponentContext by componentContext {
+class HomeDefaultComponent(
+  componentContext: ComponentContext,
+  private val createFeedComponent: (ComponentContext) -> FeedComponent,
+  private val createPricesComponent: (ComponentContext) -> PricesComponent,
+  private val createSearchComponent: (ComponentContext) -> SearchComponent,
+  private val createHistoryComponent: (ComponentContext) -> HistoryComponent,
+) : HomeComponent, ComponentContext by componentContext {
   private val navigation = PagesNavigation<HomePageConfig>()
 
   override val pages: Value<ChildPages<*, HomeComponent.Page>> =
@@ -38,17 +43,9 @@ class HomeDefaultComponent(componentContext: ComponentContext) :
     componentContext: ComponentContext,
   ): HomeComponent.Page =
     when (config) {
-      HomePageConfig.FEED -> {
-        HomeComponent.Page.Feed(FeedDefaultComponent(componentContext))
-      }
-      HomePageConfig.PRICES -> {
-        HomeComponent.Page.Prices(PricesDefaultComponent(componentContext))
-      }
-      HomePageConfig.SEARCH -> {
-        HomeComponent.Page.Search(SearchDefaultComponent(componentContext))
-      }
-      HomePageConfig.HISTORY -> {
-        HomeComponent.Page.History(HistoryDefaultComponent(componentContext))
-      }
+      HomePageConfig.FEED -> HomeComponent.Page.Feed(createFeedComponent(componentContext))
+      HomePageConfig.PRICES -> HomeComponent.Page.Prices(createPricesComponent(componentContext))
+      HomePageConfig.SEARCH -> HomeComponent.Page.Search(createSearchComponent(componentContext))
+      HomePageConfig.HISTORY -> HomeComponent.Page.History(createHistoryComponent(componentContext))
     }
 }
