@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.core.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,26 +20,30 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.trm.cryptosphere.domain.model.RelatedTokenItem
+import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun RelatedTokensCarousel(relatedTokens: List<RelatedTokenItem>) {
+fun TokensCarousel(tokens: List<TokenCarouselItem>) {
   HorizontalMultiBrowseCarousel(
-    state = rememberCarouselState(itemCount = relatedTokens::size),
-    modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
-    preferredItemWidth = 128.dp,
+    state = rememberCarouselState(itemCount = tokens::size),
+    modifier =
+      Modifier.fillMaxWidth()
+        .background(color = Color.Transparent)
+        .padding(top = 16.dp, bottom = 8.dp),
+    preferredItemWidth = 112.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),
   ) { index ->
     // TODO: if there is a need to put any border/shadow/glow effect on the card just put it
     // behind the card with the same maskClip and make the card itself smaller
     Card(
-      modifier = Modifier.width(128.dp).aspectRatio(2f).maskClip(MaterialTheme.shapes.extraLarge),
+      modifier = Modifier.width(112.dp).aspectRatio(2f).maskClip(MaterialTheme.shapes.medium),
       onClick = {},
     ) {
       Column(
@@ -47,7 +52,7 @@ fun RelatedTokensCarousel(relatedTokens: List<RelatedTokenItem>) {
       ) {
         Spacer(modifier = Modifier.height(4.dp))
 
-        val token = relatedTokens[index]
+        val token = tokens[index]
         // TODO: use dominant color of image as card background
         AsyncImage(
           modifier = Modifier.weight(1f).aspectRatio(1f),
@@ -55,11 +60,14 @@ fun RelatedTokensCarousel(relatedTokens: List<RelatedTokenItem>) {
           contentDescription = null,
           contentScale = ContentScale.Fit,
         )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
         Text(
           text = token.symbol,
           maxLines = 1,
           textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.labelLarge,
+          style = MaterialTheme.typography.labelMedium,
           modifier = Modifier.fillMaxWidth().basicMarquee(),
         )
       }
