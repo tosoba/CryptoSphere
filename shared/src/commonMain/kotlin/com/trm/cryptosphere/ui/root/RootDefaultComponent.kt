@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.token.TokenComponent
@@ -13,8 +14,8 @@ import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
-  private val createHomeComponent: (ComponentContext) -> HomeComponent,
-  private val createTokenComponent: (ComponentContext) -> TokenComponent,
+  private val createHomeComponent: (ComponentContext, (String) -> Unit) -> HomeComponent,
+  private val createTokenComponent: (ComponentContext, String) -> TokenComponent,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -40,14 +41,22 @@ class RootDefaultComponent(
     componentContext: ComponentContext,
   ): RootComponent.Child =
     when (config) {
-      ChildConfig.Home -> RootComponent.Child.Home(createHomeComponent(componentContext))
-      is ChildConfig.Token -> RootComponent.Child.Token(createTokenComponent(componentContext))
+      ChildConfig.Home -> {
+        RootComponent.Child.Home(createHomeComponent(componentContext, ::navigateToToken))
+      }
+      is ChildConfig.Token -> {
+        RootComponent.Child.Token(createTokenComponent(componentContext, config.symbol))
+      }
     }
+
+  private fun navigateToToken(symbol: String) {
+    navigation.pushNew(ChildConfig.Token(symbol))
+  }
 
   @Serializable
   private sealed interface ChildConfig {
     @Serializable data object Home : ChildConfig
 
-    @Serializable data object Token : ChildConfig
+    @Serializable data class Token(val symbol: String) : ChildConfig
   }
 }

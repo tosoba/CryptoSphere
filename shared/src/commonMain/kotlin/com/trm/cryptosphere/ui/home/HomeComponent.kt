@@ -10,6 +10,8 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 interface HomeComponent {
   val pages: Value<ChildPages<*, Page>>
 
+  val onTokenClick: (symbol: String) -> Unit
+
   fun selectPage(index: Int)
 
   sealed interface Page {

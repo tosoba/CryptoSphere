@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
-  val tokens = remember(::mockTokenCarouselItems)
+  val relatedTokens = remember(::mockTokenCarouselItems)
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
@@ -39,7 +39,7 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
     }
 
     // TODO: display no related tokens info text if feed item has no related tokens
-    TokensCarousel(tokens)
+    TokensCarousel(tokens = relatedTokens, onItemClick = { component.onTokenClick(it.symbol) })
   }
 }
 

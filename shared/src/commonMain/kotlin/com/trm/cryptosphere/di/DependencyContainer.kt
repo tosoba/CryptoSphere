@@ -31,23 +31,29 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  private val createFeedComponent: (ComponentContext) -> FeedComponent = ::FeedDefaultComponent,
+  private val createFeedComponent:
+    (ComponentContext, onTokenClick: (String) -> Unit) -> FeedComponent =
+    ::FeedDefaultComponent,
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
     ::PricesDefaultComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent =
     ::SearchDefaultComponent,
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
     ::HistoryDefaultComponent,
-  val createHomeComponent: (ComponentContext) -> HomeComponent = { componentContext ->
-    HomeDefaultComponent(
-      componentContext,
-      createFeedComponent,
-      createPricesComponent,
-      createSearchComponent,
-      createHistoryComponent,
-    )
-  },
-  val createTokenComponent: (ComponentContext) -> TokenComponent = ::TokenDefaultComponent,
+  val createHomeComponent:
+    (componentContext: ComponentContext, onTokenClick: (String) -> Unit) -> HomeComponent =
+    { componentContext, onTokenClick ->
+      HomeDefaultComponent(
+        componentContext = componentContext,
+        onTokenClick = onTokenClick,
+        createFeedComponent = createFeedComponent,
+        createPricesComponent = createPricesComponent,
+        createSearchComponent = createSearchComponent,
+        createHistoryComponent = createHistoryComponent,
+      )
+    },
+  val createTokenComponent: (componentContext: ComponentContext, symbol: String) -> TokenComponent =
+    ::TokenDefaultComponent,
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
     RootDefaultComponent(componentContext, createHomeComponent, createTokenComponent)
   },

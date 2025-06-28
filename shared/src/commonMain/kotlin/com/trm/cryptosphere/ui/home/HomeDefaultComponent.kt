@@ -15,7 +15,8 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 
 class HomeDefaultComponent(
   componentContext: ComponentContext,
-  private val createFeedComponent: (ComponentContext) -> FeedComponent,
+  override val onTokenClick: (String) -> Unit,
+  private val createFeedComponent: (ComponentContext, (String) -> Unit) -> FeedComponent,
   private val createPricesComponent: (ComponentContext) -> PricesComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent,
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent,
@@ -43,9 +44,17 @@ class HomeDefaultComponent(
     componentContext: ComponentContext,
   ): HomeComponent.Page =
     when (config) {
-      HomePageConfig.FEED -> HomeComponent.Page.Feed(createFeedComponent(componentContext))
-      HomePageConfig.PRICES -> HomeComponent.Page.Prices(createPricesComponent(componentContext))
-      HomePageConfig.SEARCH -> HomeComponent.Page.Search(createSearchComponent(componentContext))
-      HomePageConfig.HISTORY -> HomeComponent.Page.History(createHistoryComponent(componentContext))
+      HomePageConfig.FEED -> {
+        HomeComponent.Page.Feed(createFeedComponent(componentContext, onTokenClick))
+      }
+      HomePageConfig.PRICES -> {
+        HomeComponent.Page.Prices(createPricesComponent(componentContext))
+      }
+      HomePageConfig.SEARCH -> {
+        HomeComponent.Page.Search(createSearchComponent(componentContext))
+      }
+      HomePageConfig.HISTORY -> {
+        HomeComponent.Page.History(createHistoryComponent(componentContext))
+      }
     }
 }

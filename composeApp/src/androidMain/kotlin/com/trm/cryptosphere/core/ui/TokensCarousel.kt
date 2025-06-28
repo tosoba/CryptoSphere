@@ -30,7 +30,7 @@ import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TokensCarousel(tokens: List<TokenCarouselItem>) {
+fun TokensCarousel(tokens: List<TokenCarouselItem>, onItemClick: (TokenCarouselItem) -> Unit) {
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier =
@@ -41,6 +41,8 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>) {
   ) { index ->
     // TODO: if there is a need to put any border/shadow/glow effect on the card just put it
     // behind the card with the same maskClip and make the card itself smaller
+    val token = tokens[index]
+
     Card(
       modifier = Modifier.width(112.dp).aspectRatio(2f).maskClip(MaterialTheme.shapes.medium),
       colors =
@@ -51,7 +53,7 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>) {
               disabledContainerColor.copy(alpha = disabledContainerColor.alpha * .95f),
           )
         },
-      onClick = {},
+      onClick = { onItemClick(token) },
     ) {
       Column(
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +61,6 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>) {
       ) {
         Spacer(modifier = Modifier.height(4.dp))
 
-        val token = tokens[index]
         // TODO: use dominant color of image as card background
         AsyncImage(
           modifier = Modifier.weight(1f).aspectRatio(1f),
