@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,6 +43,14 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>) {
     // behind the card with the same maskClip and make the card itself smaller
     Card(
       modifier = Modifier.width(112.dp).aspectRatio(2f).maskClip(MaterialTheme.shapes.medium),
+      colors =
+        CardDefaults.cardColors().run {
+          copy(
+            containerColor = containerColor.copy(alpha = containerColor.alpha * .95f),
+            disabledContainerColor =
+              disabledContainerColor.copy(alpha = disabledContainerColor.alpha * .95f),
+          )
+        },
       onClick = {},
     ) {
       Column(
