@@ -1,8 +1,8 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,20 +24,21 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
-  Column(modifier = modifier) {
-    // TODO: figure out what to do if feed item has no related tokens
-    TokensCarousel(tokens)
+  // TODO: change the box background depending on feed item image color palette
+  Box(modifier = modifier) {
+    // TODO: display no related tokens info text if feed item has no related tokens
     FeedContentPager(pagerState, newsItems)
+    TokensCarousel(tokens)
   }
 }
 
 @Composable
-private fun ColumnScope.FeedContentPager(pagerState: PagerState, newsItems: List<NewsItem>) {
+private fun FeedContentPager(pagerState: PagerState, newsItems: List<NewsItem>) {
   VerticalPager(
-    modifier = Modifier.weight(1f),
+    modifier = Modifier.fillMaxSize(),
     state = pagerState,
     beyondViewportPageCount = 1,
-    contentPadding = PaddingValues(vertical = 24.dp, horizontal = 16.dp),
+    contentPadding = PaddingValues(top = 80.dp, bottom = 32.dp, start = 16.dp, end = 24.dp),
     pageSpacing = 8.dp,
   ) { page ->
     Card { FeedItem(item = newsItems[page], isCurrent = page == pagerState.currentPage) }

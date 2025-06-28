@@ -55,7 +55,7 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
           pageContent = pageContent,
         )
       },
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxSize(),
       scrollAnimation = PagesScrollAnimation.Default,
     ) { _, page ->
       when (page) {

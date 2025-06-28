@@ -33,9 +33,7 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>) {
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier =
-      Modifier.fillMaxWidth()
-        .background(color = Color.Transparent)
-        .padding(top = 16.dp, bottom = 8.dp),
+      Modifier.fillMaxWidth().background(color = Color.Transparent).padding(vertical = 8.dp),
     preferredItemWidth = 112.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),
