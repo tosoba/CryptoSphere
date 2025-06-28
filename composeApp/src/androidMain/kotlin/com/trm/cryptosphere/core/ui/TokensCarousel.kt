@@ -29,8 +29,8 @@ import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun TokensCarousel(tokens: List<TokenCarouselItem>, onItemClick: (TokenCarouselItem) -> Unit) {
+  @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier =

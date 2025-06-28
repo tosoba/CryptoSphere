@@ -10,11 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TokenContent(component: TokenComponent, modifier: Modifier = Modifier) {
-  Scaffold(modifier = modifier, topBar = { CenterAlignedTopAppBar(title = { Text("Token") }) }) {
-    paddingValues ->
+  Scaffold(
+    modifier = modifier,
+    topBar = {
+      @OptIn(ExperimentalMaterial3Api::class) CenterAlignedTopAppBar(title = { Text("Token") })
+    },
+  ) { paddingValues ->
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues))
   }
 }
