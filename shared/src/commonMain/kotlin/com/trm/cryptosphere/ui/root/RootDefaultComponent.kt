@@ -14,8 +14,8 @@ import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
-  private val createHomeComponent: (ComponentContext, (String) -> Unit) -> HomeComponent,
-  private val createTokenComponent: (ComponentContext, String) -> TokenComponent,
+  private val homeComponentFactory: HomeComponent.Factory,
+  private val tokenComponentFactory: TokenComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -42,10 +42,17 @@ class RootDefaultComponent(
   ): RootComponent.Child =
     when (config) {
       ChildConfig.Home -> {
-        RootComponent.Child.Home(createHomeComponent(componentContext, ::navigateToToken))
+        RootComponent.Child.Home(
+          homeComponentFactory(
+            componentContext = componentContext,
+            onTokenClick = ::navigateToToken,
+          )
+        )
       }
       is ChildConfig.Token -> {
-        RootComponent.Child.Token(createTokenComponent(componentContext, config.symbol))
+        RootComponent.Child.Token(
+          tokenComponentFactory(componentContext = componentContext, symbol = config.symbol)
+        )
       }
     }
 

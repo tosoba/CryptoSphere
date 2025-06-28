@@ -31,31 +31,29 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  private val createFeedComponent:
-    (ComponentContext, onTokenClick: (String) -> Unit) -> FeedComponent =
-    ::FeedDefaultComponent,
+  private val feedComponentFactory: FeedComponent.Factory =
+    FeedComponent.Factory(::FeedDefaultComponent),
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
     ::PricesDefaultComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent =
     ::SearchDefaultComponent,
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
     ::HistoryDefaultComponent,
-  val createHomeComponent:
-    (componentContext: ComponentContext, onTokenClick: (String) -> Unit) -> HomeComponent =
-    { componentContext, onTokenClick ->
+  val homeComponentFactory: HomeComponent.Factory =
+    HomeComponent.Factory { componentContext, onTokenClick ->
       HomeDefaultComponent(
         componentContext = componentContext,
         onTokenClick = onTokenClick,
-        createFeedComponent = createFeedComponent,
+        feedComponentFactory = feedComponentFactory,
         createPricesComponent = createPricesComponent,
         createSearchComponent = createSearchComponent,
         createHistoryComponent = createHistoryComponent,
       )
     },
-  val createTokenComponent: (componentContext: ComponentContext, symbol: String) -> TokenComponent =
-    ::TokenDefaultComponent,
+  val tokenComponentFactory: TokenComponent.Factory =
+    TokenComponent.Factory(::TokenDefaultComponent),
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
-    RootDefaultComponent(componentContext, createHomeComponent, createTokenComponent)
+    RootDefaultComponent(componentContext, homeComponentFactory, tokenComponentFactory)
   },
 ) {
   /**
