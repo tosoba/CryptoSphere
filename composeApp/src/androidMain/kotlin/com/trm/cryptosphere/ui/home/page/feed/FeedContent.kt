@@ -10,10 +10,12 @@ import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.TokensCarousel
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
+import kotlin.math.abs
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -41,7 +43,17 @@ private fun FeedContentPager(pagerState: PagerState, newsItems: List<NewsItem>) 
     contentPadding = PaddingValues(top = 80.dp, bottom = 32.dp, start = 16.dp, end = 24.dp),
     pageSpacing = 8.dp,
   ) { page ->
-    Card { FeedItem(item = newsItems[page], isCurrent = page == pagerState.currentPage) }
+    Card {
+      val isCurrent = page == pagerState.currentPage
+      FeedItem(
+        item = newsItems[page],
+        isCurrent = isCurrent,
+        modifier =
+          Modifier.alpha(
+            if (!isCurrent) .75f else 1f - abs(pagerState.currentPageOffsetFraction) / 2f
+          ),
+      )
+    }
   }
 }
 
