@@ -32,7 +32,7 @@ import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.NewsItem
 
 @Composable
-fun FeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) {
+fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) {
   Box(modifier = modifier) {
     AsyncImage(
       model = item.imgUrl, // TODO: loading/error placeholders
@@ -134,6 +134,6 @@ fun FeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) 
 
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-private fun FeedItemPreview() {
-  FeedItem(item = mockNewsItem(), isCurrent = true)
+private fun NewsFeedItemPreview() {
+  NewsFeedItem(item = mockNewsItem(), isCurrent = true)
 }

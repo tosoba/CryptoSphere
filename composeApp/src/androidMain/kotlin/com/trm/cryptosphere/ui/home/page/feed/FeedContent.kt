@@ -1,18 +1,14 @@
 package com.trm.cryptosphere.ui.home.page.feed
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.TokensCarousel
+import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import kotlin.math.abs
@@ -28,32 +24,22 @@ fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
 
   // TODO: change the box background depending on feed item image color palette
   Box(modifier = modifier) {
-    // TODO: display no related tokens info text if feed item has no related tokens
-    FeedContentPager(pagerState, newsItems)
-    TokensCarousel(tokens)
-  }
-}
-
-@Composable
-private fun FeedContentPager(pagerState: PagerState, newsItems: List<NewsItem>) {
-  VerticalPager(
-    modifier = Modifier.fillMaxSize(),
-    state = pagerState,
-    beyondViewportPageCount = 1,
-    contentPadding = PaddingValues(top = 80.dp, bottom = 32.dp, start = 16.dp, end = 24.dp),
-    pageSpacing = 8.dp,
-  ) { page ->
-    Card {
-      val isCurrent = page == pagerState.currentPage
-      FeedItem(
-        item = newsItems[page],
-        isCurrent = isCurrent,
-        modifier =
-          Modifier.alpha(
-            if (!isCurrent) .75f else 1f - abs(pagerState.currentPageOffsetFraction) / 2f
-          ),
-      )
+    VerticalFeedPager(pagerState) { page ->
+      Card {
+        val isCurrent = page == pagerState.currentPage
+        NewsFeedItem(
+          item = newsItems[page],
+          isCurrent = isCurrent,
+          modifier =
+            Modifier.alpha(
+              if (!isCurrent) .75f else 1f - abs(pagerState.currentPageOffsetFraction) / 2f
+            ),
+        )
+      }
     }
+
+    // TODO: display no related tokens info text if feed item has no related tokens
+    TokensCarousel(tokens)
   }
 }
 

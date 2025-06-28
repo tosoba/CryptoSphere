@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.trm.cryptosphere.ui.home.HomeContent
+import com.trm.cryptosphere.ui.token.TokenContent
 
 @Composable
 fun RootContent(component: RootComponent) {
@@ -16,7 +17,7 @@ fun RootContent(component: RootComponent) {
           HomeContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
         is RootComponent.Child.Token -> {
-          // TODO:
+          TokenContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
       }
     }
