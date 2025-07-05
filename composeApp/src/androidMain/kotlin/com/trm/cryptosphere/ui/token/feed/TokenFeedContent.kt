@@ -20,9 +20,8 @@ import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun TokenFeedContent(
+fun SharedTransitionScope.TokenFeedContent(
   component: TokenFeedComponent,
-  sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {
@@ -44,19 +43,17 @@ fun TokenFeedContent(
       }
 
       if (component.tokenCarouselItems.isNotEmpty()) {
-        with(sharedTransitionScope) {
-          TokenCarousel(
-            tokens = component.tokenCarouselItems,
-            onItemClick = { index ->
-              // TODO: navigate to another token feed page
-            },
-            modifier =
-              Modifier.sharedElement(
-                rememberSharedContentState("token-carousel"),
-                animatedVisibilityScope,
-              ),
-          )
-        }
+        TokenCarousel(
+          tokens = component.tokenCarouselItems,
+          onItemClick = { index ->
+            // TODO: navigate to another token feed page
+          },
+          modifier =
+            Modifier.sharedElement(
+              rememberSharedContentState("token-carousel"),
+              animatedVisibilityScope,
+            ),
+        )
       }
 
       // TODO: navigation toolbar at the bottom

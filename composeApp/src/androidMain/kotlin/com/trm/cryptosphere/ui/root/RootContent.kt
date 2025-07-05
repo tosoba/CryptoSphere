@@ -43,7 +43,6 @@ fun RootContent(component: RootComponent) {
           is RootComponent.Child.Home -> {
             HomeContent(
               component = instance.component,
-              sharedTransitionScope = this@SharedTransitionLayout,
               animatedVisibilityScope = this@ChildStack,
               modifier = Modifier.fillMaxSize(),
             )
@@ -51,7 +50,6 @@ fun RootContent(component: RootComponent) {
           is RootComponent.Child.TokenFeed -> {
             TokenFeedContent(
               component = instance.component,
-              sharedTransitionScope = this@SharedTransitionLayout,
               animatedVisibilityScope = this@ChildStack,
               modifier = Modifier.fillMaxSize(),
             )
@@ -59,7 +57,6 @@ fun RootContent(component: RootComponent) {
           is RootComponent.Child.TokenDetails -> {
             TokenDetailsContent(
               component = instance.component,
-              sharedTransitionScope = this@SharedTransitionLayout,
               animatedVisibilityScope = this@ChildStack,
               modifier = Modifier.fillMaxSize(),
             )

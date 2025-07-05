@@ -16,9 +16,8 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun TokenDetailsContent(
+fun SharedTransitionScope.TokenDetailsContent(
   component: TokenDetailsComponent,
-  sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {

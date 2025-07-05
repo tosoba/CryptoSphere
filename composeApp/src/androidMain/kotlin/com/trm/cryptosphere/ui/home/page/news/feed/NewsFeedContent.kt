@@ -19,9 +19,8 @@ import kotlin.math.abs
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsFeedContent(
+fun SharedTransitionScope.NewsFeedContent(
   component: NewsFeedComponent,
-  sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {
@@ -49,19 +48,17 @@ fun NewsFeedContent(
     }
 
     if (tokenCarouselItems.isNotEmpty()) {
-      with(sharedTransitionScope) {
-        TokenCarousel(
-          tokens = tokenCarouselItems,
-          onItemClick = { token ->
-            component.onTokenCarouselItemClick(token.symbol, tokenCarouselItems)
-          },
-          modifier =
-            Modifier.sharedElement(
-              rememberSharedContentState("token-carousel"),
-              animatedVisibilityScope,
-            ),
-        )
-      }
+      TokenCarousel(
+        tokens = tokenCarouselItems,
+        onItemClick = { token ->
+          component.onTokenCarouselItemClick(token.symbol, tokenCarouselItems)
+        },
+        modifier =
+          Modifier.sharedElement(
+            rememberSharedContentState("token-carousel"),
+            animatedVisibilityScope,
+          ),
+      )
     }
   }
 }

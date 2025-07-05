@@ -25,9 +25,8 @@ import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeContent(
+fun SharedTransitionScope.HomeContent(
   component: HomeComponent,
-  sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {
@@ -71,7 +70,6 @@ fun HomeContent(
         is HomeComponent.Page.NewsFeed -> {
           NewsFeedContent(
             component = page.component,
-            sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = Modifier.fillMaxSize(),
           )
