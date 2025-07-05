@@ -15,6 +15,7 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
 import com.trm.cryptosphere.ui.home.HomeContent
+import com.trm.cryptosphere.ui.token.details.TokenDetailsContent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @Composable
@@ -49,6 +50,14 @@ fun RootContent(component: RootComponent) {
           }
           is RootComponent.Child.TokenFeed -> {
             TokenFeedContent(
+              component = instance.component,
+              sharedTransitionScope = this@SharedTransitionLayout,
+              animatedVisibilityScope = this@ChildStack,
+              modifier = Modifier.fillMaxSize(),
+            )
+          }
+          is RootComponent.Child.TokenDetails -> {
+            TokenDetailsContent(
               component = instance.component,
               sharedTransitionScope = this@SharedTransitionLayout,
               animatedVisibilityScope = this@ChildStack,

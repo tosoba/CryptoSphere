@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
@@ -25,16 +27,20 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
 ) {
   Scaffold(modifier = modifier) { paddingValues ->
-    val pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size)
-
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
       VerticalFeedPager(
-        pagerState = pagerState,
+        pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size),
         contentPadding =
           if (component.tokenCarouselItems.isEmpty()) VerticalFeedPagerContentPadding.Symmetrical
           else VerticalFeedPagerContentPadding.ExtraTop,
       ) { page ->
-        Card(modifier = Modifier.fillMaxSize()) { Text(component.tokenFeedItems[page]) }
+        Card(modifier = Modifier.fillMaxSize()) {
+          Text(
+            text = component.tokenFeedItems[page],
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(16.dp),
+          )
+        }
       }
 
       if (component.tokenCarouselItems.isNotEmpty()) {

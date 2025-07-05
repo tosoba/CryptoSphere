@@ -27,7 +27,7 @@ interface HomeComponent {
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      onTokenCarouselItemClick: (List<TokenCarouselItem>, String) -> Unit,
+      onTokenCarouselItemClick: (String, List<TokenCarouselItem>) -> Unit,
     ): HomeComponent
   }
 }

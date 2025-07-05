@@ -18,6 +18,8 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 import com.trm.cryptosphere.ui.home.page.search.SearchDefaultComponent
 import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
+import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
+import com.trm.cryptosphere.ui.token.details.TokenDetailsDefaultComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
 
@@ -50,10 +52,23 @@ class DependencyContainer(
         createHistoryComponent = createHistoryComponent,
       )
     },
+  val tokenDetailsComponentFactory: TokenDetailsComponent.Factory =
+    TokenDetailsComponent.Factory(::TokenDetailsDefaultComponent),
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
-    TokenFeedComponent.Factory(::TokenFeedDefaultComponent),
+    TokenFeedComponent.Factory { componentContext, mainTokenSymbol, tokenCarouselItems ->
+      TokenFeedDefaultComponent(
+        componentContext = componentContext,
+        mainTokenSymbol = mainTokenSymbol,
+        tokenCarouselItems = tokenCarouselItems,
+      )
+    },
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
-    RootDefaultComponent(componentContext, homeComponentFactory, tokenFeedComponentFactory)
+    RootDefaultComponent(
+      componentContext = componentContext,
+      homeComponentFactory = homeComponentFactory,
+      tokenFeedComponentFactory = tokenFeedComponentFactory,
+      tokenDetailsComponentFactory = tokenDetailsComponentFactory,
+    )
   },
 ) {
   /**

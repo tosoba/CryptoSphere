@@ -53,7 +53,7 @@ fun NewsFeedContent(
         TokenCarousel(
           tokens = tokenCarouselItems,
           onItemClick = { token ->
-            component.onTokenCarouselItemClick(tokenCarouselItems, token.symbol)
+            component.onTokenCarouselItemClick(token.symbol, tokenCarouselItems)
           },
           modifier =
             Modifier.sharedElement(
