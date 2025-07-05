@@ -40,10 +40,10 @@ class DependencyContainer(
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
     ::HistoryDefaultComponent,
   val homeComponentFactory: HomeComponent.Factory =
-    HomeComponent.Factory { componentContext, onTokenClick ->
+    HomeComponent.Factory { componentContext, onTokenCarouselItemClick ->
       HomeDefaultComponent(
         componentContext = componentContext,
-        onTokenClick = onTokenClick,
+        onTokenCarouselItemClick = onTokenCarouselItemClick,
         newsFeedComponentFactory = newsFeedComponentFactory,
         createPricesComponent = createPricesComponent,
         createSearchComponent = createSearchComponent,

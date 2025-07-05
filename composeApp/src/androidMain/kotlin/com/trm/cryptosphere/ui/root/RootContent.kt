@@ -38,7 +38,7 @@ fun RootContent(component: RootComponent) {
         is RootComponent.Child.Home -> {
           HomeContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
-        is RootComponent.Child.Token -> {
+        is RootComponent.Child.TokenFeed -> {
           TokenFeedContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
       }

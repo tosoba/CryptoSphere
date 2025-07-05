@@ -29,7 +29,7 @@ import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 @Composable
-fun TokensCarousel(tokens: List<TokenCarouselItem>, onItemClick: (TokenCarouselItem) -> Unit) {
+fun TokenCarousel(tokens: List<TokenCarouselItem>, onItemAtIndexClick: (Int) -> Unit) {
   @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
@@ -53,7 +53,7 @@ fun TokensCarousel(tokens: List<TokenCarouselItem>, onItemClick: (TokenCarouselI
               disabledContainerColor.copy(alpha = disabledContainerColor.alpha * .95f),
           )
         },
-      onClick = { onItemClick(token) },
+      onClick = { onItemAtIndexClick(index) },
     ) {
       Column(
         modifier = Modifier.fillMaxSize(),

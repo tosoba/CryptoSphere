@@ -16,6 +16,6 @@ interface RootComponent : BackHandlerOwner {
   sealed interface Child {
     class Home(val component: HomeComponent) : Child
 
-    class Token(val component: TokenFeedComponent) : Child
+    class TokenFeed(val component: TokenFeedComponent) : Child
   }
 }

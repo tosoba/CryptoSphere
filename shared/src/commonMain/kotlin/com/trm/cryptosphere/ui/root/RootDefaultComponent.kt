@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
+import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import kotlinx.serialization.Serializable
@@ -45,25 +46,35 @@ class RootDefaultComponent(
         RootComponent.Child.Home(
           homeComponentFactory(
             componentContext = componentContext,
-            onTokenClick = ::navigateToToken,
+            onTokenCarouselItemClick = { items, currentIndex ->
+              navigateToTokenFeed(
+                symbols = items.map(TokenCarouselItem::symbol),
+                currentIndex = currentIndex,
+              )
+            },
           )
         )
       }
-      is ChildConfig.Token -> {
-        RootComponent.Child.Token(
-          tokenFeedComponentFactory(componentContext = componentContext, symbol = config.symbol)
+      is ChildConfig.TokenFeed -> {
+        RootComponent.Child.TokenFeed(
+          tokenFeedComponentFactory(
+            componentContext = componentContext,
+            symbols = config.symbols,
+            currentIndex = config.currentIndex,
+          )
         )
       }
     }
 
-  private fun navigateToToken(symbol: String) {
-    navigation.pushNew(ChildConfig.Token(symbol))
+  private fun navigateToTokenFeed(symbols: List<String>, currentIndex: Int) {
+    navigation.pushNew(ChildConfig.TokenFeed(symbols, currentIndex))
   }
 
   @Serializable
   private sealed interface ChildConfig {
     @Serializable data object Home : ChildConfig
 
-    @Serializable data class Token(val symbol: String) : ChildConfig
+    @Serializable
+    data class TokenFeed(val symbols: List<String>, val currentIndex: Int) : ChildConfig
   }
 }

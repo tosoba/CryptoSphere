@@ -30,6 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.NewsItem
+import com.trm.cryptosphere.domain.model.mockNewsItem
 
 @Composable
 fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) {

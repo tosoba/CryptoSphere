@@ -3,8 +3,9 @@ package com.trm.cryptosphere.ui.home
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.pages.ChildPages
 import com.arkivanov.decompose.value.Value
-import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
+import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
+import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 
@@ -26,7 +27,7 @@ interface HomeComponent {
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      onTokenClick: (String) -> Unit,
+      onTokenCarouselItemClick: (List<TokenCarouselItem>, Int) -> Unit,
     ): HomeComponent
   }
 }
