@@ -29,7 +29,12 @@ fun SharedTransitionScope.TokenDetailsContent(
       Text(
         text = component.symbol,
         style = MaterialTheme.typography.headlineLarge,
-        modifier = Modifier.padding(16.dp),
+        modifier =
+          Modifier.padding(16.dp)
+            .sharedElement(
+              rememberSharedContentState("token-symbol-${component.symbol}"),
+              animatedVisibilityScope,
+            ),
       )
     }
   }

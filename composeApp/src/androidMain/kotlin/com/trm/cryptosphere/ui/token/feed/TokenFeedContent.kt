@@ -34,10 +34,16 @@ fun SharedTransitionScope.TokenFeedContent(
           else VerticalFeedPagerContentPadding.ExtraTop,
       ) { page ->
         Card(modifier = Modifier.fillMaxSize()) {
+          val item = component.tokenFeedItems[page]
           Text(
-            text = component.tokenFeedItems[page],
+            text = item,
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(16.dp),
+            modifier =
+              Modifier.padding(16.dp)
+                .sharedElement(
+                  rememberSharedContentState("token-symbol-$item"),
+                  animatedVisibilityScope,
+                ),
           )
         }
       }
