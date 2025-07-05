@@ -5,5 +5,5 @@ import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 class NewsFeedDefaultComponent(
   componentContext: ComponentContext,
-  override val onTokenCarouselItemClick: (List<TokenCarouselItem>, Int) -> Unit,
+  override val onTokenCarouselItemClick: (List<TokenCarouselItem>, String) -> Unit,
 ) : NewsFeedComponent, ComponentContext by componentContext {}

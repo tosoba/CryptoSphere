@@ -4,12 +4,12 @@ import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 interface NewsFeedComponent {
-  val onTokenCarouselItemClick: (List<TokenCarouselItem>, Int) -> Unit
+  val onTokenCarouselItemClick: (List<TokenCarouselItem>, String) -> Unit
 
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      onTokenCarouselItemClick: (List<TokenCarouselItem>, Int) -> Unit,
+      onTokenCarouselItemClick: (List<TokenCarouselItem>, String) -> Unit,
     ): NewsFeedComponent
   }
 }

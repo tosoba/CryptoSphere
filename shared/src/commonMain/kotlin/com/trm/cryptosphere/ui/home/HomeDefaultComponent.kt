@@ -16,7 +16,7 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 
 class HomeDefaultComponent(
   componentContext: ComponentContext,
-  private val onTokenCarouselItemClick: (List<TokenCarouselItem>, Int) -> Unit,
+  private val onTokenCarouselItemClick: (List<TokenCarouselItem>, String) -> Unit,
   private val newsFeedComponentFactory: NewsFeedComponent.Factory,
   private val createPricesComponent: (ComponentContext) -> PricesComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent,

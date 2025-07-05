@@ -16,7 +16,7 @@ import kotlin.math.abs
 
 @Composable
 fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier) {
-  val relatedTokens = remember(::mockTokenCarouselItems)
+  val tokenCarouselItems = remember(::mockTokenCarouselItems)
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
@@ -24,9 +24,7 @@ fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier)
   Box(modifier = modifier) {
     VerticalFeedPager(
       pagerState = pagerState,
-      contentPadding =
-        if (relatedTokens.isEmpty()) VerticalFeedPagerContentPadding.Symmetrical
-        else VerticalFeedPagerContentPadding.ExtraTop,
+      contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
     ) { page ->
       Card {
         val isCurrent = page == pagerState.currentPage
@@ -41,10 +39,12 @@ fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier)
       }
     }
 
-    if (relatedTokens.isNotEmpty()) {
+    if (tokenCarouselItems.isNotEmpty()) {
       TokenCarousel(
-        tokens = relatedTokens,
-        onItemAtIndexClick = { index -> component.onTokenCarouselItemClick(relatedTokens, index) },
+        tokens = tokenCarouselItems,
+        onItemClick = { token ->
+          component.onTokenCarouselItemClick(tokenCarouselItems, token.symbol)
+        },
       )
     }
   }

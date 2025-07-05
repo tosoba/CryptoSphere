@@ -46,10 +46,10 @@ class RootDefaultComponent(
         RootComponent.Child.Home(
           homeComponentFactory(
             componentContext = componentContext,
-            onTokenCarouselItemClick = { items, currentIndex ->
+            onTokenCarouselItemClick = { tokenCarouselItems, mainTokenSymbol ->
               navigateToTokenFeed(
-                symbols = items.map(TokenCarouselItem::symbol),
-                currentIndex = currentIndex,
+                mainTokenSymbol = mainTokenSymbol,
+                tokenCarouselItems = tokenCarouselItems,
               )
             },
           )
@@ -59,15 +59,18 @@ class RootDefaultComponent(
         RootComponent.Child.TokenFeed(
           tokenFeedComponentFactory(
             componentContext = componentContext,
-            symbols = config.symbols,
-            currentIndex = config.currentIndex,
+            mainTokenSymbol = config.mainTokenSymbol,
+            tokenCarouselItems = config.tokenCarouselItems,
           )
         )
       }
     }
 
-  private fun navigateToTokenFeed(symbols: List<String>, currentIndex: Int) {
-    navigation.pushNew(ChildConfig.TokenFeed(symbols, currentIndex))
+  private fun navigateToTokenFeed(
+    mainTokenSymbol: String,
+    tokenCarouselItems: List<TokenCarouselItem>,
+  ) {
+    navigation.pushNew(ChildConfig.TokenFeed(mainTokenSymbol, tokenCarouselItems))
   }
 
   @Serializable
@@ -75,6 +78,9 @@ class RootDefaultComponent(
     @Serializable data object Home : ChildConfig
 
     @Serializable
-    data class TokenFeed(val symbols: List<String>, val currentIndex: Int) : ChildConfig
+    data class TokenFeed(
+      val mainTokenSymbol: String,
+      val tokenCarouselItems: List<TokenCarouselItem>,
+    ) : ChildConfig
   }
 }

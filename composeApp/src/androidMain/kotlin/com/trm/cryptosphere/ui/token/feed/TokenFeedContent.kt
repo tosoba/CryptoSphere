@@ -8,37 +8,36 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
-import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
 @Composable
 fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
   Scaffold(modifier = modifier) { paddingValues ->
-    val relatedTokens = remember(::mockTokenCarouselItems)
-    val pagerState = rememberPagerState(pageCount = component.symbols::size)
+    val pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size)
 
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
       VerticalFeedPager(
         pagerState = pagerState,
         contentPadding =
-          if (relatedTokens.isEmpty()) VerticalFeedPagerContentPadding.Symmetrical
+          if (component.tokenCarouselItems.isEmpty()) VerticalFeedPagerContentPadding.Symmetrical
           else VerticalFeedPagerContentPadding.ExtraTop,
       ) { page ->
-        Card(modifier = Modifier.fillMaxSize()) { Text(component.symbols[page]) }
+        Card(modifier = Modifier.fillMaxSize()) { Text(component.tokenFeedItems[page]) }
       }
 
-      if (relatedTokens.isNotEmpty()) {
+      if (component.tokenCarouselItems.isNotEmpty()) {
         TokenCarousel(
-          tokens = relatedTokens,
-          onItemAtIndexClick = { index ->
+          tokens = component.tokenCarouselItems,
+          onItemClick = { index ->
             // TODO: navigate to another token feed page
           },
         )
       }
+
+      // TODO: navigation toolbar at the bottom
     }
   }
 }
