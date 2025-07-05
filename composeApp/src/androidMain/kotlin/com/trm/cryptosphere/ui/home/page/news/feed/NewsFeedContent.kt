@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.ui.home.page.feed
+package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.pager.rememberPagerState
@@ -17,7 +17,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun FeedContent(component: FeedComponent, modifier: Modifier = Modifier) {
+fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier) {
   val relatedTokens = remember(::mockTokenCarouselItems)
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
@@ -63,7 +63,7 @@ fun mockNewsItem(): NewsItem =
       "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
   )
 
-fun mockTokenCarouselItems(): List<TokenCarouselItem> =
+private fun mockTokenCarouselItems(): List<TokenCarouselItem> =
   listOf(
     TokenCarouselItem("bitcoin", "BTC", "https://static.coinstats.app/coins/1650455588819.png"),
     TokenCarouselItem("ethereum", "ETH", "https://static.coinstats.app/coins/1650455629727.png"),

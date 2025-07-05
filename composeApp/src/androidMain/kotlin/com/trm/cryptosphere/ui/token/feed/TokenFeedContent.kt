@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.ui.token
+package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun TokenContent(component: TokenComponent, modifier: Modifier = Modifier) {
+fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
   Scaffold(
     modifier = modifier,
     topBar = {

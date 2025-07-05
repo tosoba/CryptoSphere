@@ -8,7 +8,7 @@ import com.arkivanov.decompose.router.pages.PagesNavigation
 import com.arkivanov.decompose.router.pages.childPages
 import com.arkivanov.decompose.router.pages.select
 import com.arkivanov.decompose.value.Value
-import com.trm.cryptosphere.ui.home.page.feed.FeedComponent
+import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 import com.trm.cryptosphere.ui.home.page.search.SearchComponent
@@ -16,7 +16,7 @@ import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 class HomeDefaultComponent(
   componentContext: ComponentContext,
   private val onTokenClick: (String) -> Unit,
-  private val feedComponentFactory: FeedComponent.Factory,
+  private val newsFeedComponentFactory: NewsFeedComponent.Factory,
   private val createPricesComponent: (ComponentContext) -> PricesComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent,
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent,
@@ -45,8 +45,8 @@ class HomeDefaultComponent(
   ): HomeComponent.Page =
     when (config) {
       HomePageConfig.FEED -> {
-        HomeComponent.Page.Feed(
-          feedComponentFactory(componentContext = componentContext, onTokenClick = onTokenClick)
+        HomeComponent.Page.NewsFeed(
+          newsFeedComponentFactory(componentContext = componentContext, onTokenClick = onTokenClick)
         )
       }
       HomePageConfig.PRICES -> {

@@ -13,7 +13,7 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
 import com.trm.cryptosphere.ui.home.HomeContent
-import com.trm.cryptosphere.ui.token.TokenContent
+import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @Composable
 fun RootContent(component: RootComponent) {
@@ -39,7 +39,7 @@ fun RootContent(component: RootComponent) {
           HomeContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
         is RootComponent.Child.Token -> {
-          TokenContent(component = instance.component, modifier = Modifier.fillMaxSize())
+          TokenFeedContent(component = instance.component, modifier = Modifier.fillMaxSize())
         }
       }
     }

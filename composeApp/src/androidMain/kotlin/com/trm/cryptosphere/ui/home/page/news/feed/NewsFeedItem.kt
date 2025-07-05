@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.ui.home.page.feed
+package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

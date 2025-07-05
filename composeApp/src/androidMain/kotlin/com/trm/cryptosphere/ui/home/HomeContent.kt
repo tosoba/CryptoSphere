@@ -15,7 +15,7 @@ import androidx.compose.ui.text.intl.LocaleList
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.trm.cryptosphere.ui.home.page.feed.FeedContent
+import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 import com.trm.cryptosphere.ui.home.page.search.SearchContent
@@ -59,8 +59,8 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
       scrollAnimation = PagesScrollAnimation.Default,
     ) { _, page ->
       when (page) {
-        is HomeComponent.Page.Feed -> {
-          FeedContent(component = page.component, modifier = Modifier.fillMaxSize())
+        is HomeComponent.Page.NewsFeed -> {
+          NewsFeedContent(component = page.component, modifier = Modifier.fillMaxSize())
         }
         is HomeComponent.Page.Prices -> {
           PricesContent(component = page.component, modifier = Modifier.fillMaxSize())

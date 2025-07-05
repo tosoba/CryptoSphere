@@ -9,13 +9,13 @@ import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.trm.cryptosphere.ui.home.HomeComponent
-import com.trm.cryptosphere.ui.token.TokenComponent
+import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
   private val homeComponentFactory: HomeComponent.Factory,
-  private val tokenComponentFactory: TokenComponent.Factory,
+  private val tokenFeedComponentFactory: TokenFeedComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -51,7 +51,7 @@ class RootDefaultComponent(
       }
       is ChildConfig.Token -> {
         RootComponent.Child.Token(
-          tokenComponentFactory(componentContext = componentContext, symbol = config.symbol)
+          tokenFeedComponentFactory(componentContext = componentContext, symbol = config.symbol)
         )
       }
     }
