@@ -1,5 +1,8 @@
 package com.trm.cryptosphere.ui.token.feed
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,8 +16,14 @@ import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
+fun TokenFeedContent(
+  component: TokenFeedComponent,
+  sharedTransitionScope: SharedTransitionScope,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+) {
   Scaffold(modifier = modifier) { paddingValues ->
     val pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size)
 
@@ -29,12 +38,19 @@ fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifie
       }
 
       if (component.tokenCarouselItems.isNotEmpty()) {
-        TokenCarousel(
-          tokens = component.tokenCarouselItems,
-          onItemClick = { index ->
-            // TODO: navigate to another token feed page
-          },
-        )
+        with(sharedTransitionScope) {
+          TokenCarousel(
+            tokens = component.tokenCarouselItems,
+            onItemClick = { index ->
+              // TODO: navigate to another token feed page
+            },
+            modifier =
+              Modifier.sharedElement(
+                rememberSharedContentState("token-carousel"),
+                animatedVisibilityScope,
+              ),
+          )
+        }
       }
 
       // TODO: navigation toolbar at the bottom

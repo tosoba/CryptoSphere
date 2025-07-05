@@ -1,5 +1,8 @@
 package com.trm.cryptosphere.ui.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,13 +18,19 @@ import androidx.compose.ui.text.intl.LocaleList
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
+import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
+fun HomeContent(
+  component: HomeComponent,
+  sharedTransitionScope: SharedTransitionScope,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+) {
   Scaffold(
     modifier = modifier,
     bottomBar = {
@@ -60,7 +69,12 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
     ) { _, page ->
       when (page) {
         is HomeComponent.Page.NewsFeed -> {
-          NewsFeedContent(component = page.component, modifier = Modifier.fillMaxSize())
+          NewsFeedContent(
+            component = page.component,
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = animatedVisibilityScope,
+            modifier = Modifier.fillMaxSize(),
+          )
         }
         is HomeComponent.Page.Prices -> {
           PricesContent(component = page.component, modifier = Modifier.fillMaxSize())

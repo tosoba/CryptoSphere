@@ -1,5 +1,8 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
@@ -14,8 +17,14 @@ import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 import kotlin.math.abs
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier) {
+fun NewsFeedContent(
+  component: NewsFeedComponent,
+  sharedTransitionScope: SharedTransitionScope,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+) {
   val tokenCarouselItems = remember(::mockTokenCarouselItems)
   val newsItems = remember { List(3) { mockNewsItem() } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
@@ -40,12 +49,19 @@ fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier)
     }
 
     if (tokenCarouselItems.isNotEmpty()) {
-      TokenCarousel(
-        tokens = tokenCarouselItems,
-        onItemClick = { token ->
-          component.onTokenCarouselItemClick(tokenCarouselItems, token.symbol)
-        },
-      )
+      with(sharedTransitionScope) {
+        TokenCarousel(
+          tokens = tokenCarouselItems,
+          onItemClick = { token ->
+            component.onTokenCarouselItemClick(tokenCarouselItems, token.symbol)
+          },
+          modifier =
+            Modifier.sharedElement(
+              rememberSharedContentState("token-carousel"),
+              animatedVisibilityScope,
+            ),
+        )
+      }
     }
   }
 }

@@ -29,12 +29,19 @@ import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
 @Composable
-fun TokenCarousel(tokens: List<TokenCarouselItem>, onItemClick: (TokenCarouselItem) -> Unit) {
+fun TokenCarousel(
+  tokens: List<TokenCarouselItem>,
+  onItemClick: (TokenCarouselItem) -> Unit,
+  modifier: Modifier = Modifier,
+) {
   @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier =
-      Modifier.fillMaxWidth().background(color = Color.Transparent).padding(vertical = 8.dp),
+      Modifier.fillMaxWidth()
+        .background(color = Color.Transparent)
+        .padding(vertical = 8.dp)
+        .then(modifier),
     preferredItemWidth = 112.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),
