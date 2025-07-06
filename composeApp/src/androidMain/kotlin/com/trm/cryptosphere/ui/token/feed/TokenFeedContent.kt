@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
+import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -56,8 +57,8 @@ fun SharedTransitionScope.TokenFeedContent(
           },
           modifier =
             Modifier.sharedElement(
-              rememberSharedContentState("token-carousel"),
-              animatedVisibilityScope,
+              sharedContentState = rememberTokenCarouselSharedContentState(),
+              animatedVisibilityScope = animatedVisibilityScope,
             ),
         )
       }

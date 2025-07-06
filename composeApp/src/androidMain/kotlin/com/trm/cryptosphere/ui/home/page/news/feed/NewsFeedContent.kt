@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.alpha
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
+import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 import kotlin.math.abs
@@ -55,8 +56,8 @@ fun SharedTransitionScope.NewsFeedContent(
         },
         modifier =
           Modifier.sharedElement(
-            rememberSharedContentState("token-carousel"),
-            animatedVisibilityScope,
+            sharedContentState = rememberTokenCarouselSharedContentState(),
+            animatedVisibilityScope = animatedVisibilityScope,
           ),
       )
     }
