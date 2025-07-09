@@ -33,15 +33,16 @@ fun SharedTransitionScope.TokenFeedContent(
         val item = component.tokenFeedItems[page]
 
         TokenCarousel(
-          tokens = component.tokenCarouselItems,
+          tokens = component.tokenCarouselConfig.items,
           onItemClick = { index ->
             // TODO: navigate to another token feed page
           },
           modifier =
             Modifier.sharedElement(
-              // TODO: replace item with parentId in this case NewsItemId passed as argument to
-              // TokenFeedComponent
-              sharedContentState = rememberTokenCarouselSharedContentState(item),
+              sharedContentState =
+                rememberTokenCarouselSharedContentState(
+                  component.tokenCarouselConfig.parentSharedElementId ?: item
+                ),
               animatedVisibilityScope = animatedVisibilityScope,
             ),
         )

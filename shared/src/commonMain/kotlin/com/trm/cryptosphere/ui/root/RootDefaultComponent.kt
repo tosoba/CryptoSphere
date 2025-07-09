@@ -8,9 +8,11 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import com.trm.cryptosphere.domain.model.TokenCarouselItem
+import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.ui.home.HomeComponent
-import com.trm.cryptosphere.ui.root.RootComponent.Child.*
+import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
+import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenDetails
+import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
 import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import kotlinx.serialization.Serializable
@@ -58,7 +60,7 @@ class RootDefaultComponent(
           tokenFeedComponentFactory(
             componentContext = componentContext,
             mainTokenSymbol = config.mainTokenSymbol,
-            tokenCarouselItems = config.tokenCarouselItems,
+            tokenCarouselConfig = config.tokenCarouselConfig,
           )
         )
       }
@@ -71,9 +73,9 @@ class RootDefaultComponent(
 
   private fun navigateToTokenFeed(
     mainTokenSymbol: String,
-    tokenCarouselItems: List<TokenCarouselItem>,
+    tokenCarouselConfig: TokenCarouselConfig,
   ) {
-    navigation.pushNew(ChildConfig.TokenFeed(mainTokenSymbol, tokenCarouselItems))
+    navigation.pushNew(ChildConfig.TokenFeed(mainTokenSymbol, tokenCarouselConfig))
   }
 
   @Serializable
@@ -83,7 +85,7 @@ class RootDefaultComponent(
     @Serializable
     data class TokenFeed(
       val mainTokenSymbol: String,
-      val tokenCarouselItems: List<TokenCarouselItem>,
+      val tokenCarouselConfig: TokenCarouselConfig,
     ) : ChildConfig
 
     @Serializable data class TokenDetails(val symbol: String) : ChildConfig

@@ -55,11 +55,11 @@ class DependencyContainer(
   val tokenDetailsComponentFactory: TokenDetailsComponent.Factory =
     TokenDetailsComponent.Factory(::TokenDetailsDefaultComponent),
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
-    TokenFeedComponent.Factory { componentContext, mainTokenSymbol, tokenCarouselItems ->
+    TokenFeedComponent.Factory { componentContext, mainTokenSymbol, tokenCarouselConfig ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
         mainTokenSymbol = mainTokenSymbol,
-        tokenCarouselItems = tokenCarouselItems,
+        tokenCarouselConfig = tokenCarouselConfig,
       )
     },
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->

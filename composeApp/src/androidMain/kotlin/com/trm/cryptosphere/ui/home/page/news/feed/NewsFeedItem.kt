@@ -35,9 +35,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.TokenCarousel
+import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.NewsItem
-import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
@@ -48,7 +48,7 @@ fun SharedTransitionScope.NewsFeedItem(
   isCurrent: Boolean,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
-  onTokenCarouselItemClick: (String, List<TokenCarouselItem>) -> Unit,
+  onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
   val tokenCarouselItems = remember(::mockTokenCarouselItems)
 
@@ -68,7 +68,9 @@ fun SharedTransitionScope.NewsFeedItem(
 
         TokenCarousel(
           tokens = tokenCarouselItems,
-          onItemClick = { token -> onTokenCarouselItemClick(token.symbol, tokenCarouselItems) },
+          onItemClick = { token ->
+            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, tokenCarouselItems))
+          },
           modifier =
             Modifier.constrainAs(relatedTokens) {
                 top.linkTo(parent.top)
