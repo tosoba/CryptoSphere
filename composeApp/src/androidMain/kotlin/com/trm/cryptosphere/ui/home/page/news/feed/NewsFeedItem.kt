@@ -1,6 +1,10 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -17,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -29,11 +34,24 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
+import com.trm.cryptosphere.core.ui.TokenCarousel
+import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.NewsItem
+import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
+import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifier) {
+fun SharedTransitionScope.NewsFeedItem(
+  item: NewsItem,
+  isCurrent: Boolean,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+  onTokenCarouselItemClick: (String, List<TokenCarouselItem>) -> Unit,
+) {
+  val tokenCarouselItems = remember(::mockTokenCarouselItems)
+
   Box(modifier = modifier) {
     AsyncImage(
       model = item.imgUrl, // TODO: loading/error placeholders
@@ -44,8 +62,23 @@ fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifi
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backgroundGradient, title, description, linkButton, starButton) = createRefs()
+        val (backgroundGradient, relatedTokens, title, description, linkButton, starButton) =
+          createRefs()
         val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
+
+        TokenCarousel(
+          tokens = tokenCarouselItems,
+          onItemClick = { token -> onTokenCarouselItemClick(token.symbol, tokenCarouselItems) },
+          modifier =
+            Modifier.constrainAs(relatedTokens) {
+                top.linkTo(parent.top)
+                width = Dimension.matchParent
+              }
+              .sharedElement(
+                sharedContentState = rememberTokenCarouselSharedContentState(item.id),
+                animatedVisibilityScope = animatedVisibilityScope,
+              ),
+        )
 
         Box(
           modifier =
@@ -61,7 +94,6 @@ fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifi
         OutlinedIconButton(
           modifier =
             Modifier.constrainAs(starButton) {
-              // TODO: different constrains for compact height
               bottom.linkTo(linkButton.top, margin = 24.dp)
               end.linkTo(parent.end, margin = 16.dp)
             },
@@ -133,8 +165,18 @@ fun NewsFeedItem(item: NewsItem, isCurrent: Boolean, modifier: Modifier = Modifi
   }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun NewsFeedItemPreview() {
-  NewsFeedItem(item = mockNewsItem(), isCurrent = true)
+  SharedTransitionLayout {
+    AnimatedVisibility(true) {
+      NewsFeedItem(
+        item = mockNewsItem("1"),
+        isCurrent = true,
+        animatedVisibilityScope = this,
+        onTokenCarouselItemClick = { _, _ -> },
+      )
+    }
+  }
 }

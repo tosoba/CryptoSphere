@@ -94,5 +94,5 @@ fun TokenCarousel(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.rememberTokenCarouselSharedContentState() =
-  rememberSharedContentState("token-carousel")
+fun SharedTransitionScope.rememberTokenCarouselSharedContentState(id: String) =
+  rememberSharedContentState("token-carousel-$id")

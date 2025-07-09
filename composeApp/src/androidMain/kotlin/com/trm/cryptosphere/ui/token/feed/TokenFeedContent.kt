@@ -3,7 +3,6 @@ package com.trm.cryptosphere.ui.token.feed
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -27,29 +25,13 @@ fun SharedTransitionScope.TokenFeedContent(
   modifier: Modifier = Modifier,
 ) {
   Scaffold(modifier = modifier) { paddingValues ->
-    Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-      VerticalFeedPager(
-        pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size),
-        contentPadding =
-          if (component.tokenCarouselItems.isEmpty()) VerticalFeedPagerContentPadding.Symmetrical
-          else VerticalFeedPagerContentPadding.ExtraTop,
-      ) { page ->
-        Card(modifier = Modifier.fillMaxSize()) {
-          val item = component.tokenFeedItems[page]
-          Text(
-            text = item,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier =
-              Modifier.padding(16.dp)
-                .sharedElement(
-                  rememberSharedContentState("token-symbol-$item"),
-                  animatedVisibilityScope,
-                ),
-          )
-        }
-      }
+    VerticalFeedPager(
+      pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size),
+      modifier = Modifier.fillMaxSize().padding(paddingValues),
+    ) { page ->
+      Card(modifier = Modifier.fillMaxSize()) {
+        val item = component.tokenFeedItems[page]
 
-      if (component.tokenCarouselItems.isNotEmpty()) {
         TokenCarousel(
           tokens = component.tokenCarouselItems,
           onItemClick = { index ->
@@ -57,9 +39,22 @@ fun SharedTransitionScope.TokenFeedContent(
           },
           modifier =
             Modifier.sharedElement(
-              sharedContentState = rememberTokenCarouselSharedContentState(),
+              // TODO: replace item with parentId in this case NewsItemId passed as argument to
+              // TokenFeedComponent
+              sharedContentState = rememberTokenCarouselSharedContentState(item),
               animatedVisibilityScope = animatedVisibilityScope,
             ),
+        )
+
+        Text(
+          text = item,
+          style = MaterialTheme.typography.headlineLarge,
+          modifier =
+            Modifier.padding(16.dp)
+              .sharedElement(
+                sharedContentState = rememberSharedContentState("token-symbol-$item"),
+                animatedVisibilityScope = animatedVisibilityScope,
+              ),
         )
       }
 

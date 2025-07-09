@@ -18,9 +18,9 @@ data class NewsItem(
   val link: String,
 )
 
-fun mockNewsItem(): NewsItem =
+fun mockNewsItem(id: String): NewsItem =
   NewsItem(
-    id = "5bc8659a47bad806ac2fc1fc5dbb7387c04b263432722b17fbba325a6335602d",
+    id = id,
     searchKeyWords = listOf("dogecoin", "DOGE"),
     feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
     source = "U.Today",
