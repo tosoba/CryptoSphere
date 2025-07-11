@@ -41,7 +41,8 @@ fun SharedTransitionScope.TokenFeedContent(
             Modifier.sharedElement(
               sharedContentState =
                 rememberTokenCarouselSharedContentState(
-                  component.tokenCarouselConfig.parentSharedElementId ?: item
+                  if (page == 0) component.tokenCarouselConfig.parentSharedElementId ?: item
+                  else item
                 ),
               animatedVisibilityScope = animatedVisibilityScope,
             ),
