@@ -43,14 +43,14 @@ fun SharedTransitionScope.TokenFeedContent(
               // TODO: navigate to another token feed page
             },
             modifier =
-              Modifier.sharedElement(
-                sharedContentState =
-                  rememberTokenCarouselSharedContentState(
-                    if (page == 0) component.tokenCarouselConfig.parentSharedElementId ?: item
-                    else item
-                  ),
-                animatedVisibilityScope = animatedVisibilityScope,
-              ),
+              component.tokenCarouselConfig.parentSharedElementId
+                ?.takeIf { page == 0 }
+                ?.let {
+                  Modifier.sharedElement(
+                    sharedContentState = rememberTokenCarouselSharedContentState(it),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                  )
+                } ?: Modifier,
           )
 
           Text(
