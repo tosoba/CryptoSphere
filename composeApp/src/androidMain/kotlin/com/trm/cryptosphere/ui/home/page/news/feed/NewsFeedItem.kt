@@ -87,6 +87,7 @@ fun SharedTransitionScope.NewsFeedItem(
             Modifier.constrainAs(backgroundGradient) {
                 bottom.linkTo(parent.bottom)
                 top.linkTo(title.top, margin = (-128).dp)
+
                 width = Dimension.matchParent
                 height = Dimension.fillToConstraints
               }
@@ -133,12 +134,14 @@ fun SharedTransitionScope.NewsFeedItem(
             Modifier.constrainAs(title) {
               top.linkTo(parent.top, margin = 16.dp)
               bottom.linkTo(
-                if (item.description.isNullOrBlank()) parent.bottom else description.top
+                if (item.description.isNullOrBlank()) parent.bottom else description.top,
+                margin = 8.dp,
               )
-              verticalBias = 1f
               start.linkTo(parent.start, margin = 16.dp)
               end.linkTo(buttonsStartBarrier, margin = 16.dp)
+
               width = Dimension.fillToConstraints
+              verticalBias = 1f
             },
         )
 
@@ -155,8 +158,9 @@ fun SharedTransitionScope.NewsFeedItem(
             modifier =
               Modifier.constrainAs(description) {
                 bottom.linkTo(parent.bottom, margin = 16.dp)
-                start.linkTo(parent.start, 16.dp)
-                end.linkTo(buttonsStartBarrier, 16.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+                end.linkTo(buttonsStartBarrier, margin = 16.dp)
+
                 width = Dimension.fillToConstraints
               },
           )
