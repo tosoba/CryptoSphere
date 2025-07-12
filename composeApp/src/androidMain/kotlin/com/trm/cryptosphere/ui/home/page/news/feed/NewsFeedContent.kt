@@ -1,8 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -17,11 +15,7 @@ import kotlin.math.abs
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.NewsFeedContent(
-  component: NewsFeedComponent,
-  animatedVisibilityScope: AnimatedVisibilityScope,
-  modifier: Modifier = Modifier,
-) {
+fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier) {
   val newsItems = remember { List(3) { mockNewsItem(it.toString()) } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
@@ -33,7 +27,6 @@ fun SharedTransitionScope.NewsFeedContent(
         NewsFeedItem(
           item = newsItems[page],
           isCurrent = isCurrent,
-          animatedVisibilityScope = animatedVisibilityScope,
           modifier =
             Modifier.alpha(
               if (!isCurrent) .75f else 1f - abs(pagerState.currentPageOffsetFraction) / 2f

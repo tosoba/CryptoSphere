@@ -1,7 +1,5 @@
 package com.trm.cryptosphere.core.ui
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
@@ -91,8 +89,3 @@ fun TokenCarousel(
     }
   }
 }
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun SharedTransitionScope.rememberTokenCarouselSharedContentState(id: String) =
-  rememberSharedContentState("token-carousel-$id")

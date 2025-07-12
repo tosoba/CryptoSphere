@@ -19,7 +19,6 @@ import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -42,15 +41,6 @@ fun SharedTransitionScope.TokenFeedContent(
             onItemClick = { index ->
               // TODO: navigate to another token feed page
             },
-            modifier =
-              component.tokenCarouselConfig.parentSharedElementId
-                ?.takeIf { page == 0 }
-                ?.let {
-                  Modifier.sharedElement(
-                    sharedContentState = rememberTokenCarouselSharedContentState(it),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                  )
-                } ?: Modifier,
           )
 
           Text(
