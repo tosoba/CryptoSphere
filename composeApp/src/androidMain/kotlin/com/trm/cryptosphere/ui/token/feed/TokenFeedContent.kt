@@ -12,10 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TopGradientOverlay
@@ -34,14 +36,15 @@ fun SharedTransitionScope.TokenFeedContent(
   Scaffold(modifier = modifier) { paddingValues ->
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
       val scope = rememberCoroutineScope()
-      val pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size)
+      val state by component.state.collectAsStateWithLifecycle()
+      val pagerState = rememberPagerState(pageCount = state.feedItems::size)
 
       VerticalFeedPager(
         pagerState = pagerState,
         contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
         modifier = Modifier.fillMaxSize(),
       ) { page ->
-        val item = component.tokenFeedItems[page]
+        val item = state.feedItems[page]
         Card(
           modifier = Modifier.fillMaxSize(),
           onClick = { component.navigateToTokenDetails(item) },
@@ -62,10 +65,10 @@ fun SharedTransitionScope.TokenFeedContent(
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
         onItemClick = { item ->
-          if (component.mainTokenSymbol == item.symbol) {
+          if (state.mainTokenSymbol == item.symbol) {
             scope.launch { pagerState.animateScrollToPage(0) }
           } else {
-            // TODO: reload tokenFeedItems for new mainTokenSymbol
+            component.reloadFeedForSymbol(item.symbol)
           }
         },
         modifier =

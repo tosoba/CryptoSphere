@@ -2,11 +2,11 @@ package com.trm.cryptosphere.ui.token.feed
 
 import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import kotlinx.coroutines.flow.StateFlow
 
 interface TokenFeedComponent {
-  val mainTokenSymbol: String
+  val state: StateFlow<TokenFeedState>
   val tokenCarouselConfig: TokenCarouselConfig
-  val tokenFeedItems: List<String>
   val navigateToTokenDetails: (String) -> Unit
 
   fun reloadFeedForSymbol(symbol: String)
