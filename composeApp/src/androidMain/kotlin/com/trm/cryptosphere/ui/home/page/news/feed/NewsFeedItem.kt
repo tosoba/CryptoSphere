@@ -1,8 +1,10 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -34,15 +36,17 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsFeedItem(
+fun SharedTransitionScope.NewsFeedItem(
   item: NewsItem,
   isCurrent: Boolean,
+  animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
   onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
@@ -65,13 +69,17 @@ fun NewsFeedItem(
         TokenCarousel(
           tokens = tokenCarouselItems,
           onItemClick = { token ->
-            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(tokenCarouselItems))
+            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, tokenCarouselItems))
           },
           modifier =
             Modifier.constrainAs(relatedTokens) {
-              top.linkTo(parent.top)
-              width = Dimension.matchParent
-            },
+                top.linkTo(parent.top)
+                width = Dimension.matchParent
+              }
+              .sharedElement(
+                sharedContentState = rememberTokenCarouselSharedContentState(item.id),
+                animatedVisibilityScope = animatedVisibilityScope,
+              ),
         )
 
         Box(
@@ -165,7 +173,12 @@ fun NewsFeedItem(
 private fun NewsFeedItemPreview() {
   SharedTransitionLayout {
     AnimatedVisibility(true) {
-      NewsFeedItem(item = mockNewsItem("1"), isCurrent = true) { _, _ -> }
+      NewsFeedItem(
+        item = mockNewsItem("1"),
+        isCurrent = true,
+        animatedVisibilityScope = this,
+        onTokenCarouselItemClick = { _, _ -> },
+      )
     }
   }
 }

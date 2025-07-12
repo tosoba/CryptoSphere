@@ -51,6 +51,7 @@ fun RootContent(component: RootComponent) {
           is RootComponent.Child.Home -> {
             HomeContent(
               component = instance.component,
+              animatedVisibilityScope = this@ChildStack,
               modifier = Modifier.fillMaxSize(),
             )
           }

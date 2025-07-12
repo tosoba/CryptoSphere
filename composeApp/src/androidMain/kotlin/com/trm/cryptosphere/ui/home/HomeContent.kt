@@ -1,6 +1,8 @@
 package com.trm.cryptosphere.ui.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -31,7 +33,11 @@ import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
+fun SharedTransitionScope.HomeContent(
+  component: HomeComponent,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+) {
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
     modifier = modifier,
@@ -70,7 +76,11 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
       ) { _, page ->
         when (page) {
           is HomeComponent.Page.NewsFeed -> {
-            NewsFeedContent(component = page.component, modifier = Modifier.fillMaxSize())
+            NewsFeedContent(
+              component = page.component,
+              animatedVisibilityScope = animatedVisibilityScope,
+              modifier = Modifier.fillMaxSize(),
+            )
           }
           is HomeComponent.Page.Prices -> {
             PricesContent(component = page.component, modifier = Modifier.fillMaxSize())

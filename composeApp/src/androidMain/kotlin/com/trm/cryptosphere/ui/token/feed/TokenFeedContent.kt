@@ -19,6 +19,8 @@ import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
+import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -31,35 +33,44 @@ fun SharedTransitionScope.TokenFeedContent(
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
       VerticalFeedPager(
         pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size),
+        contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
         modifier = Modifier.fillMaxSize(),
       ) { page ->
         Card(modifier = Modifier.fillMaxSize()) {
           val item = component.tokenFeedItems[page]
-
-          TokenCarousel(
-            tokens = component.tokenCarouselConfig.items,
-            onItemClick = { index ->
-              // TODO: navigate to another token feed page
-            },
-          )
-
           Text(
             text = item,
             style = MaterialTheme.typography.headlineLarge,
             modifier =
               Modifier.padding(16.dp)
                 .sharedElement(
-                  sharedContentState = rememberSharedContentState("token-symbol-$item"),
-                  animatedVisibilityScope = animatedVisibilityScope,
+                  rememberSharedContentState("token-symbol-$item"),
+                  animatedVisibilityScope,
                 ),
           )
         }
-        // TODO: navigation toolbar at the bottom
       }
+
+      TokenCarousel(
+        tokens = component.tokenCarouselConfig.items,
+        onItemClick = { index ->
+          // TODO: navigate to another token feed page
+        },
+        modifier =
+          Modifier.sharedElement(
+            sharedContentState =
+              rememberTokenCarouselSharedContentState(
+                requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
+              ),
+            animatedVisibilityScope = animatedVisibilityScope,
+          ),
+      )
 
       TopGradientOverlay(modifier = Modifier.align(Alignment.TopCenter))
 
       BottomGradientOverlay(modifier = Modifier.align(Alignment.BottomCenter))
+
+      // TODO: navigation toolbar at the bottom
     }
   }
 }
