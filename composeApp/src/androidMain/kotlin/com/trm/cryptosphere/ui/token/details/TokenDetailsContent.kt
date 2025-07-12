@@ -32,8 +32,8 @@ fun SharedTransitionScope.TokenDetailsContent(
         modifier =
           Modifier.padding(16.dp)
             .sharedElement(
-              rememberSharedContentState("token-symbol-${component.symbol}"),
-              animatedVisibilityScope,
+              sharedContentState = rememberSharedContentState("token-symbol-${component.symbol}"),
+              animatedVisibilityScope = animatedVisibilityScope,
             ),
       )
     }

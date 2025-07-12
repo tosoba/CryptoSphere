@@ -41,16 +41,19 @@ fun SharedTransitionScope.TokenFeedContent(
         contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
         modifier = Modifier.fillMaxSize(),
       ) { page ->
-        Card(modifier = Modifier.fillMaxSize()) {
-          val item = component.tokenFeedItems[page]
+        val item = component.tokenFeedItems[page]
+        Card(
+          modifier = Modifier.fillMaxSize(),
+          onClick = { component.navigateToTokenDetails(item) },
+        ) {
           Text(
             text = item,
             style = MaterialTheme.typography.headlineLarge,
             modifier =
               Modifier.padding(16.dp)
                 .sharedElement(
-                  rememberSharedContentState("token-symbol-$item"),
-                  animatedVisibilityScope,
+                  sharedContentState = rememberSharedContentState("token-symbol-$item"),
+                  animatedVisibilityScope = animatedVisibilityScope,
                 ),
           )
         }
@@ -62,7 +65,7 @@ fun SharedTransitionScope.TokenFeedContent(
           if (component.mainTokenSymbol == item.symbol) {
             scope.launch { pagerState.animateScrollToPage(0) }
           } else {
-            // TODO: navigate to another token feed page
+            // TODO: reload tokenFeedItems for new mainTokenSymbol
           }
         },
         modifier =

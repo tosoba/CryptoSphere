@@ -9,10 +9,15 @@ class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
   override val mainTokenSymbol: String,
   override val tokenCarouselConfig: TokenCarouselConfig,
+  override val navigateToTokenDetails: (String) -> Unit,
 ) : TokenFeedComponent, ComponentContext by componentContext {
   // TODO: this will be retrieved from local data sources
   override val tokenFeedItems: List<String> = buildList {
     add(mainTokenSymbol)
     addAll(mockTokenCarouselItems().map(TokenCarouselItem::symbol).filter { it != mainTokenSymbol })
+  }
+
+  override fun reloadFeedForSymbol(symbol: String) {
+    // TODO: reload tokenFeedItems for new mainTokenSymbol + use update mainTokenSymbol state
   }
 }

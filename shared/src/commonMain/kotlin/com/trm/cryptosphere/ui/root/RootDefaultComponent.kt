@@ -61,6 +61,7 @@ class RootDefaultComponent(
             componentContext = componentContext,
             mainTokenSymbol = config.mainTokenSymbol,
             tokenCarouselConfig = config.tokenCarouselConfig,
+            navigateToTokenDetails = ::navigateToTokenDetails,
           )
         )
       }
@@ -76,6 +77,10 @@ class RootDefaultComponent(
     tokenCarouselConfig: TokenCarouselConfig,
   ) {
     navigation.pushNew(ChildConfig.TokenFeed(mainTokenSymbol, tokenCarouselConfig))
+  }
+
+  private fun navigateToTokenDetails(symbol: String) {
+    navigation.pushNew(ChildConfig.TokenDetails(symbol))
   }
 
   @Serializable
