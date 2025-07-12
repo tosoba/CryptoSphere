@@ -1,9 +1,10 @@
 package com.trm.cryptosphere.domain.model
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 data class NewsItem(
   val id: String,
@@ -22,7 +23,7 @@ fun mockNewsItem(id: String): NewsItem =
   NewsItem(
     id = id,
     searchKeyWords = listOf("dogecoin", "DOGE"),
-    feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+    feedDate = @OptIn(ExperimentalTime::class) Clock.System.now().toLocalDateTime(TimeZone.UTC),
     source = "U.Today",
     title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
     sourceLink = "https://u.today/",
