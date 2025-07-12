@@ -7,7 +7,7 @@ import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
 class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
-  private val mainTokenSymbol: String,
+  override val mainTokenSymbol: String,
   override val tokenCarouselConfig: TokenCarouselConfig,
 ) : TokenFeedComponent, ComponentContext by componentContext {
   // TODO: this will be retrieved from local data sources

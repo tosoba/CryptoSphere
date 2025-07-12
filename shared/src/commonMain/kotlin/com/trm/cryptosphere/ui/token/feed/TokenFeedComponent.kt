@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 
 interface TokenFeedComponent {
+  val mainTokenSymbol: String
   val tokenCarouselConfig: TokenCarouselConfig
   val tokenFeedItems: List<String>
 

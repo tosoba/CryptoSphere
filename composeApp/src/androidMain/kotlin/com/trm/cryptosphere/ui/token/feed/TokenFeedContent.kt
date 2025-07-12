@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -31,8 +33,11 @@ fun SharedTransitionScope.TokenFeedContent(
 ) {
   Scaffold(modifier = modifier) { paddingValues ->
     Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+      val scope = rememberCoroutineScope()
+      val pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size)
+
       VerticalFeedPager(
-        pagerState = rememberPagerState(pageCount = component.tokenFeedItems::size),
+        pagerState = pagerState,
         contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
         modifier = Modifier.fillMaxSize(),
       ) { page ->
@@ -53,8 +58,12 @@ fun SharedTransitionScope.TokenFeedContent(
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
-        onItemClick = { index ->
-          // TODO: navigate to another token feed page
+        onItemClick = { item ->
+          if (component.mainTokenSymbol == item.symbol) {
+            scope.launch { pagerState.animateScrollToPage(0) }
+          } else {
+            // TODO: navigate to another token feed page
+          }
         },
         modifier =
           Modifier.sharedElement(
