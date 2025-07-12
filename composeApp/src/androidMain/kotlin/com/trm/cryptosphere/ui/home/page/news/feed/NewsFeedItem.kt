@@ -138,7 +138,6 @@ fun SharedTransitionScope.NewsFeedItem(
               verticalBias = 1f
               start.linkTo(parent.start, margin = 16.dp)
               end.linkTo(buttonsStartBarrier, margin = 16.dp)
-              height = Dimension.preferredWrapContent
               width = Dimension.fillToConstraints
             },
         )
