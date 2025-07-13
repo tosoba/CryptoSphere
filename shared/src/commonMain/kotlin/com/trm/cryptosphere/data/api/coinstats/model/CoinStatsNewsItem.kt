@@ -3,7 +3,7 @@ package com.trm.cryptosphere.data.api.coinstats.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NewsResponseItem(
+data class CoinStatsNewsItem(
   val id: String,
   val searchKeyWords: List<String>?,
   val feedDate: Long,

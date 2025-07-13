@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenQuote(
+data class CmcTokenQuote(
   val price: Double,
   @SerialName("volume_24h") val volume24h: Double,
   @SerialName("volume_change_24h") val volumeChange24h: Double,

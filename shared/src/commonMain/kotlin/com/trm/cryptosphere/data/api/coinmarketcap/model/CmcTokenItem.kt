@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenResponseItem(
+data class CmcTokenItem(
   val id: Int,
   val name: String,
   val symbol: String,
@@ -16,11 +16,11 @@ data class TokenResponseItem(
   @SerialName("circulating_supply") val circulatingSupply: Double,
   @SerialName("total_supply") val totalSupply: Double,
   @SerialName("infinite_supply") val infiniteSupply: Boolean,
-  val platform: TokenPlatform?,
+  val platform: CmcTokenPlatform?,
   @SerialName("cmc_rank") val cmcRank: Int,
   @SerialName("self_reported_circulating_supply") val selfReportedCirculatingSupply: Double?,
   @SerialName("self_reported_market_cap") val selfReportedMarketCap: Double?,
   @SerialName("tvl_ratio") val tvlRatio: Double?,
   @SerialName("last_updated") val lastUpdated: String,
-  val quote: TokenQuotes,
+  val quote: CmcTokenQuotes,
 )

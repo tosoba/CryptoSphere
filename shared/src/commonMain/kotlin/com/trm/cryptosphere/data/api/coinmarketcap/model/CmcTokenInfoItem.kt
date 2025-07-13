@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenInfoResponseItem(
+data class CmcTokenInfoItem(
   val id: Int,
   val name: String,
   val symbol: String,
@@ -17,8 +17,8 @@ data class TokenInfoResponseItem(
   val tags: List<String>?,
   @SerialName("tag-names") val tagNames: List<String>?,
   @SerialName("tag-groups") val tagGroups: List<String>?,
-  val urls: TokenUrls?,
-  val platform: TokenPlatform?,
+  val urls: CmcTokenUrls?,
+  val platform: CmcTokenPlatform?,
   @SerialName("date_added") val dateAdded: String?,
   @SerialName("twitter_username") val twitterUsername: String?,
   @SerialName("date_launched") val dateLaunched: String?,

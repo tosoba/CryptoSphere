@@ -1,8 +1,8 @@
 package com.trm.cryptosphere.domain.model
 
-import com.trm.cryptosphere.data.api.coinmarketcap.model.TokenPlatform
-import com.trm.cryptosphere.data.api.coinmarketcap.model.TokenUrls
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TokenInfo(
   val id: Int,
   val name: String,
