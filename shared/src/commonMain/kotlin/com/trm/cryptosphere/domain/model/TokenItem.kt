@@ -24,6 +24,9 @@ data class TokenItem(
   val quote: TokenQuote,
 )
 
+val TokenItem.logoUrl: String
+  get() = "https://s2.coinmarketcap.com/static/img/coins/128x128/$id.png"
+
 fun mockTokenItems(): List<TokenItem> =
   listOf(
     TokenItem(

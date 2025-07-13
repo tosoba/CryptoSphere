@@ -6,8 +6,7 @@ import com.arkivanov.essenty.instancekeeper.retainedInstance
 import com.arkivanov.essenty.statekeeper.ExperimentalStateKeeperApi
 import com.arkivanov.essenty.statekeeper.saveable
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
-import com.trm.cryptosphere.domain.model.TokenCarouselItem
-import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
+import com.trm.cryptosphere.domain.model.mockTokenItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,23 +31,16 @@ class TokenFeedDefaultComponent(
   }
 
   private class StateHolder(state: TokenFeedState) : InstanceKeeper.Instance {
+    // TODO: feed items will be retrieved from local data sources
     constructor(
       mainTokenSymbol: String
-    ) : this(TokenFeedState(mainTokenSymbol, feedItems(mainTokenSymbol)))
+    ) : this(TokenFeedState(mainTokenSymbol = mainTokenSymbol, feedItems = mockTokenItems()))
 
     private val _state = MutableStateFlow(state)
     val state = _state.asStateFlow()
 
     fun updateMainTokenSymbol(symbol: String) {
-      _state.update { it.copy(mainTokenSymbol = symbol, feedItems = feedItems(symbol)) }
-    }
-
-    companion object {
-      // TODO: feed items will be retrieved from local data sources
-      private fun feedItems(symbol: String): List<String> = buildList {
-        add(symbol)
-        addAll(mockTokenCarouselItems().map(TokenCarouselItem::symbol).filter { it != symbol })
-      }
+      _state.update { it.copy(mainTokenSymbol = symbol) }
     }
   }
 }

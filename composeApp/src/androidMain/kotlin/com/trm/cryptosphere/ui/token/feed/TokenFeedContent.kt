@@ -4,8 +4,13 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -16,14 +21,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
+import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -44,21 +52,38 @@ fun SharedTransitionScope.TokenFeedContent(
         contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
         modifier = Modifier.fillMaxSize(),
       ) { page ->
-        val item = state.feedItems[page]
+        val token = state.feedItems[page]
+
         Card(
           modifier = Modifier.fillMaxSize(),
-          onClick = { component.navigateToTokenDetails(item) },
+          onClick = { component.navigateToTokenDetails(token.symbol) },
         ) {
-          Text(
-            text = item,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier =
-              Modifier.padding(16.dp)
-                .sharedElement(
-                  sharedContentState = rememberSharedContentState("token-symbol-$item"),
-                  animatedVisibilityScope = animatedVisibilityScope,
-                ),
-          )
+          Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AsyncImage(
+              modifier = Modifier.size(128.dp),
+              model = token.logoUrl,
+              contentDescription = null,
+              contentScale = ContentScale.Fit,
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+              text = token.symbol,
+              style = MaterialTheme.typography.displayMedium,
+              modifier =
+                Modifier.padding(horizontal = 16.dp)
+                  .sharedElement(
+                    sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                  ),
+            )
+          }
         }
       }
 
