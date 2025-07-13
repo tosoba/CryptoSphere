@@ -9,5 +9,5 @@ data class TokenPlatform(
   val name: String,
   val symbol: String,
   val slug: String,
-  @SerialName("token_address") val tokenAddress: String,
+  @SerialName("token_address") val tokenAddress: String?,
 )

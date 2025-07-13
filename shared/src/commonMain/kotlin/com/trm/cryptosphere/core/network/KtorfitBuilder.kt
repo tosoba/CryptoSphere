@@ -18,6 +18,7 @@ fun buildKtorfit(baseUrl: String, loggingEnabled: Boolean = true) = ktorfit {
           Json {
             isLenient = true
             ignoreUnknownKeys = true
+            explicitNulls = false
           }
         )
       }
