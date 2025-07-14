@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,7 +30,7 @@ fun SharedTransitionScope.NewsFeedContent(
     contentPadding = VerticalFeedPagerContentPadding.Symmetrical,
     modifier = modifier,
   ) { page ->
-    Card {
+    ElevatedCard {
       val isCurrent = page == pagerState.currentPage
       NewsFeedItem(
         item = newsItems[page],

@@ -2,6 +2,7 @@ package com.trm.cryptosphere.core.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -52,16 +52,16 @@ fun TokenCarousel(
     // behind the card with the same maskClip and make the card itself smaller
     val token = tokens[index]
 
-    Card(
-      modifier = Modifier.width(112.dp).aspectRatio(2f).maskClip(MaterialTheme.shapes.medium),
-      colors =
-        CardDefaults.cardColors().run {
-          copy(
-            containerColor = containerColor.copy(alpha = containerColor.alpha * .95f),
-            disabledContainerColor =
-              disabledContainerColor.copy(alpha = disabledContainerColor.alpha * .95f),
-          )
-        },
+    Surface(
+      modifier =
+        Modifier.width(112.dp)
+          .aspectRatio(2f)
+          .maskClip(MaterialTheme.shapes.medium)
+          .maskBorder(
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
+            shape = MaterialTheme.shapes.medium,
+          ),
+      color = MaterialTheme.colorScheme.surface.run { copy(alpha = alpha * .95f) },
       onClick = { onItemClick(token) },
     ) {
       Column(
