@@ -12,11 +12,11 @@ class NetworkResultConverterFactory : Converter.Factory {
   override fun suspendResponseConverter(
     typeData: TypeData,
     ktorfit: Ktorfit,
-  ): Converter.SuspendResponseConverter<HttpResponse, NetworkResult<*>>? {
+  ): Converter.SuspendResponseConverter<HttpResponse, NetworkResult<*>>? =
     if (typeData.typeInfo.type == NetworkResult::class) {
-      return object : Converter.SuspendResponseConverter<HttpResponse, NetworkResult<*>> {
-        override suspend fun convert(result: KtorfitResult): NetworkResult<*> {
-          return when (result) {
+      object : Converter.SuspendResponseConverter<HttpResponse, NetworkResult<*>> {
+        override suspend fun convert(result: KtorfitResult): NetworkResult<*> =
+          when (result) {
             is KtorfitResult.Failure -> {
               NetworkResult.Exception(result.throwable)
             }
@@ -28,9 +28,8 @@ class NetworkResultConverterFactory : Converter.Factory {
               }
             }
           }
-        }
       }
+    } else {
+      null
     }
-    return null
-  }
 }
