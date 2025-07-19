@@ -92,43 +92,19 @@ fun SharedTransitionScope.TokenFeedContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-              OutlinedCard(modifier = Modifier.weight(1f)) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                  Text(
-                    text = "Price",
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-                  )
-                  Text(
-                    text = "${token.quote.price}",
-                    style =
-                      MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
-                    maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-                  )
-                }
-              }
+              TokenParameterCard(
+                label = "Price",
+                value = token.quote.price.toString(),
+                modifier = Modifier.weight(1f),
+              )
 
               Spacer(modifier = Modifier.width(8.dp))
 
-              OutlinedCard(modifier = Modifier.weight(1f)) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                  Text(
-                    text = "Market Cap",
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-                  )
-                  Text(
-                    text = "${token.quote.marketCap}",
-                    style =
-                      MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
-                    maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-                  )
-                }
-              }
+              TokenParameterCard(
+                label = "Market Cap",
+                value = token.quote.marketCap.toString(),
+                modifier = Modifier.weight(1f),
+              )
             }
           }
         }
@@ -158,6 +134,26 @@ fun SharedTransitionScope.TokenFeedContent(
       BottomGradientOverlay(modifier = Modifier.align(Alignment.BottomCenter))
 
       // TODO: navigation toolbar at the bottom
+    }
+  }
+}
+
+@Composable
+private fun TokenParameterCard(label: String, value: String, modifier: Modifier = Modifier) {
+  OutlinedCard(modifier = modifier) {
+    Column(modifier = Modifier.padding(16.dp)) {
+      Text(
+        text = label,
+        style = MaterialTheme.typography.labelLarge,
+        maxLines = 1,
+        modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+      )
+      Text(
+        text = value,
+        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
+        maxLines = 1,
+        modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+      )
     }
   }
 }
