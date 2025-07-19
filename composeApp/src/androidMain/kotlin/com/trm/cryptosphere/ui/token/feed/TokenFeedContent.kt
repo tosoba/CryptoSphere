@@ -3,17 +3,21 @@ package com.trm.cryptosphere.ui.token.feed
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -74,8 +79,8 @@ fun SharedTransitionScope.TokenFeedContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-              text = token.symbol,
-              style = MaterialTheme.typography.displayMedium,
+              text = "#${token.cmcRank} ${token.symbol}",
+              style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
               modifier =
                 Modifier.padding(horizontal = 16.dp)
                   .sharedElement(
@@ -83,6 +88,48 @@ fun SharedTransitionScope.TokenFeedContent(
                     animatedVisibilityScope = animatedVisibilityScope,
                   ),
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+              OutlinedCard(modifier = Modifier.weight(1f)) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                  Text(
+                    text = "Price",
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+                  )
+                  Text(
+                    text = "${token.quote.price}",
+                    style =
+                      MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+                  )
+                }
+              }
+
+              Spacer(modifier = Modifier.width(8.dp))
+
+              OutlinedCard(modifier = Modifier.weight(1f)) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                  Text(
+                    text = "Market Cap",
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+                  )
+                  Text(
+                    text = "${token.quote.marketCap}",
+                    style =
+                      MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+                  )
+                }
+              }
+            }
           }
         }
       }
