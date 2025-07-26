@@ -56,8 +56,8 @@ fun TokenCarousel(
 
     Surface(
       modifier =
-        Modifier.width(112.dp)
-          .aspectRatio(2f)
+        Modifier.width(120.dp)
+          .aspectRatio(1.5f)
           .maskClip(MaterialTheme.shapes.medium)
           .maskBorder(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
@@ -70,7 +70,7 @@ fun TokenCarousel(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // TODO: use dominant color of image as card background
         AsyncImage(
@@ -80,7 +80,7 @@ fun TokenCarousel(
           contentScale = ContentScale.Fit,
         )
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Text(
           text = token.symbol,
@@ -89,6 +89,8 @@ fun TokenCarousel(
           style = labelStyle,
           modifier = Modifier.fillMaxWidth().basicMarquee(),
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
       }
     }
   }

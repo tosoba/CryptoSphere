@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -63,9 +64,16 @@ fun SharedTransitionScope.NewsFeedItem(
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backgroundGradient, tokenCarousel, title, description, linkButton, starButton) =
+        val (
+          backgroundGradient,
+          tokenCarousel,
+          title,
+          description,
+          linkButton,
+          shareButton,
+          starButton) =
           createRefs()
-        val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
+        val secondaryButtonsStartBarrier = createStartBarrier(shareButton, starButton)
 
         Box(
           modifier =
@@ -81,18 +89,29 @@ fun SharedTransitionScope.NewsFeedItem(
 
         OutlinedIconButton(
           modifier =
-            Modifier.constrainAs(starButton) {
-              bottom.linkTo(linkButton.top, margin = 24.dp)
+            Modifier.constrainAs(shareButton) {
+              bottom.linkTo(starButton.top, margin = 16.dp)
               end.linkTo(parent.end, margin = 16.dp)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
           border = BorderStroke(1.dp, Color.White),
           onClick = {},
         ) {
-          Icon(
-            Icons.Outlined.StarOutline, // TODO: icon depending on starred state
-            contentDescription = null,
-          )
+          Icon(Icons.Outlined.Share, contentDescription = null)
+        }
+
+        OutlinedIconButton(
+          modifier =
+            Modifier.constrainAs(starButton) {
+              bottom.linkTo(linkButton.top, margin = 16.dp)
+              end.linkTo(parent.end, margin = 16.dp)
+            },
+          colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
+          border = BorderStroke(1.dp, Color.White),
+          onClick = {},
+        ) {
+          // TODO: change icon or animate the whole button depending on starred state
+          Icon(Icons.Outlined.StarOutline, contentDescription = null)
         }
 
         MediumFloatingActionButton(
@@ -120,10 +139,10 @@ fun SharedTransitionScope.NewsFeedItem(
               top.linkTo(parent.top, margin = 16.dp)
               bottom.linkTo(
                 if (item.description.isNullOrBlank()) parent.bottom else description.top,
-                margin = 8.dp,
+                margin = 4.dp,
               )
               start.linkTo(parent.start, margin = 16.dp)
-              end.linkTo(buttonsStartBarrier, margin = 16.dp)
+              end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
 
               width = Dimension.fillToConstraints
               verticalBias = 1f
@@ -142,9 +161,9 @@ fun SharedTransitionScope.NewsFeedItem(
             overflow = TextOverflow.Ellipsis,
             modifier =
               Modifier.constrainAs(description) {
-                bottom.linkTo(tokenCarousel.top, margin = 8.dp)
+                bottom.linkTo(linkButton.top, margin = 16.dp)
                 start.linkTo(parent.start, margin = 16.dp)
-                end.linkTo(buttonsStartBarrier, margin = 16.dp)
+                end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
 
                 width = Dimension.fillToConstraints
               },
@@ -158,10 +177,13 @@ fun SharedTransitionScope.NewsFeedItem(
           },
           modifier =
             Modifier.constrainAs(tokenCarousel) {
-                bottom.linkTo(parent.bottom, margin = 16.dp)
+                top.linkTo(linkButton.top)
+                bottom.linkTo(linkButton.bottom)
                 start.linkTo(parent.start)
-                end.linkTo(buttonsStartBarrier, margin = 16.dp)
+                end.linkTo(linkButton.start, margin = 16.dp)
+
                 width = Dimension.fillToConstraints
+                height = Dimension.wrapContent
               }
               .sharedElement(
                 sharedContentState = rememberTokenCarouselSharedContentState(item.id),
