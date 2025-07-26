@@ -62,31 +62,9 @@ fun SharedTransitionScope.NewsFeedItem(
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backgroundGradient, relatedTokens, title, description, linkButton, starButton) =
+        val (backgroundGradient, tokenCarousel, title, description, linkButton, starButton) =
           createRefs()
         val buttonsStartBarrier = createStartBarrier(linkButton, starButton)
-
-        TokenCarousel(
-          tokens = tokenCarouselItems,
-          onItemClick = { token ->
-            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, tokenCarouselItems))
-          },
-          modifier =
-            Modifier.constrainAs(relatedTokens) {
-                top.linkTo(parent.top)
-                width = Dimension.matchParent
-              }
-              .sharedElement(
-                sharedContentState = rememberTokenCarouselSharedContentState(item.id),
-                animatedVisibilityScope = animatedVisibilityScope,
-              ),
-          labelStyle =
-            MaterialTheme.typography.labelMedium.copy(
-              color = Color.White,
-              shadow =
-                Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f),
-            ),
-        )
 
         Box(
           modifier =
@@ -163,7 +141,7 @@ fun SharedTransitionScope.NewsFeedItem(
             overflow = TextOverflow.Ellipsis,
             modifier =
               Modifier.constrainAs(description) {
-                bottom.linkTo(parent.bottom, margin = 16.dp)
+                bottom.linkTo(tokenCarousel.top, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
                 end.linkTo(buttonsStartBarrier, margin = 16.dp)
 
@@ -171,6 +149,30 @@ fun SharedTransitionScope.NewsFeedItem(
               },
           )
         }
+
+        TokenCarousel(
+          tokens = tokenCarouselItems,
+          onItemClick = { token ->
+            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, tokenCarouselItems))
+          },
+          modifier =
+            Modifier.constrainAs(tokenCarousel) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                start.linkTo(parent.start)
+                end.linkTo(buttonsStartBarrier, margin = 16.dp)
+                width = Dimension.fillToConstraints
+              }
+              .sharedElement(
+                sharedContentState = rememberTokenCarouselSharedContentState(item.id),
+                animatedVisibilityScope = animatedVisibilityScope,
+              ),
+          labelStyle =
+            MaterialTheme.typography.labelMedium.copy(
+              color = Color.White,
+              shadow =
+                Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f),
+            ),
+        )
       }
     }
   }
