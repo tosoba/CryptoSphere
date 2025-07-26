@@ -5,7 +5,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun VerticalFeedPager(
@@ -17,7 +16,6 @@ fun VerticalFeedPager(
     modifier = modifier,
     state = pagerState,
     beyondViewportPageCount = 1,
-    pageSpacing = 8.dp,
     pageContent = pageContent,
   )
 }
