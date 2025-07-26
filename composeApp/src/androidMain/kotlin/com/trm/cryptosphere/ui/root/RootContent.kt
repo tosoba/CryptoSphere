@@ -2,13 +2,7 @@ package com.trm.cryptosphere.ui.root
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,9 +26,7 @@ fun RootContent(component: RootComponent) {
       @OptIn(ExperimentalDecomposeApi::class)
       ChildStack(
         stack = component.stack,
-        modifier =
-          Modifier.fillMaxSize()
-            .padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
+        modifier = Modifier.fillMaxSize(),
         animation =
           stackAnimation(
             animator = fade() + scale(),
