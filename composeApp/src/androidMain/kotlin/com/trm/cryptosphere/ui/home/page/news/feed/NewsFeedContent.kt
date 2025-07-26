@@ -11,12 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.domain.model.mockNewsItem
-import kotlin.math.abs
 import mx.platacard.pagerindicator.PagerIndicatorOrientation
 import mx.platacard.pagerindicator.PagerWormIndicator
 
@@ -33,15 +31,10 @@ fun SharedTransitionScope.NewsFeedContent(
   // TODO: change the theme depending on feed item image color palette
   Box(modifier = modifier) {
     VerticalFeedPager(pagerState = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-      val isCurrent = page == pagerState.currentPage
       NewsFeedItem(
         item = newsItems[page],
-        isCurrent = isCurrent,
+        isCurrent = page == pagerState.currentPage,
         animatedVisibilityScope = animatedVisibilityScope,
-        modifier =
-          Modifier.alpha(
-            if (!isCurrent) .75f else 1f - abs(pagerState.currentPageOffsetFraction) / 2f
-          ),
         onTokenCarouselItemClick = component.onTokenCarouselItemClick,
       )
     }
