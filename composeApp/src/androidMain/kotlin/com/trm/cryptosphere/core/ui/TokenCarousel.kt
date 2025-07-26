@@ -46,7 +46,7 @@ fun TokenCarousel(
         .background(color = Color.Transparent)
         .padding(vertical = 8.dp)
         .then(modifier),
-    preferredItemWidth = 112.dp,
+    preferredItemWidth = 120.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),
   ) { index ->
