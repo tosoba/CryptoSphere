@@ -56,7 +56,7 @@ fun TokenCarousel(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
             shape = MaterialTheme.shapes.medium,
           ),
-      color = MaterialTheme.colorScheme.surface.run { copy(alpha = alpha * .25f) },
+      color = MaterialTheme.colorScheme.surfaceContainer.run { copy(alpha = alpha * .25f) },
       onClick = { onItemClick(token) },
     ) {
       Column(
