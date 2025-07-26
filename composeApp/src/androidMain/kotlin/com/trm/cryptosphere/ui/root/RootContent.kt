@@ -14,6 +14,8 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.details.TokenDetailsContent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
@@ -48,6 +50,8 @@ fun RootContent(component: RootComponent) {
             )
           }
           is RootComponent.Child.TokenFeed -> {
+            StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)
+
             TokenFeedContent(
               component = instance.component,
               animatedVisibilityScope = this@ChildStack,
@@ -55,6 +59,8 @@ fun RootContent(component: RootComponent) {
             )
           }
           is RootComponent.Child.TokenDetails -> {
+            StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)
+
             TokenDetailsContent(
               component = instance.component,
               animatedVisibilityScope = this@ChildStack,
