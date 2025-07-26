@@ -3,7 +3,6 @@ package com.trm.cryptosphere.core.ui
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +21,6 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -41,11 +38,7 @@ fun TokenCarousel(
   @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
-    modifier =
-      Modifier.fillMaxWidth()
-        .background(color = Color.Transparent)
-        .padding(vertical = 8.dp)
-        .then(modifier),
+    modifier = modifier,
     preferredItemWidth = 120.dp,
     itemSpacing = 8.dp,
     contentPadding = PaddingValues(horizontal = 16.dp),

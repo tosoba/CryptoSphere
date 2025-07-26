@@ -30,9 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
-import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.logoUrl
@@ -60,7 +58,7 @@ fun SharedTransitionScope.TokenFeedContent(
           horizontalAlignment = Alignment.CenterHorizontally,
           modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
         ) {
-          Spacer(modifier = Modifier.height(96.dp))
+          Spacer(modifier = Modifier.height(112.dp))
 
           AsyncImage(
             modifier = Modifier.size(128.dp),
@@ -120,18 +118,16 @@ fun SharedTransitionScope.TokenFeedContent(
           }
         },
         modifier =
-          Modifier.sharedElement(
-            sharedContentState =
-              rememberTokenCarouselSharedContentState(
-                requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
-              ),
-            animatedVisibilityScope = animatedVisibilityScope,
-          ),
+          Modifier.fillMaxWidth()
+            .padding(top = 8.dp)
+            .sharedElement(
+              sharedContentState =
+                rememberTokenCarouselSharedContentState(
+                  requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
+                ),
+              animatedVisibilityScope = animatedVisibilityScope,
+            ),
       )
-
-      TopGradientOverlay(modifier = Modifier.align(Alignment.TopCenter))
-
-      BottomGradientOverlay(modifier = Modifier.align(Alignment.BottomCenter))
 
       // TODO: navigation toolbar at the bottom
     }
