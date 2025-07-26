@@ -91,7 +91,8 @@ fun SharedTransitionScope.NewsFeedItem(
           modifier =
             Modifier.constrainAs(shareButton) {
               bottom.linkTo(starButton.top, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
+              start.linkTo(linkButton.start)
+              end.linkTo(linkButton.end)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
           border = BorderStroke(1.dp, Color.White),
@@ -104,7 +105,8 @@ fun SharedTransitionScope.NewsFeedItem(
           modifier =
             Modifier.constrainAs(starButton) {
               bottom.linkTo(linkButton.top, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
+              start.linkTo(linkButton.start)
+              end.linkTo(linkButton.end)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
           border = BorderStroke(1.dp, Color.White),

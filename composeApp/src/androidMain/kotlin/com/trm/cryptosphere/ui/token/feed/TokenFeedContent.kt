@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -25,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,10 +34,11 @@ import com.trm.cryptosphere.core.ui.BottomGradientOverlay
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TopGradientOverlay
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.core.ui.VerticalFeedPagerContentPadding
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
+import mx.platacard.pagerindicator.PagerIndicatorOrientation
+import mx.platacard.pagerindicator.PagerWormIndicator
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -52,63 +53,62 @@ fun SharedTransitionScope.TokenFeedContent(
       val state by component.state.collectAsStateWithLifecycle()
       val pagerState = rememberPagerState(pageCount = state.feedItems::size)
 
-      VerticalFeedPager(
-        pagerState = pagerState,
-        contentPadding = VerticalFeedPagerContentPadding.ExtraTop,
-        modifier = Modifier.fillMaxSize(),
-      ) { page ->
+      VerticalFeedPager(pagerState = pagerState, modifier = Modifier.fillMaxSize()) { page ->
         val token = state.feedItems[page]
 
-        ElevatedCard(
-          modifier = Modifier.fillMaxSize(),
-          onClick = { component.navigateToTokenDetails(token.symbol) },
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
         ) {
-          Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth(),
-          ) {
-            Spacer(modifier = Modifier.height(16.dp))
+          Spacer(modifier = Modifier.height(96.dp))
 
-            AsyncImage(
-              modifier = Modifier.size(128.dp),
-              model = token.logoUrl,
-              contentDescription = null,
-              contentScale = ContentScale.Fit,
+          AsyncImage(
+            modifier = Modifier.size(128.dp),
+            model = token.logoUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Text(
+            text = token.symbol,
+            style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
+            modifier =
+              Modifier.sharedElement(
+                sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
+                animatedVisibilityScope = animatedVisibilityScope,
+              ),
+          )
+
+          Spacer(modifier = Modifier.height(16.dp))
+
+          Row(modifier = Modifier.fillMaxWidth()) {
+            TokenParameterCard(
+              label = "Price",
+              value = token.quote.price.toString(),
+              modifier = Modifier.weight(1f),
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-              text = "#${token.cmcRank} ${token.symbol}",
-              style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-              modifier =
-                Modifier.padding(horizontal = 16.dp)
-                  .sharedElement(
-                    sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                  ),
+            TokenParameterCard(
+              label = "Market Cap",
+              value = token.quote.marketCap.toString(),
+              modifier = Modifier.weight(1f),
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-              TokenParameterCard(
-                label = "Price",
-                value = token.quote.price.toString(),
-                modifier = Modifier.weight(1f),
-              )
-
-              Spacer(modifier = Modifier.width(8.dp))
-
-              TokenParameterCard(
-                label = "Market Cap",
-                value = token.quote.marketCap.toString(),
-                modifier = Modifier.weight(1f),
-              )
-            }
           }
         }
       }
+
+      PagerWormIndicator(
+        pagerState = pagerState,
+        activeDotColor = Color.LightGray,
+        dotColor = Color.DarkGray,
+        dotCount = 5,
+        orientation = PagerIndicatorOrientation.Vertical,
+        modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
+      )
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
