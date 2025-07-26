@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -35,6 +36,7 @@ fun TokenCarousel(
   tokens: List<TokenCarouselItem>,
   onItemClick: (TokenCarouselItem) -> Unit,
   modifier: Modifier = Modifier,
+  labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
   @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
@@ -61,7 +63,7 @@ fun TokenCarousel(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
             shape = MaterialTheme.shapes.medium,
           ),
-      color = MaterialTheme.colorScheme.surface.run { copy(alpha = alpha * .95f) },
+      color = MaterialTheme.colorScheme.surface.run { copy(alpha = alpha * .25f) },
       onClick = { onItemClick(token) },
     ) {
       Column(
@@ -84,7 +86,7 @@ fun TokenCarousel(
           text = token.symbol,
           maxLines = 1,
           textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.labelMedium,
+          style = labelStyle,
           modifier = Modifier.fillMaxWidth().basicMarquee(),
         )
       }

@@ -80,6 +80,12 @@ fun SharedTransitionScope.NewsFeedItem(
                 sharedContentState = rememberTokenCarouselSharedContentState(item.id),
                 animatedVisibilityScope = animatedVisibilityScope,
               ),
+          labelStyle =
+            MaterialTheme.typography.labelMedium.copy(
+              color = Color.White,
+              shadow =
+                Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f),
+            ),
         )
 
         Box(
