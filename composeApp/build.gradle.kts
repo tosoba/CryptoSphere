@@ -15,6 +15,7 @@ kotlin {
       implementation(compose.preview)
 
       implementation(libs.androidx.activity.compose)
+      implementation(libs.androidx.material3)
       implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
       implementation(libs.androidx.constraintLayout.compose)
       implementation(libs.coil.compose)

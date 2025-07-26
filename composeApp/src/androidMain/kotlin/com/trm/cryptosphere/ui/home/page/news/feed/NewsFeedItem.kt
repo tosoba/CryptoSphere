@@ -14,10 +14,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.StarOutline
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +42,7 @@ import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SharedTransitionScope.NewsFeedItem(
   item: NewsItem,
@@ -94,7 +95,7 @@ fun SharedTransitionScope.NewsFeedItem(
           )
         }
 
-        FloatingActionButton(
+        MediumFloatingActionButton(
           modifier =
             Modifier.constrainAs(linkButton) {
               bottom.linkTo(parent.bottom, margin = 24.dp)
