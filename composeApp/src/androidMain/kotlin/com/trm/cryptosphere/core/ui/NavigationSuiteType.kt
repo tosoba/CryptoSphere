@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.core.ui
 
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
@@ -11,8 +12,7 @@ fun currentNavigationSuiteType(): NavigationSuiteType =
       windowPosture.isTabletop -> {
         NavigationSuiteType.NavigationBar
       }
-      windowSizeClass.isWidthAtLeastBreakpoint(600) ||
-        !windowSizeClass.isHeightAtLeastBreakpoint(480) -> {
+      isAtLeastMediumWidthAndAtMostMediumHeight() || isCompactHeight() -> {
         NavigationSuiteType.NavigationRail
       }
       else -> {
@@ -20,3 +20,11 @@ fun currentNavigationSuiteType(): NavigationSuiteType =
       }
     }
   }
+
+@Composable
+private fun WindowAdaptiveInfo.isAtLeastMediumWidthAndAtMostMediumHeight(): Boolean =
+  windowSizeClass.isWidthAtLeastBreakpoint(600) && !windowSizeClass.isHeightAtLeastBreakpoint(900)
+
+@Composable
+private fun WindowAdaptiveInfo.isCompactHeight(): Boolean =
+  !windowSizeClass.isHeightAtLeastBreakpoint(480)
