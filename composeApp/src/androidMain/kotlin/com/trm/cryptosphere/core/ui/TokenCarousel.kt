@@ -33,6 +33,7 @@ fun TokenCarousel(
   tokens: List<TokenCarouselItem>,
   onItemClick: (TokenCarouselItem) -> Unit,
   modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
   @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +42,7 @@ fun TokenCarousel(
     modifier = modifier,
     preferredItemWidth = 120.dp,
     itemSpacing = 8.dp,
-    contentPadding = PaddingValues(horizontal = 16.dp),
+    contentPadding = contentPadding,
   ) { index ->
     // TODO: if there is a need to put any border/shadow/glow effect on the card just put it
     // behind the card with the same maskClip and make the card itself smaller

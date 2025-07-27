@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
@@ -196,6 +197,7 @@ fun SharedTransitionScope.NewsFeedItem(
                 sharedContentState = rememberTokenCarouselSharedContentState(item.id),
                 animatedVisibilityScope = animatedVisibilityScope,
               ),
+          contentPadding = PaddingValues(start = 16.dp),
           labelStyle =
             MaterialTheme.typography.labelMedium.copy(
               color = Color.White,

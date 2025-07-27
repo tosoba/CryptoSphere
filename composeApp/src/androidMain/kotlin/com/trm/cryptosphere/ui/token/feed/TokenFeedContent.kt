@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
+import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
 import mx.platacard.pagerindicator.PagerIndicatorOrientation
@@ -114,54 +116,26 @@ fun SharedTransitionScope.TokenFeedContent(
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
+            start.linkTo(parent.start, margin = 32.dp)
+            end.linkTo(
+              if (navigationSuiteType == NavigationSuiteType.NavigationBar) pagerIndicator.start
+              else floatingToolbar.start,
+              margin =
+                if (navigationSuiteType == NavigationSuiteType.NavigationBar) 16.dp else 32.dp,
+            )
+
+            width = Dimension.fillToConstraints
+            height = Dimension.fillToConstraints
           },
       ) { page ->
-        val token = state.feedItems[page]
-
-        Column(
-          horizontalAlignment = Alignment.CenterHorizontally,
-          modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
-        ) {
-          Spacer(modifier = Modifier.height(16.dp))
-
-          AsyncImage(
-            modifier = Modifier.size(128.dp),
-            model = token.logoUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
+        Column(modifier = Modifier.fillMaxSize()) {
+          TokenFeedPagerItem(
+            token = state.feedItems[page],
+            animatedVisibilityScope = animatedVisibilityScope,
+            modifier = Modifier.weight(1f),
           )
 
-          Spacer(modifier = Modifier.height(8.dp))
-
-          Text(
-            text = token.symbol,
-            style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-            modifier =
-              Modifier.sharedElement(
-                sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
-                animatedVisibilityScope = animatedVisibilityScope,
-              ),
-          )
-
-          Spacer(modifier = Modifier.height(16.dp))
-
-          Row(modifier = Modifier.fillMaxWidth()) {
-            TokenParameterCard(
-              label = "Price",
-              value = token.quote.price.toString(),
-              modifier = Modifier.weight(1f),
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            TokenParameterCard(
-              label = "Market Cap",
-              value = token.quote.marketCap.toString(),
-              modifier = Modifier.weight(1f),
-            )
-          }
+          Spacer(modifier = Modifier.height(128.dp))
         }
       }
 
@@ -192,9 +166,11 @@ fun SharedTransitionScope.TokenFeedContent(
           Modifier.constrainAs(tokenCarousel) {
               start.linkTo(parent.start)
               end.linkTo(detailsButton.start, margin = 16.dp)
-              bottom.linkTo(parent.bottom, margin = 16.dp)
+              top.linkTo(detailsButton.top)
+              bottom.linkTo(detailsButton.bottom)
 
               width = Dimension.fillToConstraints
+              height = Dimension.wrapContent
             }
             .sharedElement(
               sharedContentState =
@@ -203,6 +179,7 @@ fun SharedTransitionScope.TokenFeedContent(
                 ),
               animatedVisibilityScope = animatedVisibilityScope,
             ),
+        contentPadding = PaddingValues(start = 16.dp),
       )
 
       MediumFloatingActionButton(
@@ -236,6 +213,55 @@ fun SharedTransitionScope.TokenFeedContent(
           }
         }
       }
+    }
+  }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun SharedTransitionScope.TokenFeedPagerItem(
+  token: TokenItem,
+  animatedVisibilityScope: AnimatedVisibilityScope,
+  modifier: Modifier = Modifier,
+) {
+  Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+    Spacer(modifier = Modifier.height(16.dp))
+
+    AsyncImage(
+      modifier = Modifier.size(128.dp),
+      model = token.logoUrl,
+      contentDescription = null,
+      contentScale = ContentScale.Fit,
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(
+      text = token.symbol,
+      style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
+      modifier =
+        Modifier.sharedElement(
+          sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
+          animatedVisibilityScope = animatedVisibilityScope,
+        ),
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Row(modifier = Modifier.fillMaxWidth()) {
+      TokenParameterCard(
+        label = "Price",
+        value = token.quote.price.toString(),
+        modifier = Modifier.weight(1f),
+      )
+
+      Spacer(modifier = Modifier.width(8.dp))
+
+      TokenParameterCard(
+        label = "Market Cap",
+        value = token.quote.marketCap.toString(),
+        modifier = Modifier.weight(1f),
+      )
     }
   }
 }
