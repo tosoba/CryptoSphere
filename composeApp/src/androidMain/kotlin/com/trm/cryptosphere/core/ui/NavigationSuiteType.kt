@@ -5,7 +5,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 
 @Composable
-fun navigationSuiteLayoutType(): NavigationSuiteType =
+fun currentNavigationSuiteType(): NavigationSuiteType =
   with(currentWindowAdaptiveInfo()) {
     when {
       windowPosture.isTabletop -> {

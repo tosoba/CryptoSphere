@@ -31,6 +31,7 @@ import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
 import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
@@ -63,9 +65,41 @@ fun SharedTransitionScope.TokenFeedContent(
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {
-  Scaffold(modifier = modifier) { paddingValues ->
+  Scaffold(
+    modifier = modifier,
+    bottomBar = {
+      if (currentNavigationSuiteType() == NavigationSuiteType.NavigationBar) {
+        FlexibleBottomAppBar(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = BottomAppBarDefaults.FlexibleFixedHorizontalArrangement,
+        ) {
+          AppBarRow(
+            overflowIndicator = { menuState ->
+              IconButton(
+                onClick = { if (menuState.isExpanded) menuState.dismiss() else menuState.show() }
+              ) {
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+              }
+            }
+          ) {
+            clickableItem(
+              onClick = {},
+              icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null) },
+              label = "ArrowBack",
+            )
+            clickableItem(
+              onClick = {},
+              icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
+              label = "ArrowForward",
+              enabled = false,
+            )
+          }
+        }
+      }
+    },
+  ) { paddingValues ->
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-      val (verticalPager, pagerIndicator, bottomAppBar, tokenCarousel, detailsButton) = createRefs()
+      val (verticalPager, pagerIndicator, tokenCarousel, detailsButton) = createRefs()
 
       val scope = rememberCoroutineScope()
       val state by component.state.collectAsStateWithLifecycle()
@@ -155,7 +189,7 @@ fun SharedTransitionScope.TokenFeedContent(
           Modifier.constrainAs(tokenCarousel) {
               start.linkTo(parent.start)
               end.linkTo(detailsButton.start, margin = 16.dp)
-              bottom.linkTo(bottomAppBar.top, margin = 16.dp)
+              bottom.linkTo(parent.bottom, margin = 16.dp)
 
               width = Dimension.fillToConstraints
             }
@@ -171,7 +205,7 @@ fun SharedTransitionScope.TokenFeedContent(
       MediumFloatingActionButton(
         modifier =
           Modifier.constrainAs(detailsButton) {
-            bottom.linkTo(bottomAppBar.top, margin = 16.dp)
+            bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
         onClick = {
@@ -179,40 +213,6 @@ fun SharedTransitionScope.TokenFeedContent(
         },
       ) {
         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
-      }
-
-      // TODO: this should be a VerticalFloatingToolbar on the right for
-      // NavigationSuiteType.NavigationRail
-      FlexibleBottomAppBar(
-        modifier =
-          Modifier.constrainAs(bottomAppBar) {
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-          },
-        horizontalArrangement = BottomAppBarDefaults.FlexibleFixedHorizontalArrangement,
-      ) {
-        AppBarRow(
-          overflowIndicator = { menuState ->
-            IconButton(
-              onClick = { if (menuState.isExpanded) menuState.dismiss() else menuState.show() }
-            ) {
-              Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-            }
-          }
-        ) {
-          clickableItem(
-            onClick = {},
-            icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null) },
-            label = "ArrowBack",
-          )
-          clickableItem(
-            onClick = {},
-            icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
-            label = "ArrowForward",
-            enabled = false,
-          )
-        }
       }
     }
   }

@@ -18,7 +18,7 @@ import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
-import com.trm.cryptosphere.core.ui.navigationSuiteLayoutType
+import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
@@ -34,7 +34,7 @@ fun SharedTransitionScope.HomeContent(
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
     modifier = modifier,
-    layoutType = navigationSuiteLayoutType(),
+    layoutType = currentNavigationSuiteType(),
     navigationSuiteItems = {
       HomePageConfig.entries.forEachIndexed { index, config ->
         item(
