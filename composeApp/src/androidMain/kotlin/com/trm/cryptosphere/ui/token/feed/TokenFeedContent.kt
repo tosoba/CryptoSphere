@@ -31,6 +31,7 @@ import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -65,10 +66,12 @@ fun SharedTransitionScope.TokenFeedContent(
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
 ) {
+  val navigationSuiteType = currentNavigationSuiteType()
+
   Scaffold(
     modifier = modifier,
     bottomBar = {
-      if (currentNavigationSuiteType() == NavigationSuiteType.NavigationBar) {
+      if (navigationSuiteType == NavigationSuiteType.NavigationBar) {
         FlexibleBottomAppBar(
           modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = BottomAppBarDefaults.FlexibleFixedHorizontalArrangement,
@@ -99,7 +102,7 @@ fun SharedTransitionScope.TokenFeedContent(
     },
   ) { paddingValues ->
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-      val (verticalPager, pagerIndicator, tokenCarousel, detailsButton) = createRefs()
+      val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
 
       val scope = rememberCoroutineScope()
       val state by component.state.collectAsStateWithLifecycle()
@@ -108,7 +111,7 @@ fun SharedTransitionScope.TokenFeedContent(
       VerticalFeedPager(
         pagerState = pagerState,
         modifier =
-          Modifier.constrainAs(verticalPager) {
+          Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
             start.linkTo(parent.start)
@@ -171,7 +174,7 @@ fun SharedTransitionScope.TokenFeedContent(
         modifier =
           Modifier.constrainAs(pagerIndicator) {
             top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
+            bottom.linkTo(detailsButton.top)
             end.linkTo(parent.end, margin = 12.dp)
           },
       )
@@ -213,6 +216,25 @@ fun SharedTransitionScope.TokenFeedContent(
         },
       ) {
         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+      }
+
+      if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
+        VerticalFloatingToolbar(
+          expanded = true,
+          modifier =
+            Modifier.constrainAs(floatingToolbar) {
+              top.linkTo(parent.top, margin = 16.dp)
+              bottom.linkTo(detailsButton.top, margin = 16.dp)
+              end.linkTo(pagerIndicator.start, margin = 12.dp)
+            },
+        ) {
+          IconButton(onClick = {}) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+          }
+          IconButton(onClick = {}, enabled = false) {
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+          }
+        }
       }
     }
   }
