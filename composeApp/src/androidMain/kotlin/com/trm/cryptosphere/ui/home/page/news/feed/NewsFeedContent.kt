@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
+import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.domain.model.mockNewsItem
-import mx.platacard.pagerindicator.PagerIndicatorOrientation
-import mx.platacard.pagerindicator.PagerWormIndicator
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

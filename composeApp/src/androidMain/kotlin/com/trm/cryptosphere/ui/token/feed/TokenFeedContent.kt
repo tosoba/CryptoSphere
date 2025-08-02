@@ -47,6 +47,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
+import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
@@ -54,8 +56,6 @@ import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
-import mx.platacard.pagerindicator.PagerIndicatorOrientation
-import mx.platacard.pagerindicator.PagerWormIndicator
 
 @OptIn(
   ExperimentalSharedTransitionApi::class,
