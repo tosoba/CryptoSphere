@@ -3,7 +3,8 @@ package com.trm.cryptosphere.ui.root
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -22,7 +23,8 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @Composable
 fun RootContent(component: RootComponent) {
-  MaterialTheme {
+  @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+  MaterialExpressiveTheme {
     @OptIn(ExperimentalSharedTransitionApi::class)
     SharedTransitionLayout {
       @OptIn(ExperimentalDecomposeApi::class)
