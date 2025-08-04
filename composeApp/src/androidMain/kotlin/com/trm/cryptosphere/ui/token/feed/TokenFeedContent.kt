@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FlexibleBottomAppBar
@@ -29,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalFloatingToolbar
@@ -266,19 +266,24 @@ private fun SharedTransitionScope.TokenFeedPagerItem(
   }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun TokenParameterCard(label: String, value: String, modifier: Modifier = Modifier) {
-  OutlinedCard(modifier = modifier) {
+  ElevatedCard(modifier = modifier) {
     Column(modifier = Modifier.padding(16.dp)) {
       Text(
         text = label,
-        style = MaterialTheme.typography.labelLarge,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
       )
+
+      Spacer(modifier = Modifier.height(4.dp))
+
       Text(
         text = value,
-        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
+        style = MaterialTheme.typography.headlineMediumEmphasized,
+        fontWeight = FontWeight.Medium,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
       )
