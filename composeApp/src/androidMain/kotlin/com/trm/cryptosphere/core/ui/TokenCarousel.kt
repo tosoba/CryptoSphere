@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.TokenCarouselItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TokenCarousel(
   tokens: List<TokenCarouselItem>,
@@ -36,7 +37,6 @@ fun TokenCarousel(
   contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
-  @OptIn(ExperimentalMaterial3Api::class)
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier = modifier,

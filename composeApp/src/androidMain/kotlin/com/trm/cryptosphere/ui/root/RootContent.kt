@@ -21,13 +21,15 @@ import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.details.TokenDetailsContent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
+@OptIn(
+  ExperimentalMaterial3ExpressiveApi::class,
+  ExperimentalSharedTransitionApi::class,
+  ExperimentalDecomposeApi::class,
+)
 @Composable
 fun RootContent(component: RootComponent) {
-  @OptIn(ExperimentalMaterial3ExpressiveApi::class)
   MaterialExpressiveTheme {
-    @OptIn(ExperimentalSharedTransitionApi::class)
     SharedTransitionLayout {
-      @OptIn(ExperimentalDecomposeApi::class)
       ChildStack(
         stack = component.stack,
         modifier = Modifier.fillMaxSize(),
