@@ -1,10 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -37,21 +33,22 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
+import com.trm.cryptosphere.core.ui.SharedTransitionPreview
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
-import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
+import com.trm.cryptosphere.core.ui.localSharedElement
+import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SharedTransitionScope.NewsFeedItem(
+fun NewsFeedItem(
   item: NewsItem,
   isCurrent: Boolean,
-  animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
   onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
@@ -193,10 +190,7 @@ fun SharedTransitionScope.NewsFeedItem(
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
               }
-              .sharedElement(
-                sharedContentState = rememberTokenCarouselSharedContentState(item.id),
-                animatedVisibilityScope = animatedVisibilityScope,
-              ),
+              .localSharedElement(key = tokenCarouselSharedTransitionKey(item.id)),
           contentPadding = PaddingValues(start = 16.dp),
           labelStyle =
             MaterialTheme.typography.labelMedium.copy(
@@ -210,18 +204,10 @@ fun SharedTransitionScope.NewsFeedItem(
   }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun NewsFeedItemPreview() {
-  SharedTransitionLayout {
-    AnimatedVisibility(true) {
-      NewsFeedItem(
-        item = mockNewsItem("1"),
-        isCurrent = true,
-        animatedVisibilityScope = this,
-        onTokenCarouselItemClick = { _, _ -> },
-      )
-    }
+  SharedTransitionPreview {
+    NewsFeedItem(item = mockNewsItem("1"), isCurrent = true, onTokenCarouselItemClick = { _, _ -> })
   }
 }

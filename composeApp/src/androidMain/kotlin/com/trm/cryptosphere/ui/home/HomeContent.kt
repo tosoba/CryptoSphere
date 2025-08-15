@@ -1,8 +1,5 @@
 package com.trm.cryptosphere.ui.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -24,13 +21,8 @@ import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.HomeContent(
-  component: HomeComponent,
-  animatedVisibilityScope: AnimatedVisibilityScope,
-  modifier: Modifier = Modifier,
-) {
+fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
     modifier = modifier,
@@ -67,11 +59,7 @@ fun SharedTransitionScope.HomeContent(
       ) { _, page ->
         when (page) {
           is HomeComponent.Page.NewsFeed -> {
-            NewsFeedContent(
-              component = page.component,
-              animatedVisibilityScope = animatedVisibilityScope,
-              modifier = Modifier.fillMaxSize(),
-            )
+            NewsFeedContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
           is HomeComponent.Page.Prices -> {
             StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)

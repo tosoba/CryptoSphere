@@ -1,8 +1,5 @@
 package com.trm.cryptosphere.ui.token.feed
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,22 +49,15 @@ import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
-import com.trm.cryptosphere.core.ui.rememberTokenCarouselSharedContentState
+import com.trm.cryptosphere.core.ui.localSharedElement
+import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
 
-@OptIn(
-  ExperimentalSharedTransitionApi::class,
-  ExperimentalMaterial3ExpressiveApi::class,
-  ExperimentalMaterial3Api::class,
-)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SharedTransitionScope.TokenFeedContent(
-  component: TokenFeedComponent,
-  animatedVisibilityScope: AnimatedVisibilityScope,
-  modifier: Modifier = Modifier,
-) {
+fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
   val navigationSuiteType = currentNavigationSuiteType()
 
   Scaffold(
@@ -129,11 +119,7 @@ fun SharedTransitionScope.TokenFeedContent(
           },
       ) { page ->
         Column(modifier = Modifier.fillMaxSize()) {
-          TokenFeedPagerItem(
-            token = state.feedItems[page],
-            animatedVisibilityScope = animatedVisibilityScope,
-            modifier = Modifier.weight(1f),
-          )
+          TokenFeedPagerItem(token = state.feedItems[page], modifier = Modifier.weight(1f))
 
           Spacer(modifier = Modifier.height(128.dp))
         }
@@ -172,12 +158,11 @@ fun SharedTransitionScope.TokenFeedContent(
               width = Dimension.fillToConstraints
               height = Dimension.wrapContent
             }
-            .sharedElement(
-              sharedContentState =
-                rememberTokenCarouselSharedContentState(
+            .localSharedElement(
+              key =
+                tokenCarouselSharedTransitionKey(
                   requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
-                ),
-              animatedVisibilityScope = animatedVisibilityScope,
+                )
             ),
         contentPadding = PaddingValues(start = 16.dp),
       )
@@ -217,13 +202,8 @@ fun SharedTransitionScope.TokenFeedContent(
   }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun SharedTransitionScope.TokenFeedPagerItem(
-  token: TokenItem,
-  animatedVisibilityScope: AnimatedVisibilityScope,
-  modifier: Modifier = Modifier,
-) {
+private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
   Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -239,11 +219,7 @@ private fun SharedTransitionScope.TokenFeedPagerItem(
     Text(
       text = token.symbol,
       style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-      modifier =
-        Modifier.sharedElement(
-          sharedContentState = rememberSharedContentState("token-symbol-${token.symbol}"),
-          animatedVisibilityScope = animatedVisibilityScope,
-        ),
+      modifier = Modifier.localSharedElement(key = "token-symbol-${token.symbol}"),
     )
 
     Spacer(modifier = Modifier.height(16.dp))

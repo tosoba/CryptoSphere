@@ -1,8 +1,5 @@
 package com.trm.cryptosphere.ui.token.details
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,14 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.trm.cryptosphere.core.ui.localSharedElement
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.TokenDetailsContent(
-  component: TokenDetailsComponent,
-  animatedVisibilityScope: AnimatedVisibilityScope,
-  modifier: Modifier = Modifier,
-) {
+fun TokenDetailsContent(component: TokenDetailsComponent, modifier: Modifier = Modifier) {
   Scaffold(modifier = modifier) { paddingValues ->
     Box(
       modifier = Modifier.fillMaxSize().padding(paddingValues),
@@ -30,11 +23,7 @@ fun SharedTransitionScope.TokenDetailsContent(
         text = component.symbol,
         style = MaterialTheme.typography.headlineLarge,
         modifier =
-          Modifier.padding(16.dp)
-            .sharedElement(
-              sharedContentState = rememberSharedContentState("token-symbol-${component.symbol}"),
-              animatedVisibilityScope = animatedVisibilityScope,
-            ),
+          Modifier.padding(16.dp).localSharedElement(key = "token-symbol-${component.symbol}"),
       )
     }
   }
