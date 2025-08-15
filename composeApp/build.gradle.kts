@@ -25,6 +25,7 @@ kotlin {
       implementation(libs.decompose.extensions.compose.experimental)
 
       implementation(libs.kotlinx.coroutines.android)
+      implementation(libs.materialKolor)
     }
 
     commonMain.dependencies {
