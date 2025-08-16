@@ -6,6 +6,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.capitalize
@@ -22,7 +23,11 @@ import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
 @Composable
-fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
+fun HomeContent(
+  component: HomeComponent,
+  modifier: Modifier = Modifier,
+  onDynamicThemeModelChange: (Any?) -> Unit,
+) {
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
     modifier = modifier,
@@ -57,23 +62,30 @@ fun HomeContent(component: HomeComponent, modifier: Modifier = Modifier) {
         modifier = Modifier.fillMaxSize(),
         scrollAnimation = PagesScrollAnimation.Default,
       ) { _, page ->
+        LaunchedEffect(Unit) {
+          if (page !is HomeComponent.Page.NewsFeed) {
+            onDynamicThemeModelChange(null)
+          }
+        }
+
         when (page) {
           is HomeComponent.Page.NewsFeed -> {
-            NewsFeedContent(component = page.component, modifier = Modifier.fillMaxSize())
+            NewsFeedContent(
+              component = page.component,
+              modifier = Modifier.fillMaxSize(),
+              onCurrentNewsItemChange = { onDynamicThemeModelChange(it.imgUrl) },
+            )
           }
           is HomeComponent.Page.Prices -> {
             StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)
-
             PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
           is HomeComponent.Page.Search -> {
             StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)
-
             SearchContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
           is HomeComponent.Page.History -> {
             StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)
-
             HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
         }

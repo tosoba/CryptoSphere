@@ -6,6 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
@@ -32,7 +37,8 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 )
 @Composable
 fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
-  DynamicTheme(model = null, colorExtractor = colorExtractor) {
+  var model: Any? by remember { mutableStateOf(null) }
+  DynamicTheme(model = model, colorExtractor = colorExtractor) {
     SharedTransitionLayout {
       ChildStack(
         stack = component.stack,
@@ -56,9 +62,19 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
               animatedVisibilityScope = this@ChildStack,
             )
         ) {
+          LaunchedEffect(child.instance) {
+            if (child.instance !is RootComponent.Child.Home) {
+              model = null
+            }
+          }
+
           when (val instance = child.instance) {
             is RootComponent.Child.Home -> {
-              HomeContent(component = instance.component, modifier = Modifier.fillMaxSize())
+              HomeContent(
+                component = instance.component,
+                modifier = Modifier.fillMaxSize(),
+                onDynamicThemeModelChange = { model = it },
+              )
             }
             is RootComponent.Child.TokenFeed -> {
               StatusBarContentAppearanceEffect(StatusBarContentAppearance.DARK)

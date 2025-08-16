@@ -39,6 +39,10 @@ fun DynamicTheme(
     }
   DynamicMaterialExpressiveTheme(
     seedColor = result?.color ?: fallback,
+    primary = if (result == null) MaterialTheme.colorScheme.primary else null,
+    secondary = if (result == null) MaterialTheme.colorScheme.secondary else null,
+    tertiary = if (result == null) MaterialTheme.colorScheme.tertiary else null,
+    error = if (result == null) MaterialTheme.colorScheme.error else null,
     isDark = useDarkTheme,
     animate = result.let { it != null && !it.cached },
     content = content,

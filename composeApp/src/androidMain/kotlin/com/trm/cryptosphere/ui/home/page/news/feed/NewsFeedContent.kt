@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,14 +14,22 @@ import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 
 @Composable
-fun NewsFeedContent(component: NewsFeedComponent, modifier: Modifier = Modifier) {
+fun NewsFeedContent(
+  component: NewsFeedComponent,
+  modifier: Modifier = Modifier,
+  onCurrentNewsItemChange: (NewsItem) -> Unit,
+) {
   val newsItems = remember { List(3) { mockNewsItem(it.toString()) } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
-  // TODO: change the theme depending on feed item image color palette
+  LaunchedEffect(pagerState.currentPage, newsItems) {
+    onCurrentNewsItemChange(newsItems[pagerState.currentPage])
+  }
+
   Box(modifier = modifier) {
     VerticalFeedPager(pagerState = pagerState, modifier = Modifier.fillMaxSize()) { page ->
       NewsFeedItem(
