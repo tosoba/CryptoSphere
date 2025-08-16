@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.drawable.toBitmap
@@ -27,11 +26,11 @@ import kotlin.coroutines.resumeWithException
 @Composable
 fun DynamicTheme(
   model: Any?,
+  colorExtractor: ColorExtractor,
   fallback: Color = MaterialTheme.colorScheme.primary,
   useDarkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
-  val colorExtractor = LocalColorExtractor.current
   val result by
     produceState<ColorExtractor.Result?>(initialValue = null, model, colorExtractor) {
       value =
@@ -79,6 +78,3 @@ class ColorExtractor(private val imageLoader: ImageLoader, private val context: 
     val DEFAULT_REQUEST_SIZE = SizeResolver(Size(96, 96))
   }
 }
-
-val LocalColorExtractor =
-  staticCompositionLocalOf<ColorExtractor> { error("LocalColorExtractor not provided") }

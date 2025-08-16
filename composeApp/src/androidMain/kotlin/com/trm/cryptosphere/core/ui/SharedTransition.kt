@@ -19,9 +19,7 @@ data class SharedTransition(
 )
 
 val LocalSharedTransition =
-  staticCompositionLocalOf<SharedTransition> {
-    throw IllegalStateException("SharedTransition is not provided.")
-  }
+  staticCompositionLocalOf<SharedTransition> { error("SharedTransition is not provided.") }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

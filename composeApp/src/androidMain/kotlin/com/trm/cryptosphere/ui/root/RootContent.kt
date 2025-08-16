@@ -4,7 +4,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -16,6 +15,8 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.trm.cryptosphere.core.ui.ColorExtractor
+import com.trm.cryptosphere.core.ui.DynamicTheme
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
@@ -30,8 +31,8 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
   ExperimentalDecomposeApi::class,
 )
 @Composable
-fun RootContent(component: RootComponent) {
-  MaterialExpressiveTheme {
+fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
+  DynamicTheme(model = null, colorExtractor = colorExtractor) {
     SharedTransitionLayout {
       ChildStack(
         stack = component.stack,
