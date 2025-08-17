@@ -85,12 +85,12 @@ fun TokenFeedContent(
             clickableItem(
               onClick = {},
               icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null) },
-              label = "ArrowBack",
+              label = "Go back",
             )
             clickableItem(
               onClick = {},
               icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
-              label = "ArrowForward",
+              label = "Go forward",
               enabled = false,
             )
           }
