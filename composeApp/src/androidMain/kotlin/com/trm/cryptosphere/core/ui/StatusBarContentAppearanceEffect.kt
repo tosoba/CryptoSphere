@@ -2,13 +2,13 @@ package com.trm.cryptosphere.core.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
 fun StatusBarContentAppearanceEffect(appearance: StatusBarContentAppearance) {
   LocalActivity.current?.window?.let { window ->
-    SideEffect {
+    LaunchedEffect(appearance) {
       WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
         appearance != StatusBarContentAppearance.LIGHT
     }

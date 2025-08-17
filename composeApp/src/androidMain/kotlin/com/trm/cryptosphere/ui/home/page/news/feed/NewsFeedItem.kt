@@ -34,8 +34,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.SharedTransitionPreview
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -53,9 +51,6 @@ fun NewsFeedItem(
   onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
   val tokenCarouselItems = remember(::mockTokenCarouselItems)
-
-  // TODO: this should be calculated based on image background and its distance from white/black
-  StatusBarContentAppearanceEffect(StatusBarContentAppearance.LIGHT)
 
   Box(modifier = modifier) {
     AsyncImage(

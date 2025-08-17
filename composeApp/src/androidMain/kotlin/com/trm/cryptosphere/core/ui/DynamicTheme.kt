@@ -18,9 +18,9 @@ import coil.size.SizeResolver
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.ktx.themeColors
 import com.trm.cryptosphere.core.util.cancellableRunCatching
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -31,6 +31,10 @@ fun DynamicTheme(
   useDarkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
+  StatusBarContentAppearanceEffect(
+    if (useDarkTheme) StatusBarContentAppearance.LIGHT else StatusBarContentAppearance.DARK
+  )
+
   val result by
     produceState<ColorExtractor.Result?>(initialValue = null, imageUrl, colorExtractor) {
       value =
