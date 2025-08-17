@@ -14,20 +14,19 @@ import androidx.compose.ui.unit.dp
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockNewsItem
 
 @Composable
 fun NewsFeedContent(
   component: NewsFeedComponent,
   modifier: Modifier = Modifier,
-  onCurrentNewsItemChange: (NewsItem) -> Unit,
+  onImageUrlChange: (String?) -> Unit,
 ) {
   val newsItems = remember { List(3) { mockNewsItem(it.toString()) } }
   val pagerState = rememberPagerState(pageCount = newsItems::size)
 
   LaunchedEffect(pagerState.currentPage, newsItems) {
-    onCurrentNewsItemChange(newsItems[pagerState.currentPage])
+    onImageUrlChange(newsItems[pagerState.currentPage].imgUrl)
   }
 
   Box(modifier = modifier) {

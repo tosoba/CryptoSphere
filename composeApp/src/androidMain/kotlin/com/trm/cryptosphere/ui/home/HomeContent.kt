@@ -26,7 +26,7 @@ import com.trm.cryptosphere.ui.home.page.search.SearchContent
 fun HomeContent(
   component: HomeComponent,
   modifier: Modifier = Modifier,
-  onDynamicThemeModelChange: (Any?) -> Unit,
+  onImageUrlChange: (String?) -> Unit,
 ) {
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
@@ -64,7 +64,7 @@ fun HomeContent(
       ) { _, page ->
         LaunchedEffect(Unit) {
           if (page !is HomeComponent.Page.NewsFeed) {
-            onDynamicThemeModelChange(null)
+            onImageUrlChange(null)
           }
         }
 
@@ -73,7 +73,7 @@ fun HomeContent(
             NewsFeedContent(
               component = page.component,
               modifier = Modifier.fillMaxSize(),
-              onCurrentNewsItemChange = { onDynamicThemeModelChange(it.imgUrl) },
+              onImageUrlChange = onImageUrlChange,
             )
           }
           is HomeComponent.Page.Prices -> {

@@ -18,23 +18,23 @@ import coil.size.SizeResolver
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.ktx.themeColors
 import com.trm.cryptosphere.core.util.cancellableRunCatching
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DynamicTheme(
-  model: Any?,
+  imageUrl: String?,
   colorExtractor: ColorExtractor,
   fallback: Color = MaterialTheme.colorScheme.primary,
   useDarkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
   val result by
-    produceState<ColorExtractor.Result?>(initialValue = null, model, colorExtractor) {
+    produceState<ColorExtractor.Result?>(initialValue = null, imageUrl, colorExtractor) {
       value =
-        cancellableRunCatching { model?.let { colorExtractor.calculatePrimaryColor(it) } }
+        cancellableRunCatching { imageUrl?.let { colorExtractor.calculatePrimaryColor(it) } }
           .getOrNull()
     }
   DynamicMaterialTheme(
@@ -53,14 +53,14 @@ class ColorExtractor(private val imageLoader: ImageLoader, private val context: 
   private val cache = lruCache<Any, Color>(100)
 
   suspend fun calculatePrimaryColor(
-    model: Any,
+    imageUrl: String,
     sizeResolver: SizeResolver = DEFAULT_REQUEST_SIZE,
   ): Result =
-    cache[model]?.let { Result(color = it, cached = true) }
+    cache[imageUrl]?.let { Result(color = it, cached = true) }
       ?: suspendCancellableCoroutine { cont ->
           imageLoader.enqueue(
             ImageRequest.Builder(context)
-              .data(model)
+              .data(imageUrl)
               .size(sizeResolver)
               .allowHardware(false)
               .allowRgb565(true)
@@ -73,7 +73,7 @@ class ColorExtractor(private val imageLoader: ImageLoader, private val context: 
         }
         .themeColors()
         .first()
-        .also { cache.put(model, it) }
+        .also { cache.put(imageUrl, it) }
         .let { Result(color = it, cached = false) }
 
   data class Result(val color: Color, val cached: Boolean)

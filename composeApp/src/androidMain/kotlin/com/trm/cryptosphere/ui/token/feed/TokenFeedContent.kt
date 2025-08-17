@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -57,7 +58,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
+fun TokenFeedContent(
+  component: TokenFeedComponent,
+  modifier: Modifier = Modifier,
+  onImageUrlChange: (String?) -> Unit,
+) {
   val navigationSuiteType = currentNavigationSuiteType()
 
   Scaffold(
@@ -99,6 +104,10 @@ fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifie
       val scope = rememberCoroutineScope()
       val state by component.state.collectAsStateWithLifecycle()
       val pagerState = rememberPagerState(pageCount = state.feedItems::size)
+
+      LaunchedEffect(pagerState.currentPage, state.feedItems) {
+        onImageUrlChange(state.feedItems[pagerState.currentPage].logoUrl)
+      }
 
       VerticalFeedPager(
         pagerState = pagerState,
