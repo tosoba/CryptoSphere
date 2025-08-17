@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.core.ui
+package com.trm.cryptosphere.core.util
 
 import android.content.Context
 import coil.ImageLoader

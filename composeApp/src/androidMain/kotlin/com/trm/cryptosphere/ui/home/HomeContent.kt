@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,7 +15,7 @@ import androidx.compose.ui.text.intl.LocaleList
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
+import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
@@ -29,7 +30,7 @@ fun HomeContent(
   val pages by component.pages.subscribeAsState()
   NavigationSuiteScaffold(
     modifier = modifier,
-    layoutType = currentNavigationSuiteType(),
+    layoutType = currentWindowAdaptiveInfo().toNavigationSuiteType(),
     navigationSuiteItems = {
       HomePageConfig.entries.forEachIndexed { index, config ->
         item(

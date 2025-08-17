@@ -30,6 +30,7 @@ import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalFloatingToolbar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,8 +50,8 @@ import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.core.ui.currentNavigationSuiteType
 import com.trm.cryptosphere.core.ui.localSharedElement
+import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
@@ -63,7 +64,7 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val navigationSuiteType = currentNavigationSuiteType()
+  val navigationSuiteType = currentWindowAdaptiveInfo().toNavigationSuiteType()
 
   Scaffold(
     modifier = modifier,
