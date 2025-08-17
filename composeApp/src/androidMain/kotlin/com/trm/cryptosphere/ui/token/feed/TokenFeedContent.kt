@@ -3,15 +3,14 @@ package com.trm.cryptosphere.ui.token.feed
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -19,7 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FlexibleBottomAppBar
@@ -35,10 +34,12 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,8 +52,8 @@ import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
-import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
+import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import kotlinx.coroutines.launch
@@ -234,41 +235,51 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    val tokenParameters = remember {
+      listOf(
+        TokenParameter(label = "Price", value = token.quote.price.toString()),
+        TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
+      )
+    }
+    tokenParameters.forEachIndexed { index, parameter ->
       TokenParameterCard(
-        label = "Price",
-        value = token.quote.price.toString(),
-        modifier = Modifier.weight(1f),
+        parameter = parameter,
+        shape =
+          when (index) {
+            0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+            tokenParameters.lastIndex -> RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+            else -> RoundedCornerShape(0.dp)
+          },
+        modifier = Modifier.fillMaxWidth(),
       )
 
-      Spacer(modifier = Modifier.width(8.dp))
-
-      TokenParameterCard(
-        label = "Market Cap",
-        value = token.quote.marketCap.toString(),
-        modifier = Modifier.weight(1f),
-      )
+      if (index != tokenParameters.lastIndex) {
+        Spacer(modifier = Modifier.height(2.dp))
+      }
     }
   }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private data class TokenParameter(val label: String, val value: String)
+
 @Composable
-private fun TokenParameterCard(label: String, value: String, modifier: Modifier = Modifier) {
-  ElevatedCard(modifier = modifier) {
+private fun TokenParameterCard(
+  parameter: TokenParameter,
+  shape: Shape,
+  modifier: Modifier = Modifier,
+) {
+  Card(modifier = modifier, shape = shape) {
     Column(modifier = Modifier.padding(16.dp)) {
       Text(
-        text = label,
-        style = MaterialTheme.typography.titleSmall,
+        text = parameter.label,
+        style = MaterialTheme.typography.labelSmall,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
       )
 
-      Spacer(modifier = Modifier.height(4.dp))
-
       Text(
-        text = value,
-        style = MaterialTheme.typography.headlineMediumEmphasized,
+        text = parameter.value,
+        style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
