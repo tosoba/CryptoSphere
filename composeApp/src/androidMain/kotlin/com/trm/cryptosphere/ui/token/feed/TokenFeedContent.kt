@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atMost
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
@@ -120,7 +121,7 @@ fun TokenFeedContent(
         modifier =
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
+            bottom.linkTo(tokenCarousel.top)
             start.linkTo(parent.start, margin = 32.dp)
             end.linkTo(
               if (navigationSuiteType == NavigationSuiteType.NavigationBar) pagerIndicator.start
@@ -132,15 +133,9 @@ fun TokenFeedContent(
             width = Dimension.fillToConstraints
             height = Dimension.fillToConstraints
           },
+        contentPadding = PaddingValues(bottom = 16.dp),
       ) { page ->
-        Column {
-          TokenFeedPagerItem(
-            token = state.feedItems[page],
-            modifier = Modifier.fillMaxWidth().weight(1f),
-          )
-
-          Spacer(modifier = Modifier.height(90.dp))
-        }
+        TokenFeedPagerItem(token = state.feedItems[page], modifier = Modifier.fillMaxSize())
       }
 
       PagerWormIndicator(
@@ -236,9 +231,12 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
           top.linkTo(parent.top, margin = 16.dp)
           start.linkTo(parent.start)
           end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
+          if (isCompactHeight) bottom.linkTo(symbol.top)
 
-          width = Dimension.value(128.dp)
-          height = Dimension.value(128.dp)
+          height =
+            if (isCompactHeight) Dimension.fillToConstraints.atMost(128.dp)
+            else Dimension.value(128.dp)
+          width = Dimension.ratio("1:1")
         },
     )
 
@@ -250,6 +248,9 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
             top.linkTo(logo.bottom, margin = 8.dp)
             start.linkTo(parent.start)
             end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
+            if (isCompactHeight) bottom.linkTo(parent.bottom)
+
+            height = Dimension.fillToConstraints
           }
           .localSharedElement(key = "token-symbol-${token.symbol}"),
     )
