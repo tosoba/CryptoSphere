@@ -5,9 +5,13 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,11 +40,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,7 +54,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.atMost
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
@@ -105,7 +110,17 @@ fun TokenFeedContent(
       }
     },
   ) { paddingValues ->
-    ConstraintLayout(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+    ConstraintLayout(
+      modifier =
+        Modifier.fillMaxSize()
+          .padding(
+            PaddingValues(
+              start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+              end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+              bottom = paddingValues.calculateBottomPadding(),
+            )
+          )
+    ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
 
       val scope = rememberCoroutineScope()
@@ -133,7 +148,6 @@ fun TokenFeedContent(
             width = Dimension.fillToConstraints
             height = Dimension.fillToConstraints
           },
-        contentPadding = PaddingValues(bottom = 16.dp),
       ) { page ->
         TokenFeedPagerItem(token = state.feedItems[page], modifier = Modifier.fillMaxSize())
       }
@@ -219,55 +233,42 @@ fun TokenFeedContent(
 private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
   ConstraintLayout(modifier = modifier) {
     val isCompactHeight = currentWindowAdaptiveInfo().isCompactHeight()
-    val (logo, symbol, tokenParametersColumn) = createRefs()
-    val logoSymbolEndBarrier = createEndBarrier(logo, symbol)
+    val (logoWithSymbol, tokenParametersColumn) = createRefs()
 
-    AsyncImage(
-      model = token.logoUrl,
-      contentDescription = null,
-      contentScale = ContentScale.Fit,
+    Column(
       modifier =
-        Modifier.constrainAs(logo) {
-          top.linkTo(parent.top, margin = 16.dp)
+        Modifier.constrainAs(logoWithSymbol) {
+          top.linkTo(parent.top, margin = if (isCompactHeight) 0.dp else 16.dp)
           start.linkTo(parent.start)
-          end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
-          if (isCompactHeight) bottom.linkTo(symbol.top)
-
-          height =
-            if (isCompactHeight) Dimension.fillToConstraints.atMost(128.dp)
-            else Dimension.value(128.dp)
-          width = Dimension.ratio("1:1")
+          if (!isCompactHeight) end.linkTo(parent.end)
+          if (isCompactHeight) bottom.linkTo(parent.bottom)
         },
-    )
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      AsyncImage(
+        modifier = Modifier.weight(1f, fill = false).heightIn(max = 128.dp).aspectRatio(1f),
+        model = token.logoUrl,
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+      )
 
-    Text(
-      text = token.symbol,
-      style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-      modifier =
-        Modifier.constrainAs(symbol) {
-            top.linkTo(logo.bottom, margin = 8.dp)
-            start.linkTo(parent.start)
-            end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
-            if (isCompactHeight) bottom.linkTo(parent.bottom)
+      Spacer(modifier = Modifier.height(8.dp))
 
-            height = Dimension.fillToConstraints
-          }
-          .localSharedElement(key = "token-symbol-${token.symbol}"),
-    )
+      Text(
+        text = token.symbol,
+        style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
+      )
+    }
 
-    TokenParameterCardsColumn(
-      parameters =
-        remember {
-          listOf(
-            TokenParameter(label = "Price", value = token.quote.price.toString()),
-            TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
-          )
-        },
+    BoxWithConstraints(
       modifier =
         Modifier.constrainAs(tokenParametersColumn) {
-          top.linkTo(anchor = if (!isCompactHeight) symbol.bottom else parent.top, margin = 16.dp)
+          top.linkTo(
+            anchor = if (isCompactHeight) parent.top else logoWithSymbol.bottom,
+            margin = if (isCompactHeight) 0.dp else 32.dp,
+          )
           start.linkTo(
-            anchor = if (isCompactHeight) logoSymbolEndBarrier else parent.start,
+            anchor = if (isCompactHeight) logoWithSymbol.end else parent.start,
             margin = if (isCompactHeight) 32.dp else 0.dp,
           )
           end.linkTo(parent.end)
@@ -275,8 +276,24 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
 
           width = Dimension.fillToConstraints
           height = Dimension.fillToConstraints
-        },
-    )
+        }
+    ) {
+      val parameters = remember {
+        listOf(
+          TokenParameter(label = "Price", value = token.quote.price.toString()),
+          TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
+        )
+      }
+      TokenParameterCardsColumn(
+        parameters.take(
+          maxHeight.value.toInt() /
+            calculateTokenParametersCardColumnHeight(parameters.size).value.toInt()
+        ),
+        modifier =
+          if (isCompactHeight) Modifier.fillMaxWidth().align(Alignment.Center)
+          else Modifier.fillMaxSize(),
+      )
+    }
   }
 }
 
@@ -285,35 +302,30 @@ private fun TokenParameterCardsColumn(
   parameters: List<TokenParameter>,
   modifier: Modifier = Modifier,
 ) {
-  BoxWithConstraints(modifier = modifier) {
-    val cardHeight = calculateTokenParametersCardColumnHeight(parameters.size)
-    val fittingParameters = parameters.take(maxHeight.value.toInt() / cardHeight.value.toInt())
+  Column(modifier = modifier) {
+    parameters.forEachIndexed { index, parameter ->
+      TokenParameterCard(
+        parameter = parameter,
+        shape =
+          when {
+            parameters.size == 1 -> {
+              RoundedCornerShape(16.dp)
+            }
+            index == 0 -> {
+              RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+            }
+            index == parameters.lastIndex -> {
+              RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+            }
+            else -> {
+              RoundedCornerShape(0.dp)
+            }
+          },
+        modifier = Modifier.fillMaxWidth(),
+      )
 
-    Column(modifier = Modifier.fillMaxSize()) {
-      fittingParameters.forEachIndexed { index, parameter ->
-        TokenParameterCard(
-          parameter = parameter,
-          shape =
-            when {
-              fittingParameters.size == 1 -> {
-                RoundedCornerShape(16.dp)
-              }
-              index == 0 -> {
-                RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-              }
-              index == fittingParameters.lastIndex -> {
-                RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-              }
-              else -> {
-                RoundedCornerShape(0.dp)
-              }
-            },
-          modifier = Modifier.fillMaxWidth(),
-        )
-
-        if (index != fittingParameters.lastIndex) {
-          Spacer(modifier = Modifier.height(2.dp))
-        }
+      if (index != parameters.lastIndex) {
+        Spacer(modifier = Modifier.height(2.dp))
       }
     }
   }
