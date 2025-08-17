@@ -15,7 +15,7 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.size.Size
 import coil.size.SizeResolver
-import com.materialkolor.DynamicMaterialExpressiveTheme
+import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.ktx.themeColors
 import com.trm.cryptosphere.core.util.cancellableRunCatching
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -37,7 +37,7 @@ fun DynamicTheme(
         cancellableRunCatching { model?.let { colorExtractor.calculatePrimaryColor(it) } }
           .getOrNull()
     }
-  DynamicMaterialExpressiveTheme(
+  DynamicMaterialTheme(
     seedColor = result?.color ?: fallback,
     primary = if (result == null) MaterialTheme.colorScheme.primary else null,
     secondary = if (result == null) MaterialTheme.colorScheme.secondary else null,
