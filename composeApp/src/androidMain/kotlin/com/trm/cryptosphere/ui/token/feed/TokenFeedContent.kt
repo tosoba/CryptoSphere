@@ -1,6 +1,7 @@
 package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -39,8 +40,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +56,7 @@ import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
+import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
@@ -127,13 +133,13 @@ fun TokenFeedContent(
             height = Dimension.fillToConstraints
           },
       ) { page ->
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column {
           TokenFeedPagerItem(
             token = state.feedItems[page],
             modifier = Modifier.fillMaxWidth().weight(1f),
           )
 
-          Spacer(modifier = Modifier.height(128.dp))
+          Spacer(modifier = Modifier.height(90.dp))
         }
       }
 
@@ -217,7 +223,10 @@ fun TokenFeedContent(
 @Composable
 private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
   ConstraintLayout(modifier = modifier) {
-    val (logo, symbol, price, marketCap) = createRefs()
+    val isCompactHeight = currentWindowAdaptiveInfo().isCompactHeight()
+    val (logo, symbol, tokenParametersColumn) = createRefs()
+    val logoSymbolEndBarrier = createEndBarrier(logo, symbol)
+
     AsyncImage(
       model = token.logoUrl,
       contentDescription = null,
@@ -226,7 +235,7 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
         Modifier.constrainAs(logo) {
           top.linkTo(parent.top, margin = 16.dp)
           start.linkTo(parent.start)
-          end.linkTo(parent.end)
+          end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
 
           width = Dimension.value(128.dp)
           height = Dimension.value(128.dp)
@@ -240,41 +249,83 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
         Modifier.constrainAs(symbol) {
             top.linkTo(logo.bottom, margin = 8.dp)
             start.linkTo(parent.start)
-            end.linkTo(parent.end)
+            end.linkTo(if (isCompactHeight) logoSymbolEndBarrier else parent.end)
           }
           .localSharedElement(key = "token-symbol-${token.symbol}"),
     )
 
-    val tokenParameters = remember {
-      listOf(
-        TokenParameter(label = "Price", value = token.quote.price.toString()),
-        TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
-      )
-    }
-    TokenParameterCard(
-      parameter = tokenParameters[0],
-      shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-      modifier =
-        Modifier.constrainAs(price) {
-          top.linkTo(symbol.bottom, margin = 16.dp)
-          start.linkTo(parent.start)
-          end.linkTo(parent.end)
-          width = Dimension.fillToConstraints
+    TokenParameterCardsColumn(
+      parameters =
+        remember {
+          listOf(
+            TokenParameter(label = "Price", value = token.quote.price.toString()),
+            TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
+          )
         },
-    )
-    TokenParameterCard(
-      parameter = tokenParameters[1],
-      shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
       modifier =
-        Modifier.constrainAs(marketCap) {
-          top.linkTo(price.bottom, margin = 2.dp)
-          start.linkTo(parent.start)
+        Modifier.constrainAs(tokenParametersColumn) {
+          top.linkTo(anchor = if (!isCompactHeight) symbol.bottom else parent.top, margin = 16.dp)
+          start.linkTo(
+            anchor = if (isCompactHeight) logoSymbolEndBarrier else parent.start,
+            margin = if (isCompactHeight) 32.dp else 0.dp,
+          )
           end.linkTo(parent.end)
+          bottom.linkTo(parent.bottom)
+
           width = Dimension.fillToConstraints
+          height = Dimension.fillToConstraints
         },
     )
   }
 }
+
+@Composable
+private fun TokenParameterCardsColumn(
+  parameters: List<TokenParameter>,
+  modifier: Modifier = Modifier,
+) {
+  BoxWithConstraints(modifier = modifier) {
+    val cardHeight = calculateTokenParametersCardColumnHeight(parameters.size)
+    val fittingParameters = parameters.take(maxHeight.value.toInt() / cardHeight.value.toInt())
+
+    Column(modifier = Modifier.fillMaxSize()) {
+      fittingParameters.forEachIndexed { index, parameter ->
+        TokenParameterCard(
+          parameter = parameter,
+          shape =
+            when {
+              fittingParameters.size == 1 -> {
+                RoundedCornerShape(16.dp)
+              }
+              index == 0 -> {
+                RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+              }
+              index == fittingParameters.lastIndex -> {
+                RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+              }
+              else -> {
+                RoundedCornerShape(0.dp)
+              }
+            },
+          modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (index != fittingParameters.lastIndex) {
+          Spacer(modifier = Modifier.height(2.dp))
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun calculateTokenParametersCardColumnHeight(parametersCount: Int): Dp =
+  with(LocalDensity.current) { MaterialTheme.typography.labelSmall.lineHeight.value.sp.toDp() } +
+    with(LocalDensity.current) {
+      MaterialTheme.typography.headlineSmall.lineHeight.value.sp.toDp()
+    } +
+    32.dp +
+    (parametersCount - 1) * 2.dp
 
 private data class TokenParameter(val label: String, val value: String)
 
