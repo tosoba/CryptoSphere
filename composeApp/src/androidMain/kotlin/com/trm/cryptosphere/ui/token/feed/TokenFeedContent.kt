@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,7 +35,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -130,7 +128,10 @@ fun TokenFeedContent(
           },
       ) { page ->
         Column(modifier = Modifier.fillMaxSize()) {
-          TokenFeedPagerItem(token = state.feedItems[page], modifier = Modifier.weight(1f))
+          TokenFeedPagerItem(
+            token = state.feedItems[page],
+            modifier = Modifier.fillMaxWidth().weight(1f),
+          )
 
           Spacer(modifier = Modifier.height(128.dp))
         }
@@ -215,25 +216,34 @@ fun TokenFeedContent(
 
 @Composable
 private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-    Spacer(modifier = Modifier.height(16.dp))
-
+  ConstraintLayout(modifier = modifier) {
+    val (logo, symbol, price, marketCap) = createRefs()
     AsyncImage(
-      modifier = Modifier.size(128.dp),
       model = token.logoUrl,
       contentDescription = null,
       contentScale = ContentScale.Fit,
-    )
+      modifier =
+        Modifier.constrainAs(logo) {
+          top.linkTo(parent.top, margin = 16.dp)
+          start.linkTo(parent.start)
+          end.linkTo(parent.end)
 
-    Spacer(modifier = Modifier.height(8.dp))
+          width = Dimension.value(128.dp)
+          height = Dimension.value(128.dp)
+        },
+    )
 
     Text(
       text = token.symbol,
       style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-      modifier = Modifier.localSharedElement(key = "token-symbol-${token.symbol}"),
+      modifier =
+        Modifier.constrainAs(symbol) {
+            top.linkTo(logo.bottom, margin = 8.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+          }
+          .localSharedElement(key = "token-symbol-${token.symbol}"),
     )
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     val tokenParameters = remember {
       listOf(
@@ -241,22 +251,28 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
         TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
       )
     }
-    tokenParameters.forEachIndexed { index, parameter ->
-      TokenParameterCard(
-        parameter = parameter,
-        shape =
-          when (index) {
-            0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-            tokenParameters.lastIndex -> RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-            else -> RoundedCornerShape(0.dp)
-          },
-        modifier = Modifier.fillMaxWidth(),
-      )
-
-      if (index != tokenParameters.lastIndex) {
-        Spacer(modifier = Modifier.height(2.dp))
-      }
-    }
+    TokenParameterCard(
+      parameter = tokenParameters[0],
+      shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+      modifier =
+        Modifier.constrainAs(price) {
+          top.linkTo(symbol.bottom, margin = 16.dp)
+          start.linkTo(parent.start)
+          end.linkTo(parent.end)
+          width = Dimension.fillToConstraints
+        },
+    )
+    TokenParameterCard(
+      parameter = tokenParameters[1],
+      shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
+      modifier =
+        Modifier.constrainAs(marketCap) {
+          top.linkTo(price.bottom, margin = 2.dp)
+          start.linkTo(parent.start)
+          end.linkTo(parent.end)
+          width = Dimension.fillToConstraints
+        },
+    )
   }
 }
 
