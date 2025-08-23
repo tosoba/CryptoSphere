@@ -11,4 +11,6 @@ internal class CoinMarketCapApiTest {
   fun getTokensInfo() = runTest {
     CoinMarketCapApi().getTokensInfo(id = List(100) { it + 1 }.joinToString(","))
   }
+
+  @Test fun getCategories() = runTest { CoinMarketCapApi().getCategories(100) }
 }

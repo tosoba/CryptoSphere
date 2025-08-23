@@ -2,6 +2,7 @@ package com.trm.cryptosphere.data.api.coinmarketcap
 
 import com.trm.cryptosphere.core.network.NetworkResult
 import com.trm.cryptosphere.core.network.buildKtorfit
+import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcCategoriesResponse
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokensInfoResponse
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokensResponse
 import de.jensklingenberg.ktorfit.http.GET
@@ -19,6 +20,10 @@ interface CoinMarketCapApi {
     @Query("id", encoded = true) id: String,
     @Query("skip_invalid") skipInvalid: Boolean = true,
   ): NetworkResult<CmcTokensInfoResponse>
+
+  @GET("v1/cryptocurrency/categories")
+  @Headers("X-CMC_PRO_API_KEY: $COIN_MARKET_CAP_API_KEY")
+  suspend fun getCategories(@Query("limit") limit: Int): NetworkResult<CmcCategoriesResponse>
 
   companion object {
     private const val BASE_URL = "https://pro-api.coinmarketcap.com/"
