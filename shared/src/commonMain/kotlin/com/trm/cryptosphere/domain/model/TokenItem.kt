@@ -15,7 +15,6 @@ data class TokenItem(
   val circulatingSupply: Double,
   val totalSupply: Double,
   val infiniteSupply: Boolean,
-  val platform: TokenPlatform?,
   val cmcRank: Int,
   val selfReportedCirculatingSupply: Double?,
   val selfReportedMarketCap: Double?,
@@ -41,7 +40,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 19891696.0,
       totalSupply = 19891696.0,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 1,
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -77,14 +75,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 76069014.48347135,
       totalSupply = 84000000.0,
       infiniteSupply = false,
-      platform =
-        TokenPlatform(
-          id = 2502,
-          name = "Huobi Token",
-          slug = "htx-token",
-          symbol = "HT",
-          tokenAddress = "0xecb56cf772b5c9a6907fb7d32387da2fcbfb63b4",
-        ),
       cmcRank = 20, // Sample Rank, actual can vary
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -120,7 +110,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 14736400.0,
       totalSupply = 14736400.0,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 800, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -156,7 +145,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 35039019.14956619,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 1500, // Sample Rank
       selfReportedCirculatingSupply = 35038960.65,
       selfReportedMarketCap = 495548.1410176276,
@@ -193,14 +181,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 29663781.66153835,
       totalSupply = 29663781.66153835, // Often same as circulating for PPC
       infiniteSupply = true, // Due to its inflationary nature
-      platform =
-        TokenPlatform(
-          id = 1027,
-          name = "Ethereum",
-          slug = "ethereum",
-          symbol = "ETH",
-          tokenAddress = "0x044d078F1c86508e13328842Cc75AC021B272958",
-        ),
       cmcRank = 600, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -236,14 +216,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 4526390.522174,
       infiniteSupply = true, // Typically for PoS coins without a hard cap
-      platform =
-        TokenPlatform(
-          id = 1839,
-          name = "BNB",
-          slug = "bnb",
-          symbol = "BNB",
-          tokenAddress = "0xbf84720097de111a80f46f9d077643967042841a",
-        ),
       cmcRank = 2000, // Sample Rank
       selfReportedCirculatingSupply = 5106060.19,
       selfReportedMarketCap = 132392.07855834218,
@@ -279,7 +251,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 15167257500.0,
       totalSupply = 15167257500.0,
       infiniteSupply = true,
-      platform = null,
       cmcRank = 3000, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -315,7 +286,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 236600238.0,
       totalSupply = 336000000.0,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 1200, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -351,7 +321,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 6228916.8879491,
       totalSupply = 6228916.8879491,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 2500, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,
@@ -387,7 +356,6 @@ fun mockTokenItems(): List<TokenItem> =
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 100000000.0,
       infiniteSupply = false,
-      platform = null,
       cmcRank = 4000, // Sample Rank
       selfReportedCirculatingSupply = null,
       selfReportedMarketCap = null,

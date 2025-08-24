@@ -17,7 +17,7 @@ import coil.size.Size
 import coil.size.SizeResolver
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.ktx.themeColors
-import com.trm.cryptosphere.core.util.cancellableRunCatching
+import com.trm.cryptosphere.core.base.cancellableRunCatching
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

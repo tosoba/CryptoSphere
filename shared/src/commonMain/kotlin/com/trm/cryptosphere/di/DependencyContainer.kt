@@ -2,10 +2,12 @@ package com.trm.cryptosphere.di
 
 import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.PlatformContext
+import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
+import com.trm.cryptosphere.data.store.TokensStore
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
@@ -30,9 +32,17 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
  */
 class DependencyContainer(
   private val context: PlatformContext,
+  private val appCoroutineDispatchers: AppCoroutineDispatchers = AppCoroutineDispatchers.default(),
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
+  private val tokensStore: Lazy<TokensStore> = lazy {
+    TokensStore(
+      api = coinMarketCapApi.value,
+      dao = database.value.tokenDao(),
+      dispatchers = appCoroutineDispatchers,
+    )
+  },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =
     NewsFeedComponent.Factory(::NewsFeedDefaultComponent),
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
