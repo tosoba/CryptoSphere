@@ -8,5 +8,10 @@ import com.trm.cryptosphere.domain.repository.NewsRepository
 
 class NewsNetworkRepository(private val api: CoinStatsApi) : NewsRepository {
   override suspend fun getNews(): List<NewsItem> =
-    api.getNews().getDataOrThrow().result.map(CoinStatsNewsItem::toNewsItem)
+    api
+      .getNews()
+      .getDataOrThrow()
+      .result
+      .filter { item -> !item.relatedCoins.isNullOrEmpty() }
+      .map(CoinStatsNewsItem::toNewsItem)
 }

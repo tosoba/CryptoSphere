@@ -56,6 +56,7 @@ class DependencyContainer(
     NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
       NewsFeedDefaultComponent(
         componentContext = componentContext,
+        dispatchers = appCoroutineDispatchers,
         getNews = getNews.value,
         onTokenCarouselItemClick = onTokenCarouselItemClick,
       )
