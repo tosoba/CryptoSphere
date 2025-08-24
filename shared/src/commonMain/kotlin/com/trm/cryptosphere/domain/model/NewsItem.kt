@@ -9,7 +9,7 @@ import kotlin.time.ExperimentalTime
 data class NewsItem(
   val id: String,
   val searchKeyWords: List<String>?,
-  val feedDate: LocalDateTime, // TODO: map from Long in JSON
+  val feedDate: LocalDateTime,
   val source: String,
   val title: String,
   val sourceLink: String,

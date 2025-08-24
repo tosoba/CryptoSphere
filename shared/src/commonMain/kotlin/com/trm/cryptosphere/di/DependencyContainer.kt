@@ -7,7 +7,12 @@ import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
-import com.trm.cryptosphere.data.store.TokensStore
+import com.trm.cryptosphere.data.repository.NewsNetworkRepository
+import com.trm.cryptosphere.data.repository.TokenNetworkRepository
+import com.trm.cryptosphere.data.store.TokenStore
+import com.trm.cryptosphere.domain.repository.NewsRepository
+import com.trm.cryptosphere.domain.repository.TokenRepository
+import com.trm.cryptosphere.domain.usecase.GetNews
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
@@ -25,26 +30,36 @@ import com.trm.cryptosphere.ui.token.details.TokenDetailsDefaultComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
 
-/**
- * Only data layer dependencies are passed as arguments to DependencyContainer so they can be
- * swapped with fakes (on DI-level) for a larger A-B/integration test if needed (other swappable
- * dependencies will be added as args if needed in the future).
- */
 class DependencyContainer(
   private val context: PlatformContext,
   private val appCoroutineDispatchers: AppCoroutineDispatchers = AppCoroutineDispatchers.default(),
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  private val tokensStore: Lazy<TokensStore> = lazy {
-    TokensStore(
+  private val tokenStore: Lazy<TokenStore> = lazy {
+    TokenStore(
       api = coinMarketCapApi.value,
       dao = database.value.tokenDao(),
       dispatchers = appCoroutineDispatchers,
     )
   },
+  private val tokenRepository: Lazy<TokenRepository> = lazy {
+    TokenNetworkRepository(tokenStore.value)
+  },
+  private val newsRepository: Lazy<NewsRepository> = lazy {
+    NewsNetworkRepository(coinStatsApi.value)
+  },
+  private val getNews: Lazy<GetNews> = lazy {
+    GetNews(tokenRepository.value, newsRepository.value)
+  },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =
-    NewsFeedComponent.Factory(::NewsFeedDefaultComponent),
+    NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
+      NewsFeedDefaultComponent(
+        componentContext = componentContext,
+        getNews = getNews.value,
+        onTokenCarouselItemClick = onTokenCarouselItemClick,
+      )
+    },
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
     ::PricesDefaultComponent,
   private val createSearchComponent: (ComponentContext) -> SearchComponent =
@@ -85,9 +100,4 @@ class DependencyContainer(
       tokenDetailsComponentFactory = tokenDetailsComponentFactory,
     )
   },
-) {
-  /**
-   * Default decompose components (some of them at least)/UseCases will be created inside AppModule
-   * because they will not be swapped on DI-level.
-   */
-}
+)

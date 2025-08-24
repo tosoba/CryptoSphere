@@ -18,7 +18,7 @@ class TokenFeedDefaultComponent(
   override val tokenCarouselConfig: TokenCarouselConfig,
   override val navigateToTokenDetails: (String) -> Unit,
 ) : TokenFeedComponent, ComponentContext by componentContext {
-  private val stateHolder by
+  private val stateHolder: StateHolder by
     @OptIn(ExperimentalStateKeeperApi::class)
     saveable(serializer = TokenFeedState.serializer(), state = { it.state.value }) { savedState ->
       retainedInstance { savedState?.let(::StateHolder) ?: StateHolder(mainTokenSymbol) }

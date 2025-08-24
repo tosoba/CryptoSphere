@@ -15,7 +15,7 @@ import org.mobilenativefoundation.store.store5.Fetcher
 import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.Store
 
-class TokensStore(
+class TokenStore(
   private val api: CoinMarketCapApi,
   private val dao: TokenDao,
   private val dispatchers: AppCoroutineDispatchers,
