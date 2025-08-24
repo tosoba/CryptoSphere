@@ -63,13 +63,7 @@ fun NewsFeedItem(
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (
-          backgroundGradient,
-          tokenCarousel,
-          title,
-          description,
-          linkButton,
-          shareButton,
-          starButton) =
+          backgroundGradient, tokenCarousel, title, source, linkButton, shareButton, starButton) =
           createRefs()
         val secondaryButtonsStartBarrier = createStartBarrier(shareButton, starButton)
 
@@ -137,10 +131,7 @@ fun NewsFeedItem(
           modifier =
             Modifier.constrainAs(title) {
               top.linkTo(parent.top, margin = 16.dp)
-              bottom.linkTo(
-                if (item.description.isNullOrBlank()) parent.bottom else description.top,
-                margin = 4.dp,
-              )
+              bottom.linkTo(source.top, margin = 4.dp)
               start.linkTo(parent.start, margin = 16.dp)
               end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
 
@@ -149,26 +140,24 @@ fun NewsFeedItem(
             },
         )
 
-        item.description?.let {
-          Text(
-            text = it,
-            color = Color.White,
-            style =
-              MaterialTheme.typography.bodyMedium.copy(
-                shadow =
-                  Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f)
-              ),
-            overflow = TextOverflow.Ellipsis,
-            modifier =
-              Modifier.constrainAs(description) {
-                bottom.linkTo(linkButton.top, margin = 16.dp)
-                start.linkTo(parent.start, margin = 16.dp)
-                end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
+        Text(
+          text = item.source,
+          color = Color.White,
+          style =
+            MaterialTheme.typography.bodyMedium.copy(
+              shadow =
+                Shadow(color = Color.DarkGray, offset = Offset(x = 2f, y = 2f), blurRadius = 4f)
+            ),
+          overflow = TextOverflow.Ellipsis,
+          modifier =
+            Modifier.constrainAs(source) {
+              bottom.linkTo(linkButton.top, margin = 16.dp)
+              start.linkTo(parent.start, margin = 16.dp)
+              end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
 
-                width = Dimension.fillToConstraints
-              },
-          )
-        }
+              width = Dimension.fillToConstraints
+            },
+        )
 
         TokenCarousel(
           tokens = tokenCarouselItems,

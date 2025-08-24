@@ -16,7 +16,6 @@ fun CoinStatsNewsItem.toNewsItem(): NewsItem =
     source = source,
     title = title,
     sourceLink = sourceLink,
-    description = source,
     imgUrl = imgUrl,
     relatedCoins = relatedCoins.orEmpty(),
     link = link,

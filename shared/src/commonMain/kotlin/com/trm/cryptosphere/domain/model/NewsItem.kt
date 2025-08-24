@@ -13,7 +13,6 @@ data class NewsItem(
   val source: String,
   val title: String,
   val sourceLink: String,
-  val description: String?,
   val imgUrl: String?,
   val relatedCoins: List<String>,
   val link: String,
@@ -27,7 +26,6 @@ fun mockNewsItem(id: String): NewsItem =
     source = "U.Today",
     title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
     sourceLink = "https://u.today/",
-    description = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
     imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
     relatedCoins =
       listOf(
