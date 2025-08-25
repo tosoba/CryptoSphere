@@ -39,8 +39,11 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
-import com.trm.cryptosphere.domain.model.mockNewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -195,3 +198,22 @@ private fun NewsFeedItemPreview() {
     NewsFeedItem(item = mockNewsItem("1"), isCurrent = true, onTokenCarouselItemClick = { _, _ -> })
   }
 }
+
+private fun mockNewsItem(id: String): NewsItem =
+  NewsItem(
+    id = id,
+    searchKeyWords = listOf("dogecoin", "DOGE"),
+    feedDate = @OptIn(ExperimentalTime::class) Clock.System.now().toLocalDateTime(TimeZone.UTC),
+    source = "U.Today",
+    title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
+    sourceLink = "https://u.today/",
+    imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
+    relatedCoins =
+      listOf(
+        "dogecoin",
+        "0x4206931337dc273a630d328da6441786bfad668f_ethereum",
+        "0x1a8e39ae59e5556b56b76fcba98d22c9ae557396_cronos",
+      ),
+    link =
+      "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
+  )

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import org.mobilenativefoundation.store.store5.Fetcher
 import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.Validator
 
 class TokenStore(
   private val api: CoinMarketCapApi,
@@ -34,4 +35,5 @@ class TokenStore(
             writeDispatcher = dispatchers.databaseWrite,
           ),
     )
+    .validator(Validator.by { result -> result.isNotEmpty() })
     .build()

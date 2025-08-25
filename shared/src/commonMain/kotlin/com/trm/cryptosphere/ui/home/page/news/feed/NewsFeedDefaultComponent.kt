@@ -15,6 +15,6 @@ class NewsFeedDefaultComponent(
   private val getNews: GetNews,
   override val onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) : NewsFeedComponent, ComponentContext by componentContext {
-  val news: RestartableStateFlow<LoadableState<List<NewsItem>>> =
+  override val state: RestartableStateFlow<LoadableState<List<NewsItem>>> =
     instanceKeeper.getOrCreate { NewsFeedViewModel(dispatchers, getNews) }.value
 }
