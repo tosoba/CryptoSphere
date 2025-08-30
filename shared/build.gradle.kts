@@ -4,6 +4,8 @@ import co.touchlab.skie.configuration.FlowInterop
 import co.touchlab.skie.configuration.SealedInterop
 import co.touchlab.skie.configuration.SuppressSkieWarning
 import co.touchlab.skie.configuration.SuspendInterop
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import com.google.devtools.ksp.gradle.KspAATask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -15,6 +17,7 @@ plugins {
   alias(libs.plugins.kotlinKsp)
   alias(libs.plugins.ktorfit)
   alias(libs.plugins.room)
+  alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -66,6 +69,32 @@ kotlin {
       implementation(libs.kotlin.test)
       implementation(libs.kotlinx.coroutines.test)
     }
+  }
+}
+
+buildkonfig {
+  packageName = "com.trm.cryptosphere.shared"
+
+  defaultConfigs {
+    val localProperties = gradleLocalProperties(rootDir, providers)
+    buildConfigField(
+      type = FieldSpec.Type.STRING,
+      name = "CMC_API_KEY",
+      value =
+        requireNotNull(localProperties.getProperty("cmc_api_key")) {
+          "A property cmc_api_key with CoinMarketCap API key must be set in local.properties."
+        },
+      const = true,
+    )
+    buildConfigField(
+      type = FieldSpec.Type.STRING,
+      name = "COIN_NEWS_API_KEY",
+      value =
+        requireNotNull(localProperties.getProperty("coin_news_api_key")) {
+          "A property coin_news_api_key with CoinNews API key must be set in local.properties."
+        },
+      const = true,
+    )
   }
 }
 
