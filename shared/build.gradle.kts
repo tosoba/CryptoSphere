@@ -67,14 +67,6 @@ kotlin {
       implementation(libs.kotlinx.coroutines.test)
     }
   }
-
-  tasks {
-    configureEach {
-      if (name.contains("kspDebugKotlinAndroid")) {
-        dependsOn("kspCommonMainKotlinMetadata")
-      }
-    }
-  }
 }
 
 android {
