@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.trm.cryptosphere.data.db.entity.CategoryEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
@@ -12,7 +13,7 @@ interface CategoryDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insert(items: List<CategoryEntity>)
 
-  @Query("SELECT * FROM CategoryEntity") fun selectAll(): List<CategoryEntity>
+  @Query("SELECT * FROM CategoryEntity") fun selectAll(): Flow<List<CategoryEntity>>
 
   @Query("DELETE FROM CategoryEntity") suspend fun deleteAll()
 }

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CmcCategory(
+data class CmcCategoryItem(
   val id: String,
   val name: String,
   val title: String,
