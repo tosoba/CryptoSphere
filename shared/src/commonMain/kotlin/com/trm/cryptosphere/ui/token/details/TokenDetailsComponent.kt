@@ -9,4 +9,3 @@ interface TokenDetailsComponent {
     operator fun invoke(componentContext: ComponentContext, symbol: String): TokenDetailsComponent
   }
 }
-

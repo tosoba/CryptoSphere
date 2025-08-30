@@ -20,4 +20,3 @@ data class CmcTokenQuote(
   val tvl: Double?,
   @SerialName("last_updated") val lastUpdated: String,
 )
-

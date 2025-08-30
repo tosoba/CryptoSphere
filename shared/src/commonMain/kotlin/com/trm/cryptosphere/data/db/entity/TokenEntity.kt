@@ -26,4 +26,3 @@ data class TokenEntity(
   @ColumnInfo(name = "last_updated") val lastUpdated: String,
   @Embedded(prefix = "usd_quote_") val usdQuote: TokenQuoteEmbedded,
 )
-
