@@ -9,9 +9,14 @@ import com.trm.cryptosphere.data.db.converter.StringListConverter
 import com.trm.cryptosphere.data.db.dao.CategoryDao
 import com.trm.cryptosphere.data.db.dao.TokenDao
 import com.trm.cryptosphere.data.db.entity.CategoryEntity
+import com.trm.cryptosphere.data.db.entity.TagEntity
 import com.trm.cryptosphere.data.db.entity.TokenEntity
+import com.trm.cryptosphere.data.db.entity.TokenTagEntity
 
-@Database(entities = [TokenEntity::class, CategoryEntity::class], version = 1)
+@Database(
+  entities = [TokenEntity::class, CategoryEntity::class, TagEntity::class, TokenTagEntity::class],
+  version = 1,
+)
 @ConstructedBy(CryptoSphereDatabaseConstructor::class)
 @TypeConverters(StringListConverter::class)
 abstract class CryptoSphereDatabase : RoomDatabase() {

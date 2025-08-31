@@ -5,7 +5,6 @@ import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokenItem
 import com.trm.cryptosphere.data.db.dao.TokenDao
 import com.trm.cryptosphere.data.db.entity.TokenEntity
-import com.trm.cryptosphere.data.db.mapper.toEntity
 import com.trm.cryptosphere.data.db.mapper.toTokenItem
 import com.trm.cryptosphere.data.store.util.storeBuilder
 import com.trm.cryptosphere.data.store.util.usingDispatchers
@@ -25,10 +24,10 @@ class TokenStore(
       fetcher = Fetcher.of { page: Int -> api.getTokens(limit = 100).getDataOrThrow().data },
       sourceOfTruth =
         SourceOfTruth.of<Int, List<CmcTokenItem>, List<TokenItem>>(
-            reader = { page -> dao.selectAll().map { it.map(TokenEntity::toTokenItem) } },
-            writer = { page, response -> dao.insert(response.map(CmcTokenItem::toEntity)) },
-            delete = { page -> dao.deleteAll() },
-            deleteAll = { dao.deleteAll() },
+            reader = { page -> dao.selectAllTokens().map { it.map(TokenEntity::toTokenItem) } },
+            writer = { page, response -> dao.insertTokensWithTags(response) },
+            delete = { page -> dao.deleteAllTokens() },
+            deleteAll = { dao.deleteAllTokens() },
           )
           .usingDispatchers(
             readDispatcher = dispatchers.databaseRead,

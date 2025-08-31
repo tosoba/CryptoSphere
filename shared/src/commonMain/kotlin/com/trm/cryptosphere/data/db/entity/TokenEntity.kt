@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.trm.cryptosphere.data.db.entity.embedded.TokenQuoteEmbedded
 
-@Entity
+@Entity(tableName = "token")
 data class TokenEntity(
   @PrimaryKey val id: Int,
   val name: String,
@@ -14,7 +14,6 @@ data class TokenEntity(
   val slug: String,
   @ColumnInfo(name = "num_market_pairs") val numMarketPairs: Int,
   @ColumnInfo(name = "date_added") val dateAdded: String,
-  val tags: List<String>,
   @ColumnInfo(name = "max_supply") val maxSupply: Double?,
   @ColumnInfo(name = "circulating_supply") val circulatingSupply: Double,
   @ColumnInfo(name = "total_supply") val totalSupply: Double,

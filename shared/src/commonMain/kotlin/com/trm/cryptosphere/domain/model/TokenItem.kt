@@ -10,7 +10,6 @@ data class TokenItem(
   val slug: String,
   val numMarketPairs: Int,
   val dateAdded: String,
-  val tags: List<String>,
   val maxSupply: Double?,
   val circulatingSupply: Double,
   val totalSupply: Double,
@@ -35,7 +34,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "bitcoin",
       numMarketPairs = 12253,
       dateAdded = "2010-07-13T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "sha-256", "store-of-value", "state-channel"),
       maxSupply = 21000000.0,
       circulatingSupply = 19891696.0,
       totalSupply = 19891696.0,
@@ -70,7 +68,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "litecoin",
       numMarketPairs = 1385,
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "scrypt", "medium-of-exchange", "layer-1"),
       maxSupply = 84000000.0,
       circulatingSupply = 76069014.48347135,
       totalSupply = 84000000.0,
@@ -105,7 +102,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "namecoin",
       numMarketPairs = 7,
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "sha-256", "platform"),
       maxSupply = 21000000.0, // Typical for Bitcoin forks, not specified, using common value
       circulatingSupply = 14736400.0,
       totalSupply = 14736400.0,
@@ -140,7 +136,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "terracoin",
       numMarketPairs = 7,
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "sha-256", "masternodes"),
       maxSupply = 42000000.0, // Common max supply for older coins, not specified
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 35039019.14956619,
@@ -176,7 +171,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "peercoin",
       numMarketPairs = 42,
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "hybrid-pow-pos", "sha-256", "medium-of-exchange"),
       maxSupply = null, // Peercoin has an inflationary model, typically represented as null
       circulatingSupply = 29663781.66153835,
       totalSupply = 29663781.66153835, // Often same as circulating for PPC
@@ -211,7 +205,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "novacoin",
       numMarketPairs = 4,
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "hybrid-pow-pos", "scrypt", "bnb-chain-ecosystem"),
       maxSupply = null, // Often null for PoS coins if not explicitly capped
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 4526390.522174,
@@ -246,7 +239,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "devcoin",
       numMarketPairs = 1, // Deduced from context, not explicitly in the summary
       dateAdded = "2013-04-28T00:00:00.000Z",
-      tags = listOf("mineable", "SHA-256", "Philanthropy"), // Using self_reported_tags
       maxSupply = null, // Devcoin has a complex generation model, often considered infinite
       circulatingSupply = 15167257500.0,
       totalSupply = 15167257500.0,
@@ -281,7 +273,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "feathercoin",
       numMarketPairs = 12,
       dateAdded = "2013-05-03T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "neoscrypt", "medium-of-exchange"),
       maxSupply = 336000000.0,
       circulatingSupply = 236600238.0,
       totalSupply = 336000000.0,
@@ -316,7 +307,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "mincoin",
       numMarketPairs = 2, // Deduced from context
       dateAdded = "2013-05-03T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "scrypt"),
       maxSupply = 10000000.0, // Common for older scrypt coins, not specified
       circulatingSupply = 6228916.8879491,
       totalSupply = 6228916.8879491,
@@ -351,7 +341,6 @@ fun mockTokenItems(): List<TokenItem> =
       slug = "freicoin",
       numMarketPairs = 1,
       dateAdded = "2013-05-03T00:00:00.000Z",
-      tags = listOf("mineable", "pow", "sha-256"),
       maxSupply = 100000000.0,
       circulatingSupply = 0.0, // As per "0 in circulation"
       totalSupply = 100000000.0,
