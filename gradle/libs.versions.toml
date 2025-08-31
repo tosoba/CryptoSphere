@@ -22,6 +22,7 @@ ktor = "3.2.3"
 ktorfit = "2.6.4"
 material3 = "1.5.0-alpha02"
 materialKolor = "3.0.1"
+moko-resources = "0.25.0"
 skie = "0.10.5"
 store = "5.0.0"
 
@@ -34,7 +35,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3",
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
-
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensions-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
@@ -54,6 +54,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
+moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 store = { module = "org.mobilenativefoundation.store:store5", version.ref = "store" }
 
 [plugins]
@@ -66,5 +68,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
+moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
 skie = { id = "co.touchlab.skie", version.ref = "skie" }

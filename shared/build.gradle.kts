@@ -18,6 +18,7 @@ plugins {
   alias(libs.plugins.ktorfit)
   alias(libs.plugins.room)
   alias(libs.plugins.buildkonfig)
+  alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -42,7 +43,10 @@ kotlin {
   }
 
   sourceSets {
-    androidMain.dependencies { implementation(libs.androidx.room.ktx) }
+    androidMain.dependencies {
+      implementation(libs.androidx.room.ktx)
+      api(libs.moko.resources.compose)
+    }
 
     commonMain.dependencies {
       implementation(libs.androidx.room.runtime)
@@ -61,6 +65,8 @@ kotlin {
       implementation(libs.ktor.client.logging)
       implementation(libs.ktor.serialization.kotlinx.json)
       implementation(libs.ktorfit)
+
+      api(libs.moko.resources)
 
       implementation(libs.store)
     }
@@ -132,4 +138,8 @@ skie {
       SuppressSkieWarning.NameCollision(true)
     }
   }
+}
+
+multiplatformResources {
+  resourcesPackage.set("com.trm.cryptosphere.shared")
 }
