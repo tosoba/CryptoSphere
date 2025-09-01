@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "960041f890200a8f5c97395c7a0e996d",
+    "identityHash": "d12dc0627d3d0ba70ad1be4a958bd178",
     "entities": [
       {
         "tableName": "token",
@@ -317,11 +317,75 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "news",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `searchKeyWords` TEXT, `feedDate` INTEGER NOT NULL, `source` TEXT NOT NULL, `title` TEXT NOT NULL, `sourceLink` TEXT NOT NULL, `imgUrl` TEXT, `relatedCoins` TEXT NOT NULL, `link` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "searchKeyWords",
+            "columnName": "searchKeyWords",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "feedDate",
+            "columnName": "feedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceLink",
+            "columnName": "sourceLink",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imgUrl",
+            "columnName": "imgUrl",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "relatedCoins",
+            "columnName": "relatedCoins",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "link",
+            "columnName": "link",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '960041f890200a8f5c97395c7a0e996d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd12dc0627d3d0ba70ad1be4a958bd178')"
     ]
   }
 }
