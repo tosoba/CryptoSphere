@@ -30,7 +30,7 @@ interface TokenDao {
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   suspend fun insertTokenTags(tokenTags: List<TokenTagEntity>): List<Long>
 
-  @Delete suspend fun deleteTokenTags(crossRefs: List<TokenTagEntity>)
+  @Delete suspend fun deleteTokenTags(tokenTags: List<TokenTagEntity>)
 
   @Query("DELETE FROM token_tag WHERE token_id = :tokenId")
   suspend fun deleteTokenTagsByTokenId(tokenId: Int)
