@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.core.base
 
+import co.touchlab.kermit.Logger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,6 @@ fun <T> loadableStateFlowOf(
       emit(LoadableState.Loading)
       emit(LoadableState.Idle(withTimeout(timeout) { load() }))
     }
-    .catch { emit(LoadableState.Error(it)) }
+    .catch { emit(LoadableState.Error(it).apply { Logger.e("loadableStateFlowOf", it) }) }
 
 internal val DefaultTimeout = 20.seconds

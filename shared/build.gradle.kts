@@ -56,6 +56,8 @@ kotlin {
       api(libs.essenty.stateKeeper)
       api(libs.essenty.backHandler)
 
+      api(libs.kermit)
+
       api(libs.kotlinx.coroutines.core)
       api(libs.kotlinx.datetime)
       api(libs.kotlinx.serialization.json)
