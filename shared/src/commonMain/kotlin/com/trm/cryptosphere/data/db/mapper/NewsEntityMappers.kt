@@ -5,10 +5,11 @@ import com.trm.cryptosphere.data.db.entity.NewsEntity
 import com.trm.cryptosphere.domain.model.NewsItem
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-fun CoinStatsNewsItem.toEntity(): NewsEntity =
+fun CoinStatsNewsItem.toEntity(fetchedDate: LocalDateTime): NewsEntity =
   NewsEntity(
     id = id,
     searchKeyWords = searchKeyWords,
@@ -21,6 +22,7 @@ fun CoinStatsNewsItem.toEntity(): NewsEntity =
     imgUrl = imgUrl,
     relatedCoins = relatedCoins.orEmpty(),
     link = link,
+    fetchedDate = fetchedDate,
   )
 
 fun NewsEntity.toNewsItem(): NewsItem =
@@ -34,4 +36,5 @@ fun NewsEntity.toNewsItem(): NewsItem =
     imgUrl = imgUrl,
     relatedCoins = relatedCoins,
     link = link,
+    fetchedDate = fetchedDate,
   )

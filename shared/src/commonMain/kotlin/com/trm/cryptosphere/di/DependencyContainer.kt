@@ -11,6 +11,7 @@ import com.trm.cryptosphere.data.repository.CategoryNetworkRepository
 import com.trm.cryptosphere.data.repository.NewsNetworkRepository
 import com.trm.cryptosphere.data.repository.TokenNetworkRepository
 import com.trm.cryptosphere.data.store.CategoryStore
+import com.trm.cryptosphere.data.store.NewsStore
 import com.trm.cryptosphere.data.store.TokenStore
 import com.trm.cryptosphere.domain.repository.CategoryRepository
 import com.trm.cryptosphere.domain.repository.NewsRepository
@@ -50,6 +51,13 @@ class DependencyContainer(
     CategoryStore(
       api = coinMarketCapApi.value,
       dao = database.value.categoryDao(),
+      dispatchers = appCoroutineDispatchers,
+    )
+  },
+  private val newsStore: Lazy<NewsStore> = lazy {
+    NewsStore(
+      api = coinStatsApi.value,
+      dao = database.value.newsDao(),
       dispatchers = appCoroutineDispatchers,
     )
   },

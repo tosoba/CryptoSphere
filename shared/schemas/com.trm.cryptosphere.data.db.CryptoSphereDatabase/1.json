@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d12dc0627d3d0ba70ad1be4a958bd178",
+    "identityHash": "eda0d7893fcd39151e9f622501125f4e",
     "entities": [
       {
         "tableName": "token",
@@ -320,7 +320,7 @@
       },
       {
         "tableName": "news",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `searchKeyWords` TEXT, `feedDate` INTEGER NOT NULL, `source` TEXT NOT NULL, `title` TEXT NOT NULL, `sourceLink` TEXT NOT NULL, `imgUrl` TEXT, `relatedCoins` TEXT NOT NULL, `link` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `searchKeyWords` TEXT, `feedDate` INTEGER NOT NULL, `source` TEXT NOT NULL, `title` TEXT NOT NULL, `sourceLink` TEXT NOT NULL, `imgUrl` TEXT, `relatedCoins` TEXT NOT NULL, `link` TEXT NOT NULL, `fetchedDate` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -373,6 +373,12 @@
             "columnName": "link",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "fetchedDate",
+            "columnName": "fetchedDate",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -385,7 +391,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd12dc0627d3d0ba70ad1be4a958bd178')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eda0d7893fcd39151e9f622501125f4e')"
     ]
   }
 }

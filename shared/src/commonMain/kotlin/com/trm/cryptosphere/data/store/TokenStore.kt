@@ -21,7 +21,7 @@ class TokenStore(
   private val dispatchers: AppCoroutineDispatchers,
 ) :
   Store<Int, List<TokenItem>> by storeBuilder(
-      fetcher = Fetcher.of { page: Int -> api.getTokens(limit = 100).getDataOrThrow().data },
+      fetcher = Fetcher.of { page -> api.getTokens(limit = 100).getDataOrThrow().data },
       sourceOfTruth =
         SourceOfTruth.of<Int, List<CmcTokenItem>, List<TokenItem>>(
             reader = { page -> dao.selectAllTokens().map { it.map(TokenEntity::toTokenItem) } },

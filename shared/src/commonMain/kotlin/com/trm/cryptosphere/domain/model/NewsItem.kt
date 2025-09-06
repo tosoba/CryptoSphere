@@ -12,4 +12,5 @@ data class NewsItem(
   val imgUrl: String?,
   val relatedCoins: List<String>,
   val link: String,
+  val fetchedDate: LocalDateTime,
 )

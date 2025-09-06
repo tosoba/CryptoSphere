@@ -23,7 +23,7 @@ class CategoryStore(
 ) :
   Store<Int, List<CategoryItem>> by storeBuilder(
       fetcher =
-        Fetcher.of { page: Int -> api.getCategories(limit = MAX_LIMIT).getDataOrThrow().data },
+        Fetcher.of { page -> api.getCategories(limit = MAX_LIMIT).getDataOrThrow().data },
       sourceOfTruth =
         SourceOfTruth.of<Int, List<CmcCategoryItem>, List<CategoryItem>>(
             reader = { page -> dao.selectAll().map { it.map(CategoryEntity::toCategoryItem) } },

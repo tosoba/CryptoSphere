@@ -12,12 +12,14 @@ interface CoinStatsApi {
   @GET("news")
   @Headers("X-API-KEY: ${BuildKonfig.COIN_NEWS_API_KEY}")
   suspend fun getNews(
-    @Query page: Int = 1,
-    @Query limit: Int = 100,
+    @Query page: Int = PAGE_OFFSET,
+    @Query limit: Int = MAX_LIMIT,
   ): NetworkResult<CoinStatsNewsResponse>
 
   companion object {
     private const val BASE_URL = "https://openapiv1.coinstats.app/"
+    const val PAGE_OFFSET = 1 // API uses 1-based indexing...
+    const val MAX_LIMIT = 100
 
     operator fun invoke(): CoinStatsApi = buildKtorfit(BASE_URL).createCoinStatsApi()
   }

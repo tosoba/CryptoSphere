@@ -2,6 +2,7 @@ package com.trm.cryptosphere.data.api.coinstats
 
 import com.trm.cryptosphere.data.api.coinstats.model.CoinStatsNewsItem
 import com.trm.cryptosphere.domain.model.NewsItem
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
@@ -19,4 +20,5 @@ fun CoinStatsNewsItem.toNewsItem(): NewsItem =
     imgUrl = imgUrl,
     relatedCoins = relatedCoins.orEmpty(),
     link = link,
+    fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
   )

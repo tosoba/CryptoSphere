@@ -15,5 +15,8 @@ interface NewsDao {
 
   @Query("SELECT * FROM news") fun selectAll(): Flow<List<NewsEntity>>
 
+  @Query("SELECT * FROM news LIMIT :pageSize OFFSET :page * :pageSize")
+  fun selectPage(page: Int, pageSize: Int): Flow<List<NewsEntity>>
+
   @Query("DELETE FROM news") suspend fun deleteAll()
 }

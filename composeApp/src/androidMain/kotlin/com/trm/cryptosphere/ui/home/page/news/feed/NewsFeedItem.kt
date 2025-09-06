@@ -40,10 +40,10 @@ import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -195,15 +195,16 @@ fun NewsFeedItem(
 @Composable
 private fun NewsFeedItemPreview() {
   SharedTransitionPreview {
-    NewsFeedItem(item = mockNewsItem("1"), isCurrent = true, onTokenCarouselItemClick = { _, _ -> })
+    NewsFeedItem(item = mockNewsItem(), isCurrent = true, onTokenCarouselItemClick = { _, _ -> })
   }
 }
 
-private fun mockNewsItem(id: String): NewsItem =
+@OptIn(ExperimentalTime::class)
+private fun mockNewsItem(): NewsItem =
   NewsItem(
-    id = id,
+    id = "1",
     searchKeyWords = listOf("dogecoin", "DOGE"),
-    feedDate = @OptIn(ExperimentalTime::class) Clock.System.now().toLocalDateTime(TimeZone.UTC),
+    feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
     source = "U.Today",
     title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
     sourceLink = "https://u.today/",
@@ -216,4 +217,5 @@ private fun mockNewsItem(id: String): NewsItem =
       ),
     link =
       "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
+    fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
   )
