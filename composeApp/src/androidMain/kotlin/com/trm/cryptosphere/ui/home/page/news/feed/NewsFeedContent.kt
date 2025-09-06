@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.trm.cryptosphere.core.base.LoadableState
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
@@ -28,49 +28,51 @@ fun NewsFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  Crossfade(component.state.collectAsStateWithLifecycle(LoadableState.Loading)) {
-    when (val state = it.value) {
-      LoadableState.Loading -> {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
-          CircularProgressIndicator()
-        }
+  val newsItems = component.state.collectAsLazyPagingItems()
+  val pagerState = rememberPagerState { newsItems.itemCount }
+
+  when (val loadState = newsItems.loadState.refresh) {
+    LoadState.Loading -> {
+      Box(modifier = modifier, contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+    }
+    is LoadState.NotLoading -> {
+      LaunchedEffect(pagerState.currentPage, newsItems) {
+        onImageUrlChange(newsItems[pagerState.currentPage]?.imgUrl)
       }
-      is LoadableState.Idle -> {
-        val newsItems = state.value
-        val pagerState = rememberPagerState(pageCount = newsItems::size)
 
-        LaunchedEffect(pagerState.currentPage, newsItems) {
-          onImageUrlChange(newsItems[pagerState.currentPage].imgUrl)
-        }
-
-        Box(modifier = modifier) {
-          VerticalFeedPager(pagerState = pagerState, modifier = Modifier.fillMaxSize()) { page ->
+      Box(modifier = modifier) {
+        VerticalFeedPager(
+          pagerState = pagerState,
+          key = newsItems.itemKey { it.id },
+          modifier = Modifier.fillMaxSize(),
+        ) { page ->
+          newsItems[page]?.let {
             NewsFeedItem(
-              item = newsItems[page],
+              item = it,
               isCurrent = page == pagerState.currentPage,
               onTokenCarouselItemClick = component.onTokenCarouselItemClick,
             )
           }
+        }
 
-          PagerWormIndicator(
-            pagerState = pagerState,
-            activeDotColor = Color.White,
-            dotColor = Color.LightGray,
-            dotCount = 5,
-            orientation = PagerIndicatorOrientation.Vertical,
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
-          )
-        }
+        PagerWormIndicator(
+          pagerState = pagerState,
+          activeDotColor = Color.White,
+          dotColor = Color.LightGray,
+          dotCount = 5,
+          orientation = PagerIndicatorOrientation.Vertical,
+          modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
+        )
       }
-      is LoadableState.Error -> {
-        Column(
-          modifier = modifier,
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
-        ) {
-          Text(state.throwable?.message ?: "Error occurred.")
-          Button(onClick = component.state::restart) { Text("Retry") }
-        }
+    }
+    is LoadState.Error -> {
+      Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+      ) {
+        Text(loadState.error.message ?: "Error occurred.")
+        Button(onClick = newsItems::retry) { Text("Retry") }
       }
     }
   }

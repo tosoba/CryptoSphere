@@ -49,6 +49,7 @@ kotlin {
     }
 
     commonMain.dependencies {
+      implementation(libs.androidx.paging.common)
       implementation(libs.androidx.room.runtime)
 
       api(libs.decompose)
@@ -142,6 +143,4 @@ skie {
   }
 }
 
-multiplatformResources {
-  resourcesPackage.set("com.trm.cryptosphere.shared")
-}
+multiplatformResources { resourcesPackage.set("com.trm.cryptosphere.shared") }

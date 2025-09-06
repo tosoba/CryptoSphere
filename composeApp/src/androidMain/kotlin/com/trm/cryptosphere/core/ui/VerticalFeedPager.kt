@@ -13,6 +13,7 @@ fun VerticalFeedPager(
   pagerState: PagerState,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
+  key: ((index: Int) -> Any)? = null,
   pageContent: @Composable PagerScope.(page: Int) -> Unit,
 ) {
   VerticalPager(
@@ -20,6 +21,7 @@ fun VerticalFeedPager(
     state = pagerState,
     contentPadding = contentPadding,
     beyondViewportPageCount = 1,
+    key = key,
     pageContent = pageContent,
   )
 }

@@ -36,6 +36,7 @@ class NewsStore(
             .getNews(page = page + CoinStatsApi.PAGE_OFFSET, limit = CoinStatsApi.MAX_LIMIT)
             .getDataOrThrow()
             .result
+            .filter { item -> !item.relatedCoins.isNullOrEmpty() }
         },
       sourceOfTruth =
         SourceOfTruth.of<Int, List<CoinStatsNewsItem>, List<NewsItem>>(

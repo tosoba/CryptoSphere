@@ -18,6 +18,7 @@ kotlin {
       implementation(libs.androidx.material3)
       implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
       implementation(libs.androidx.constraintLayout.compose)
+      implementation(libs.androidx.paging.compose)
 
       implementation(libs.coil.compose)
 

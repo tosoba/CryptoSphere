@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "eda0d7893fcd39151e9f622501125f4e",
+    "identityHash": "7bb06905afc27f186bb60cd1d3873cbf",
     "entities": [
       {
         "tableName": "token",
@@ -386,12 +386,24 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_news_fetchedDate_feedDate",
+            "unique": false,
+            "columnNames": [
+              "fetchedDate",
+              "feedDate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_news_fetchedDate_feedDate` ON `${TABLE_NAME}` (`fetchedDate`, `feedDate`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eda0d7893fcd39151e9f622501125f4e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7bb06905afc27f186bb60cd1d3873cbf')"
     ]
   }
 }
