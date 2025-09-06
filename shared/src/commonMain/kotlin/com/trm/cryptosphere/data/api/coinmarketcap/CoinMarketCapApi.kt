@@ -28,6 +28,7 @@ interface CoinMarketCapApi {
 
   companion object {
     private const val BASE_URL = "https://pro-api.coinmarketcap.com/"
+    const val MAX_LIMIT = 5_000
 
     operator fun invoke(): CoinMarketCapApi = buildKtorfit(BASE_URL).createCoinMarketCapApi()
   }

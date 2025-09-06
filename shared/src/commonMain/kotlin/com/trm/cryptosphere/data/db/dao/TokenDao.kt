@@ -24,6 +24,8 @@ interface TokenDao {
 
   @Query("DELETE FROM token") suspend fun deleteAllTokens()
 
+  @Query("SELECT COUNT(*) FROM token") suspend fun selectTokensCount(): Int
+
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   suspend fun insertTags(tags: List<TagEntity>): List<Long>
 

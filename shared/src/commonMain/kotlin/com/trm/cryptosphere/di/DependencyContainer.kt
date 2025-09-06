@@ -62,7 +62,10 @@ class DependencyContainer(
     )
   },
   private val tokenRepository: Lazy<TokenRepository> = lazy {
-    TokenNetworkRepository(tokenStore.value)
+    TokenNetworkRepository(
+      dao = database.value.tokenDao(),
+      coinMarketCapApi = coinMarketCapApi.value,
+    )
   },
   private val categoryRepository: Lazy<CategoryRepository> = lazy {
     CategoryNetworkRepository(categoryStore.value)
