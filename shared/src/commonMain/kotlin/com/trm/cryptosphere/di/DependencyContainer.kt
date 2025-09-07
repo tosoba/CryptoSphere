@@ -71,7 +71,10 @@ class DependencyContainer(
     CategoryNetworkRepository(categoryStore.value)
   },
   private val newsRepository: Lazy<NewsRepository> = lazy {
-    NewsNetworkRepository(store = newsStore.value, tokenRepository = tokenRepository.value)
+    NewsNetworkRepository(
+      coinStatsApi = coinStatsApi.value,
+      tokenRepository = tokenRepository.value,
+    )
   },
   private val getNews: Lazy<GetNews> = lazy { GetNews(newsRepository.value) },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =

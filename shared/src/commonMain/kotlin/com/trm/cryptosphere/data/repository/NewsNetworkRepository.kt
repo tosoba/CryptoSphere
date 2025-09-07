@@ -7,7 +7,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.trm.cryptosphere.core.base.cancellableRunCatching
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
-import com.trm.cryptosphere.data.store.NewsStore
+import com.trm.cryptosphere.data.api.coinstats.model.CoinStatsNewsItem
+import com.trm.cryptosphere.data.api.coinstats.toNewsItem
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
@@ -15,10 +16,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 class NewsNetworkRepository(
-  private val store: NewsStore,
+  private val coinStatsApi: CoinStatsApi,
   private val tokenRepository: TokenRepository,
 ) : NewsRepository {
   override fun getNewsFlow(): Flow<PagingData<NewsItem>> =
@@ -34,14 +34,24 @@ class NewsNetworkRepository(
           val tokensSync = launch {
             if (tokenRepository.getTokensCount() == 0) tokenRepository.performFullTokensSync()
           }
+
           val page = params.key ?: 0
-          val news = async { store.get(page) }
+          val news = async {
+            coinStatsApi
+              .getNews(page = page + CoinStatsApi.PAGE_OFFSET)
+              .getDataOrThrow()
+              .result
+              .filter { item -> !item.relatedCoins.isNullOrEmpty() }
+              .map(CoinStatsNewsItem::toNewsItem)
+          }
 
           tokensSync.join()
+          val data = news.await()
+
           LoadResult.Page(
-            data = news.await(),
+            data = data,
             prevKey = (page - 1).takeIf { it >= 0 },
-            nextKey = page + 1,
+            nextKey = (page + 1).takeIf { data.isNotEmpty() && it < 100 },
           )
         }
         .fold(onSuccess = { it }, onFailure = { LoadResult.Error(it) })
