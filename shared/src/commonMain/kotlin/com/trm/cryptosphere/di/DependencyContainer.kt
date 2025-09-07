@@ -7,16 +7,11 @@ import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
-import com.trm.cryptosphere.data.repository.CategoryNetworkRepository
 import com.trm.cryptosphere.data.repository.NewsNetworkRepository
 import com.trm.cryptosphere.data.repository.TokenNetworkRepository
-import com.trm.cryptosphere.data.store.CategoryStore
-import com.trm.cryptosphere.data.store.NewsStore
 import com.trm.cryptosphere.data.store.TokenStore
-import com.trm.cryptosphere.domain.repository.CategoryRepository
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
-import com.trm.cryptosphere.domain.usecase.GetNews
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
@@ -47,28 +42,11 @@ class DependencyContainer(
       dispatchers = appCoroutineDispatchers,
     )
   },
-  private val categoryStore: Lazy<CategoryStore> = lazy {
-    CategoryStore(
-      api = coinMarketCapApi.value,
-      dao = database.value.categoryDao(),
-      dispatchers = appCoroutineDispatchers,
-    )
-  },
-  private val newsStore: Lazy<NewsStore> = lazy {
-    NewsStore(
-      api = coinStatsApi.value,
-      dao = database.value.newsDao(),
-      dispatchers = appCoroutineDispatchers,
-    )
-  },
   private val tokenRepository: Lazy<TokenRepository> = lazy {
     TokenNetworkRepository(
       dao = database.value.tokenDao(),
       coinMarketCapApi = coinMarketCapApi.value,
     )
-  },
-  private val categoryRepository: Lazy<CategoryRepository> = lazy {
-    CategoryNetworkRepository(categoryStore.value)
   },
   private val newsRepository: Lazy<NewsRepository> = lazy {
     NewsNetworkRepository(
@@ -76,12 +54,11 @@ class DependencyContainer(
       tokenRepository = tokenRepository.value,
     )
   },
-  private val getNews: Lazy<GetNews> = lazy { GetNews(newsRepository.value) },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =
     NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
       NewsFeedDefaultComponent(
         componentContext = componentContext,
-        getNews = getNews.value,
+        repository = newsRepository.value,
         dispatchers = appCoroutineDispatchers,
         onTokenCarouselItemClick = onTokenCarouselItemClick,
       )

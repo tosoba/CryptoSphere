@@ -27,7 +27,7 @@ fun CmcTokenItem.toEntity() =
     usdQuote = quote.usd.toEmbedded(),
   )
 
-fun CmcTokenQuote.toEmbedded() =
+private fun CmcTokenQuote.toEmbedded() =
   TokenQuoteEmbedded(
     price = price,
     volume24h = volume24h,
@@ -65,7 +65,7 @@ fun TokenEntity.toTokenItem() =
     quote = usdQuote.toTokenQuote(),
   )
 
-fun TokenQuoteEmbedded.toTokenQuote() =
+private fun TokenQuoteEmbedded.toTokenQuote() =
   TokenQuote(
     price = price,
     volume24h = volume24h,
