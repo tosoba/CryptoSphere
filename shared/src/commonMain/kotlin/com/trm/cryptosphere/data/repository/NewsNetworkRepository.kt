@@ -41,7 +41,6 @@ class NewsNetworkRepository(
               .getNews(page = page + CoinStatsApi.PAGE_OFFSET)
               .getDataOrThrow()
               .result
-              .filter { item -> !item.relatedCoins.isNullOrEmpty() }
               .map(CoinStatsNewsItem::toNewsItem)
           }
 

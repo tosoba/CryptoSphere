@@ -20,7 +20,6 @@ import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -29,6 +28,8 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -39,6 +40,7 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
+import com.trm.cryptosphere.domain.model.TokenCarouselItem
 import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -50,11 +52,10 @@ import kotlinx.datetime.toLocalDateTime
 fun NewsFeedItem(
   item: NewsItem,
   isCurrent: Boolean,
+  carouselItems: List<TokenCarouselItem>,
   modifier: Modifier = Modifier,
   onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
-  val tokenCarouselItems = remember(::mockTokenCarouselItems)
-
   Box(modifier = modifier) {
     AsyncImage(
       model = item.imgUrl, // TODO: loading/error placeholders
@@ -136,7 +137,10 @@ fun NewsFeedItem(
               top.linkTo(parent.top, margin = 16.dp)
               bottom.linkTo(source.top, margin = 4.dp)
               start.linkTo(parent.start, margin = 16.dp)
-              end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
+              end.linkTo(
+                if (carouselItems.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
+                margin = 16.dp,
+              )
 
               width = Dimension.fillToConstraints
               verticalBias = 1f
@@ -154,18 +158,25 @@ fun NewsFeedItem(
           overflow = TextOverflow.Ellipsis,
           modifier =
             Modifier.constrainAs(source) {
-              bottom.linkTo(linkButton.top, margin = 16.dp)
+              if (carouselItems.isEmpty()) {
+                bottom.linkTo(linkButton.bottom)
+              } else {
+                bottom.linkTo(linkButton.top, margin = 16.dp)
+              }
               start.linkTo(parent.start, margin = 16.dp)
-              end.linkTo(secondaryButtonsStartBarrier, margin = 16.dp)
+              end.linkTo(
+                if (carouselItems.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
+                margin = 16.dp,
+              )
 
               width = Dimension.fillToConstraints
             },
         )
 
         TokenCarousel(
-          tokens = tokenCarouselItems,
+          tokens = carouselItems,
           onItemClick = { token ->
-            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, tokenCarouselItems))
+            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, carouselItems))
           },
           modifier =
             Modifier.constrainAs(tokenCarousel) {
@@ -191,12 +202,30 @@ fun NewsFeedItem(
   }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
 @Composable
-private fun NewsFeedItemPreview() {
+private fun NewsFeedItemPreview(
+  @PreviewParameter(NewsFeedItemPreviewParameterProvider::class) params: NewsFeedItemPreviewParams
+) {
   SharedTransitionPreview {
-    NewsFeedItem(item = mockNewsItem(), isCurrent = true, onTokenCarouselItemClick = { _, _ -> })
+    NewsFeedItem(
+      item = mockNewsItem(),
+      isCurrent = true,
+      carouselItems = params.carouselItems,
+      onTokenCarouselItemClick = { _, _ -> },
+    )
   }
+}
+
+private data class NewsFeedItemPreviewParams(val carouselItems: List<TokenCarouselItem>)
+
+private class NewsFeedItemPreviewParameterProvider :
+  PreviewParameterProvider<NewsFeedItemPreviewParams> {
+  override val values: Sequence<NewsFeedItemPreviewParams> =
+    sequenceOf(
+      NewsFeedItemPreviewParams(carouselItems = emptyList()),
+      NewsFeedItemPreviewParams(carouselItems = mockTokenCarouselItems()),
+    )
 }
 
 @OptIn(ExperimentalTime::class)

@@ -11,6 +11,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
 @Composable
 fun NewsFeedContent(
@@ -30,6 +32,8 @@ fun NewsFeedContent(
 ) {
   val newsItems = component.state.collectAsLazyPagingItems()
   val pagerState = rememberPagerState { newsItems.itemCount }
+
+  val carouselItems = remember(::mockTokenCarouselItems)
 
   when (val loadState = newsItems.loadState.refresh) {
     LoadState.Loading -> {
@@ -50,6 +54,7 @@ fun NewsFeedContent(
             NewsFeedItem(
               item = it,
               isCurrent = page == pagerState.currentPage,
+              carouselItems = carouselItems,
               onTokenCarouselItemClick = component.onTokenCarouselItemClick,
             )
           }
