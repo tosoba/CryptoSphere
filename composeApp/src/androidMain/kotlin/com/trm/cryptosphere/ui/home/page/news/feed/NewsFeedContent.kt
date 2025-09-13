@@ -1,17 +1,25 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,52 +40,67 @@ fun NewsFeedContent(
 ) {
   val newsItems = component.state.collectAsLazyPagingItems()
   val pagerState = rememberPagerState { newsItems.itemCount }
-
+  var isRefreshing by remember { mutableStateOf(false) }
   val carouselItems = remember(::mockTokenCarouselItems)
 
-  when (val loadState = newsItems.loadState.refresh) {
-    LoadState.Loading -> {
-      Box(modifier = modifier, contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-    }
-    is LoadState.NotLoading -> {
-      LaunchedEffect(pagerState.currentPage, newsItems) {
-        onImageUrlChange(newsItems[pagerState.currentPage]?.imgUrl)
+  Crossfade(newsItems.loadState.refresh) { loadState ->
+    when (loadState) {
+      LoadState.Loading -> {
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+          CircularProgressIndicator()
+        }
       }
-
-      Box(modifier = modifier) {
-        VerticalFeedPager(
-          pagerState = pagerState,
-          key = newsItems.itemKey { it.id },
-          modifier = Modifier.fillMaxSize(),
-        ) { page ->
-          newsItems[page]?.let {
-            NewsFeedItem(
-              item = it,
-              isCurrent = page == pagerState.currentPage,
-              carouselItems = carouselItems,
-              onTokenCarouselItemClick = component.onTokenCarouselItemClick,
-            )
-          }
+      is LoadState.NotLoading -> {
+        LaunchedEffect(pagerState.currentPage, newsItems) {
+          onImageUrlChange(newsItems[pagerState.currentPage]?.imgUrl)
         }
 
-        PagerWormIndicator(
-          pagerState = pagerState,
-          activeDotColor = Color.White,
-          dotColor = Color.LightGray,
-          dotCount = 5,
-          orientation = PagerIndicatorOrientation.Vertical,
-          modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
-        )
+        PullToRefreshBox(
+          isRefreshing = isRefreshing,
+          onRefresh = newsItems::refresh,
+          modifier = modifier,
+        ) {
+          VerticalFeedPager(
+            pagerState = pagerState,
+            key = newsItems.itemKey { it.id },
+            modifier = Modifier.fillMaxSize(),
+          ) { page ->
+            newsItems[page]?.let {
+              NewsFeedItem(
+                item = it,
+                isCurrent = page == pagerState.currentPage,
+                carouselItems = carouselItems,
+                onTokenCarouselItemClick = component.onTokenCarouselItemClick,
+              )
+            }
+          }
+
+          PagerWormIndicator(
+            pagerState = pagerState,
+            activeDotColor = Color.White,
+            dotColor = Color.LightGray,
+            dotCount = 5,
+            orientation = PagerIndicatorOrientation.Vertical,
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
+          )
+
+          AnimatedVisibility(
+            visible = newsItems.loadState.append is LoadState.Loading,
+            modifier = Modifier.align(Alignment.BottomCenter),
+          ) {
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+          }
+        }
       }
-    }
-    is LoadState.Error -> {
-      Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-      ) {
-        Text(loadState.error.message ?: "Error occurred.")
-        Button(onClick = newsItems::retry) { Text("Retry") }
+      is LoadState.Error -> {
+        Column(
+          modifier = modifier,
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center,
+        ) {
+          Text(loadState.error.message ?: "Error occurred.")
+          Button(onClick = newsItems::retry) { Text("Retry") }
+        }
       }
     }
   }
