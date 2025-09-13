@@ -20,6 +20,7 @@ interface CoinStatsApi {
     private const val BASE_URL = "https://openapiv1.coinstats.app/"
     const val PAGE_OFFSET = 1 // API uses 1-based indexing...
     const val MAX_LIMIT = 100
+    const val MAX_PAGE = 100
 
     operator fun invoke(): CoinStatsApi = buildKtorfit(BASE_URL).createCoinStatsApi()
   }
