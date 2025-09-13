@@ -32,7 +32,7 @@ class GetNewsUseCase(
           }
 
           val page = params.key ?: 0
-          val news = async { newsRepository.getNewsPage(page) }
+          val news = async { newsRepository.getNewsPage(page = page, limit = params.loadSize) }
 
           tokensSync.join()
           val data = news.await()

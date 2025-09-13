@@ -7,9 +7,9 @@ import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.repository.NewsRepository
 
 class NewsNetworkRepository(private val coinStatsApi: CoinStatsApi) : NewsRepository {
-  override suspend fun getNewsPage(page: Int): List<NewsItem> =
+  override suspend fun getNewsPage(page: Int, limit: Int): List<NewsItem> =
     coinStatsApi
-      .getNews(page = page + CoinStatsApi.PAGE_OFFSET)
+      .getNews(page = page + CoinStatsApi.PAGE_OFFSET, limit = limit)
       .getDataOrThrow()
       .result
       .map(CoinStatsNewsItem::toNewsItem)
