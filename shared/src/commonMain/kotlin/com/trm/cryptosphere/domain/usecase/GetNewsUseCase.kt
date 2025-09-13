@@ -20,31 +20,37 @@ class GetNewsUseCase(
   private val tokenRepository: TokenRepository,
 ) {
   operator fun invoke(
-    config: PagingConfig = PagingConfig(pageSize = CoinStatsApi.MAX_LIMIT, prefetchDistance = 10)
+    config: PagingConfig =
+      PagingConfig(
+        pageSize = CoinStatsApi.MAX_LIMIT,
+        prefetchDistance = 10,
+        initialLoadSize = CoinStatsApi.MAX_LIMIT,
+      )
   ): Flow<PagingData<NewsItem>> =
     Pager(config = config, pagingSourceFactory = ::NewsPagingSource).flow
 
   private inner class NewsPagingSource : PagingSource<Int, NewsItem>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NewsItem> = coroutineScope {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NewsItem> =
       cancellableRunCatching {
-          val tokensSync = launch {
-            if (tokenRepository.getTokensCount() == 0) tokenRepository.performFullTokensSync()
+          coroutineScope {
+            val tokensSync = launch {
+              if (tokenRepository.getTokensCount() == 0) tokenRepository.performFullTokensSync()
+            }
+
+            val page = params.key ?: 0
+            val news = async { newsRepository.getNewsPage(page = page, limit = params.loadSize) }
+
+            tokensSync.join()
+            val data = news.await()
+
+            LoadResult.Page(
+              data = data,
+              prevKey = (page - 1).takeIf { it >= 0 },
+              nextKey = (page + 1).takeIf { data.isNotEmpty() && it < CoinStatsApi.MAX_PAGE },
+            )
           }
-
-          val page = params.key ?: 0
-          val news = async { newsRepository.getNewsPage(page = page, limit = params.loadSize) }
-
-          tokensSync.join()
-          val data = news.await()
-
-          LoadResult.Page(
-            data = data,
-            prevKey = (page - 1).takeIf { it >= 0 },
-            nextKey = (page + 1).takeIf { data.isNotEmpty() && it < CoinStatsApi.MAX_PAGE },
-          )
         }
         .fold(onSuccess = { it }, onFailure = { LoadResult.Error(it) })
-    }
 
     override fun getRefreshKey(state: PagingState<Int, NewsItem>): Int? = null
   }
