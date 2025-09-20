@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a602199770d39fd8a9fab2cb74e9b1fa",
+    "identityHash": "1150cd8a5a9ff3d9279fb7cbce1ca5e9",
     "entities": [
       {
         "tableName": "token",
@@ -183,7 +183,19 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_token_name_symbol",
+            "unique": false,
+            "columnNames": [
+              "name",
+              "symbol"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_name_symbol` ON `${TABLE_NAME}` (`name`, `symbol`)"
+          }
+        ]
       },
       {
         "tableName": "tag",
@@ -285,7 +297,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a602199770d39fd8a9fab2cb74e9b1fa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1150cd8a5a9ff3d9279fb7cbce1ca5e9')"
     ]
   }
 }

@@ -45,6 +45,7 @@ decompose-extensions-compose = { group = "com.arkivanov.decompose", name = "exte
 decompose-extensions-compose-experimental = { group = "com.arkivanov.decompose", name = "extensions-compose-experimental", version.ref = "decompose" }
 essenty-backHandler = { group = "com.arkivanov.essenty", name = "back-handler", version.ref = "essenty" }
 essenty-lifecycle = { module = "com.arkivanov.essenty:lifecycle", version.ref = "essenty" }
+essenty-lifecycle-coroutines = { module = "com.arkivanov.essenty:lifecycle-coroutines", version.ref = "essenty" }
 essenty-stateKeeper = { group = "com.arkivanov.essenty", name = "state-keeper", version.ref = "essenty" }
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

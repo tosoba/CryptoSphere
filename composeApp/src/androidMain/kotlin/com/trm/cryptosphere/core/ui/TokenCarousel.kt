@@ -24,13 +24,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.trm.cryptosphere.domain.model.TokenCarouselItem
+import com.trm.cryptosphere.domain.model.TokenItem
+import com.trm.cryptosphere.domain.model.logoUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TokenCarousel(
-  tokens: List<TokenCarouselItem>,
-  onItemClick: (TokenCarouselItem) -> Unit,
+  tokens: List<TokenItem>,
+  onItemClick: (TokenItem) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
@@ -67,7 +68,7 @@ fun TokenCarousel(
         // TODO: use dominant color of image as card background
         AsyncImage(
           modifier = Modifier.weight(1f).aspectRatio(1f),
-          model = token.imageUrl,
+          model = token.logoUrl,
           contentDescription = null,
           contentScale = ContentScale.Fit,
         )

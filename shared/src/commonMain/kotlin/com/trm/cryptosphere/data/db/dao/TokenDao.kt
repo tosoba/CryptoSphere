@@ -22,6 +22,9 @@ interface TokenDao {
 
   @Query("SELECT * FROM token") fun selectAllTokens(): Flow<List<TokenEntity>>
 
+  @Query("SELECT * FROM token WHERE name IN (:searchTerms) OR symbol IN (:searchTerms)")
+  suspend fun selectTokensByNameOrSymbol(searchTerms: List<String>): List<TokenEntity>
+
   @Query("DELETE FROM token") suspend fun deleteAllTokens()
 
   @Query("SELECT COUNT(*) FROM token") suspend fun selectTokensCount(): Int

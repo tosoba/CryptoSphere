@@ -3,14 +3,15 @@ package com.trm.cryptosphere.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.trm.cryptosphere.data.db.entity.embedded.TokenQuoteEmbedded
 
-@Entity(tableName = "token")
+@Entity(tableName = "token", indices = [Index(value = ["name", "symbol"])])
 data class TokenEntity(
   @PrimaryKey val id: Int,
-  val name: String,
-  val symbol: String,
+  @ColumnInfo(collate = ColumnInfo.NOCASE) val name: String,
+  @ColumnInfo(collate = ColumnInfo.NOCASE) val symbol: String,
   val slug: String,
   @ColumnInfo(name = "num_market_pairs") val numMarketPairs: Int,
   @ColumnInfo(name = "date_added") val dateAdded: String,

@@ -40,8 +40,8 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
-import com.trm.cryptosphere.domain.model.TokenCarouselItem
-import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
+import com.trm.cryptosphere.domain.model.TokenItem
+import com.trm.cryptosphere.domain.model.mockTokenItems
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.TimeZone
@@ -52,9 +52,9 @@ import kotlinx.datetime.toLocalDateTime
 fun NewsFeedItem(
   item: NewsItem,
   isCurrent: Boolean,
-  carouselItems: List<TokenCarouselItem>,
+  relatedTokens: List<TokenItem>,
   modifier: Modifier = Modifier,
-  onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
+  onRelatedTokenItemClick: (String, TokenCarouselConfig) -> Unit,
 ) {
   Box(modifier = modifier) {
     AsyncImage(
@@ -138,7 +138,7 @@ fun NewsFeedItem(
               bottom.linkTo(source.top, margin = 4.dp)
               start.linkTo(parent.start, margin = 16.dp)
               end.linkTo(
-                if (carouselItems.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
+                if (relatedTokens.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
                 margin = 16.dp,
               )
 
@@ -158,14 +158,14 @@ fun NewsFeedItem(
           overflow = TextOverflow.Ellipsis,
           modifier =
             Modifier.constrainAs(source) {
-              if (carouselItems.isEmpty()) {
+              if (relatedTokens.isEmpty()) {
                 bottom.linkTo(linkButton.bottom)
               } else {
                 bottom.linkTo(linkButton.top, margin = 16.dp)
               }
               start.linkTo(parent.start, margin = 16.dp)
               end.linkTo(
-                if (carouselItems.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
+                if (relatedTokens.isEmpty()) linkButton.start else secondaryButtonsStartBarrier,
                 margin = 16.dp,
               )
 
@@ -174,9 +174,9 @@ fun NewsFeedItem(
         )
 
         TokenCarousel(
-          tokens = carouselItems,
+          tokens = relatedTokens,
           onItemClick = { token ->
-            onTokenCarouselItemClick(token.symbol, TokenCarouselConfig(item.id, carouselItems))
+            onRelatedTokenItemClick(token.symbol, TokenCarouselConfig(item.id, relatedTokens))
           },
           modifier =
             Modifier.constrainAs(tokenCarousel) {
@@ -205,27 +205,20 @@ fun NewsFeedItem(
 @Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
 @Composable
 private fun NewsFeedItemPreview(
-  @PreviewParameter(NewsFeedItemPreviewParameterProvider::class) params: NewsFeedItemPreviewParams
+  @PreviewParameter(NewsFeedItemPreviewRelatedTokensProvider::class) relatedTokens: List<TokenItem>
 ) {
   SharedTransitionPreview {
     NewsFeedItem(
       item = mockNewsItem(),
       isCurrent = true,
-      carouselItems = params.carouselItems,
-      onTokenCarouselItemClick = { _, _ -> },
+      relatedTokens = relatedTokens,
+      onRelatedTokenItemClick = { _, _ -> },
     )
   }
 }
 
-private data class NewsFeedItemPreviewParams(val carouselItems: List<TokenCarouselItem>)
-
-private class NewsFeedItemPreviewParameterProvider :
-  PreviewParameterProvider<NewsFeedItemPreviewParams> {
-  override val values: Sequence<NewsFeedItemPreviewParams> =
-    sequenceOf(
-      NewsFeedItemPreviewParams(carouselItems = emptyList()),
-      NewsFeedItemPreviewParams(carouselItems = mockTokenCarouselItems()),
-    )
+private class NewsFeedItemPreviewRelatedTokensProvider : PreviewParameterProvider<List<TokenItem>> {
+  override val values: Sequence<List<TokenItem>> = sequenceOf(emptyList(), mockTokenItems())
 }
 
 @OptIn(ExperimentalTime::class)

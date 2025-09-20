@@ -24,13 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.domain.model.mockTokenCarouselItems
 
 @Composable
 fun NewsFeedContent(
@@ -38,10 +38,10 @@ fun NewsFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val newsItems = component.state.collectAsLazyPagingItems()
+  val newsItems = component.newsItems.collectAsLazyPagingItems()
+  val relatedTokens by component.relatedTokens.collectAsStateWithLifecycle()
   val pagerState = rememberPagerState { newsItems.itemCount }
   var isRefreshing by remember { mutableStateOf(false) }
-  val carouselItems = remember(::mockTokenCarouselItems)
 
   Crossfade(newsItems.loadState.refresh) { loadState ->
     when (loadState) {
@@ -52,7 +52,9 @@ fun NewsFeedContent(
       }
       is LoadState.NotLoading -> {
         LaunchedEffect(pagerState.currentPage, newsItems) {
-          onImageUrlChange(newsItems[pagerState.currentPage]?.imgUrl)
+          val item = newsItems[pagerState.currentPage]
+          onImageUrlChange(item?.imgUrl)
+          item?.let(component::onCurrentItemChanged)
         }
 
         PullToRefreshBox(
@@ -69,8 +71,8 @@ fun NewsFeedContent(
               NewsFeedItem(
                 item = it,
                 isCurrent = page == pagerState.currentPage,
-                carouselItems = carouselItems,
-                onTokenCarouselItemClick = component.onTokenCarouselItemClick,
+                relatedTokens = relatedTokens,
+                onRelatedTokenItemClick = component.onTokenCarouselItemClick,
               )
             }
           }

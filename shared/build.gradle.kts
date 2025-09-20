@@ -54,6 +54,7 @@ kotlin {
 
       api(libs.decompose)
       api(libs.essenty.lifecycle)
+      api(libs.essenty.lifecycle.coroutines)
       api(libs.essenty.stateKeeper)
       api(libs.essenty.backHandler)
 
