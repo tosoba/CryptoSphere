@@ -22,15 +22,15 @@ import kotlinx.coroutines.launch
 
 class NewsFeedDefaultComponent(
   componentContext: ComponentContext,
+  override val onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
   private val getNewsUseCase: GetNewsUseCase,
   private val getTokensRelatedToNewsItemUseCase: GetTokensRelatedToNewsItemUseCase,
   private val dispatchers: AppCoroutineDispatchers,
-  override val onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
 ) : NewsFeedComponent, ComponentContext by componentContext {
+  private val scope = coroutineScope(dispatchers.main + SupervisorJob())
+
   override val newsItems: Flow<PagingData<NewsItem>> =
     instanceKeeper.getOrCreate { NewsFeedViewState(getNewsUseCase, dispatchers) }.value
-
-  private val scope = coroutineScope(dispatchers.main + SupervisorJob())
 
   private val currentNewsItem = MutableSharedFlow<NewsItem>()
 

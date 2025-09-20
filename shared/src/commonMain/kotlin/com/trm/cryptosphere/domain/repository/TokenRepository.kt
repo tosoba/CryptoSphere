@@ -8,4 +8,6 @@ interface TokenRepository {
   suspend fun performFullTokensSync()
 
   suspend fun getTokensMatchingSearchTerms(searchTerms: List<String>): List<TokenItem>
+
+  suspend fun getTokensBySharedTags(symbol: String): List<TokenItem>
 }

@@ -63,10 +63,10 @@ class DependencyContainer(
     NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
       NewsFeedDefaultComponent(
         componentContext = componentContext,
+        onTokenCarouselItemClick = onTokenCarouselItemClick,
         getNewsUseCase = getNewsUseCase.value,
         getTokensRelatedToNewsItemUseCase = getTokensRelatedToNewsItemUseCase.value,
         dispatchers = appCoroutineDispatchers,
-        onTokenCarouselItemClick = onTokenCarouselItemClick,
       )
     },
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
@@ -96,9 +96,11 @@ class DependencyContainer(
       navigateToTokenDetails ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        mainTokenSymbol = mainTokenSymbol,
+        initialMainTokenSymbol = mainTokenSymbol,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateToTokenDetails = navigateToTokenDetails,
+        tokenRepository = tokenRepository.value,
+        dispatchers = appCoroutineDispatchers,
       )
     },
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->

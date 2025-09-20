@@ -124,11 +124,11 @@ fun TokenFeedContent(
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
 
       val scope = rememberCoroutineScope()
-      val state by component.state.collectAsStateWithLifecycle()
-      val pagerState = rememberPagerState(pageCount = state.feedItems::size)
+      val tokens by component.tokens.collectAsStateWithLifecycle()
+      val pagerState = rememberPagerState(pageCount = tokens::size)
 
-      LaunchedEffect(pagerState.currentPage, state.feedItems) {
-        onImageUrlChange(state.feedItems[pagerState.currentPage].logoUrl)
+      LaunchedEffect(pagerState.currentPage, tokens) {
+        onImageUrlChange(tokens.getOrNull(pagerState.currentPage)?.logoUrl)
       }
 
       VerticalFeedPager(
@@ -149,7 +149,7 @@ fun TokenFeedContent(
             height = Dimension.fillToConstraints
           },
       ) { page ->
-        TokenFeedPagerItem(token = state.feedItems[page], modifier = Modifier.fillMaxSize())
+        TokenFeedPagerItem(token = tokens[page], modifier = Modifier.fillMaxSize())
       }
 
       PagerWormIndicator(
@@ -169,11 +169,8 @@ fun TokenFeedContent(
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
         onItemClick = { item ->
-          if (state.mainTokenSymbol == item.symbol) {
-            scope.launch { pagerState.animateScrollToPage(0) }
-          } else {
-            component.reloadFeedForSymbol(item.symbol)
-          }
+          scope.launch { pagerState.animateScrollToPage(0) }
+          component.mainTokenSymbol.value = item.symbol
         },
         modifier =
           Modifier.constrainAs(tokenCarousel) {
@@ -200,9 +197,7 @@ fun TokenFeedContent(
             bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
-        onClick = {
-          component.navigateToTokenDetails(state.feedItems[pagerState.currentPage].symbol)
-        },
+        onClick = { component.navigateToTokenDetails(tokens[pagerState.currentPage].symbol) },
       ) {
         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
       }
