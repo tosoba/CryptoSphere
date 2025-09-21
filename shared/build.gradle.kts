@@ -51,6 +51,7 @@ kotlin {
     commonMain.dependencies {
       implementation(libs.androidx.paging.common)
       implementation(libs.androidx.room.runtime)
+      implementation(libs.androidx.sqlite.bundled)
 
       api(libs.decompose)
       api(libs.essenty.lifecycle)

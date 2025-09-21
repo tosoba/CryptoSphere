@@ -1,6 +1,7 @@
 package com.trm.cryptosphere.data.db
 
 import androidx.room.Room
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.trm.cryptosphere.core.PlatformContext
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
@@ -11,6 +12,7 @@ actual fun buildCryptoSphereDatabase(context: PlatformContext): CryptoSphereData
   Room.databaseBuilder<CryptoSphereDatabase>(
       name = "${documentDirectory()}${CryptoSphereDatabase.DATABASE_NAME}"
     )
+    .setDriver(BundledSQLiteDriver())
     .build()
 
 @OptIn(ExperimentalForeignApi::class)
