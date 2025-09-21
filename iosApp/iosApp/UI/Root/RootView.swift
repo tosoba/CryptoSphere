@@ -16,7 +16,8 @@ struct RootView: View {
         ) { child in
             switch onEnum(of: child) {
             case let .home(homeChild): HomeView(homeChild.component)
-            case let .token(tokenChild): EmptyView() // TODO: TokenView
+            case let .tokenFeed(tokenFeedChild): EmptyView() // TODO: TokenFeedView
+            case let .tokenDetails(tokenDetailsChild): EmptyView() // TODO: TokenDetailsView
             }
         }
     }

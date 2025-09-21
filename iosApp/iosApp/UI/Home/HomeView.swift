@@ -50,7 +50,7 @@ private struct ChildView: View {
 
     var body: some View {
         switch onEnum(of: page) {
-        case let .feed(feedPage): FeedView()
+        case let .newsFeed(newsFeedPage): FeedView()
         case let .prices(pricesPage): PricesView()
         case let .search(searchPage): SearchView()
         case let .history(historyPage): HistoryView()
