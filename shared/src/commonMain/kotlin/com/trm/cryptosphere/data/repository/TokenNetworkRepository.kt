@@ -25,7 +25,9 @@ class TokenNetworkRepository(
       .filter(String::isNotEmpty)
       .distinct()
       .takeUnless(List<String>::isEmpty)
-      ?.let { dao.selectTokensByNameOrSymbol(it).map(TokenEntity::toTokenItem) } ?: emptyList()
+      ?.let { dao.selectTokensByNameOrSymbol(it) }
+      ?.map(TokenEntity::toTokenItem)
+      ?.distinctBy(TokenItem::symbol) ?: emptyList()
 
   override suspend fun getTokensBySharedTags(symbol: String): List<TokenItem> =
     dao.selectTokensBySharedTags(symbol).map(TokenEntity::toTokenItem)
