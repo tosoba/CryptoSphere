@@ -30,5 +30,5 @@ class TokenNetworkRepository(
       ?.distinctBy(TokenItem::symbol) ?: emptyList()
 
   override suspend fun getTokensBySharedTags(symbol: String): List<TokenItem> =
-    dao.selectTokensBySharedTags(symbol).map(TokenEntity::toTokenItem)
+    dao.selectTokensBySharedTags(symbol).map(TokenEntity::toTokenItem).distinctBy(TokenItem::symbol)
 }

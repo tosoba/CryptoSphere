@@ -22,7 +22,9 @@ interface TokenDao {
 
   @Query("SELECT * FROM token") fun selectAllTokens(): Flow<List<TokenEntity>>
 
-  @Query("SELECT * FROM token WHERE name IN (:searchTerms) OR symbol IN (:searchTerms) ORDER BY cmc_rank")
+  @Query(
+    "SELECT * FROM token WHERE name IN (:searchTerms) OR symbol IN (:searchTerms) ORDER BY cmc_rank"
+  )
   suspend fun selectTokensByNameOrSymbol(searchTerms: List<String>): List<TokenEntity>
 
   @Query("DELETE FROM token") suspend fun deleteAllTokens()
@@ -67,7 +69,8 @@ interface TokenDao {
     JOIN token AS T2 ON TT2.token_id = T2.id
     WHERE T1.symbol = :symbol
     GROUP BY T2.id
-    ORDER BY CASE WHEN T2.symbol = :symbol THEN 0 ELSE 1 END, sharedTagCount DESC
+    ORDER BY CASE WHEN T2.symbol = :symbol THEN 0 ELSE 1 END, sharedTagCount DESC, cmc_rank
+    LIMIT 100
     """
   )
   suspend fun selectTokensBySharedTags(symbol: String): List<TokenEntity>
