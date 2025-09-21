@@ -274,10 +274,16 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
         }
     ) {
       val parameters = remember {
-        listOf(
-          TokenParameter(label = "Price", value = token.quote.price.toString()),
-          TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()),
-        )
+        buildList {
+          add(TokenParameter(label = "Price", value = token.quote.price.toString()))
+          add(TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()))
+          add(TokenParameter(label = "Volume (24h)", value = token.quote.volume24h.toString()))
+          add(
+            TokenParameter(label = "Circulating supply", value = token.circulatingSupply.toString())
+          )
+          add(TokenParameter(label = "Total supply", value = token.totalSupply.toString()))
+          add(TokenParameter(label = "Max supply", value = token.maxSupply?.toString() ?: "--"))
+        }
       }
       TokenParameterCardsColumn(
         parameters.take(
