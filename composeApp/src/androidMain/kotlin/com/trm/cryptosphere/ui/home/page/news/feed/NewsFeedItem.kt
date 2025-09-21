@@ -186,7 +186,7 @@ fun NewsFeedItem(
                 end.linkTo(linkButton.start, margin = 16.dp)
 
                 width = Dimension.fillToConstraints
-                height = Dimension.wrapContent
+                height = Dimension.fillToConstraints
               }
               .localSharedElement(key = tokenCarouselSharedTransitionKey(item.id)),
           contentPadding = PaddingValues(start = 16.dp),

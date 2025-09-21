@@ -122,7 +122,6 @@ fun TokenFeedContent(
           )
     ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
-
       val scope = rememberCoroutineScope()
       val tokens by component.tokens.collectAsStateWithLifecycle()
       val pagerState = rememberPagerState(pageCount = tokens::size)
@@ -180,7 +179,7 @@ fun TokenFeedContent(
               bottom.linkTo(detailsButton.bottom)
 
               width = Dimension.fillToConstraints
-              height = Dimension.wrapContent
+              height = Dimension.fillToConstraints
             }
             .localSharedElement(
               key =
