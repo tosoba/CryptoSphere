@@ -3,12 +3,9 @@ import SwiftUI
 
 struct HomeView: View {
     private let component: HomeComponent
+
     @StateValue
     private var pages: ChildPages<AnyObject, HomeComponentPage>
-
-    private var activePage: HomeComponentPage {
-        pages.items[Int(pages.selectedIndex)].instance!
-    }
 
     init(_ component: HomeComponent) {
         self.component = component
@@ -16,36 +13,45 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack {
-            ChildView(page: activePage)
-                .frame(maxHeight: .infinity)
-            // TODO: use proper tabs like in tv-maniac
-            HStack(alignment: .bottom, spacing: 16) {
-                Button(action: { component.selectPage(index: 0) }) {
-                    Label("Feed", systemImage: "menucard")
-                        .labelStyle(VerticalLabelStyle())
-                }
-
-                Button(action: { component.selectPage(index: 1) }) {
-                    Label("Prices", systemImage: "123.rectangle")
-                        .labelStyle(VerticalLabelStyle())
-                }
-
-                Button(action: { component.selectPage(index: 2) }) {
-                    Label("Search", systemImage: "list.bullet")
-                        .labelStyle(VerticalLabelStyle())
-                }
-
-                Button(action: { component.selectPage(index: 3) }) {
-                    Label("History", systemImage: "list.bullet")
-                        .labelStyle(VerticalLabelStyle())
-                }
+        TabView {
+            ForEach(pages.items.indices, id: \.self) { index in
+                page(at: index).tab
             }
+        }
+    }
+
+    private func page(at index: Int) -> HomeComponentPage {
+        pages.items[index].instance!
+    }
+}
+
+private extension HomeComponentPage {
+    private var title: String {
+        switch onEnum(of: self) {
+        case .newsFeed: "Feed"
+        case .prices: "Prices"
+        case .search: "Search"
+        case .history: "History"
+        }
+    }
+
+    private var systemImage: String {
+        switch onEnum(of: self) {
+        case .newsFeed: "list.bullet.below.rectangle"
+        case .prices: "dollarsign.circle"
+        case .search: "magnifyingglass"
+        case .history: "archivebox"
+        }
+    }
+
+    var tab: Tab<Never, PageView, DefaultTabLabel> {
+        Tab(title, systemImage: systemImage) {
+            PageView(page: self)
         }
     }
 }
 
-private struct ChildView: View {
+private struct PageView: View {
     let page: HomeComponentPage
 
     var body: some View {
@@ -54,15 +60,6 @@ private struct ChildView: View {
         case let .prices(pricesPage): PricesView()
         case let .search(searchPage): SearchView()
         case let .history(historyPage): HistoryView()
-        }
-    }
-}
-
-private struct VerticalLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .center, spacing: 8) {
-            configuration.icon
-            configuration.title
         }
     }
 }
