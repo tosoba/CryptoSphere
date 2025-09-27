@@ -28,10 +28,10 @@ struct HomeView: View {
 private extension HomeComponentPage {
     private var title: String {
         switch onEnum(of: self) {
-        case .newsFeed: "Feed"
-        case .prices: "Prices"
-        case .search: "Search"
-        case .history: "History"
+        case .newsFeed: String(\.feed)
+        case .prices: String(\.prices)
+        case .search: String(\.search)
+        case .history: String(\.history)
         }
     }
 

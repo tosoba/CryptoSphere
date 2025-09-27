@@ -33,6 +33,7 @@ kotlin {
       export(libs.essenty.backHandler)
       export(libs.essenty.lifecycle)
       export(libs.essenty.stateKeeper)
+      export(libs.moko.resources)
     }
   }
 
