@@ -26,7 +26,6 @@ materialKolor = "3.0.1"
 moko-resources = "0.25.0"
 paging = "3.3.6"
 skie = "0.10.5"
-store = "5.0.0"
 sqlite = "2.6.0"
 
 [libraries]
@@ -65,7 +64,6 @@ ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "kt
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
-store = { module = "org.mobilenativefoundation.store:store5", version.ref = "store" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

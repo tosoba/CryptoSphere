@@ -73,8 +73,6 @@ kotlin {
       implementation(libs.ktorfit)
 
       api(libs.moko.resources)
-
-      implementation(libs.store)
     }
 
     commonTest.dependencies {

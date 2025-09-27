@@ -9,7 +9,6 @@ import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
 import com.trm.cryptosphere.data.repository.NewsNetworkRepository
 import com.trm.cryptosphere.data.repository.TokenNetworkRepository
-import com.trm.cryptosphere.data.store.TokenStore
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
 import com.trm.cryptosphere.domain.usecase.GetNewsUseCase
@@ -37,13 +36,6 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  private val tokenStore: Lazy<TokenStore> = lazy {
-    TokenStore(
-      api = coinMarketCapApi.value,
-      dao = database.value.tokenDao(),
-      dispatchers = appCoroutineDispatchers,
-    )
-  },
   private val tokenRepository: Lazy<TokenRepository> = lazy {
     TokenNetworkRepository(
       dao = database.value.tokenDao(),
