@@ -13,7 +13,7 @@ import com.trm.cryptosphere.domain.repository.TokenRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class TokenNetworkRepository(
+class TokenDefaultRepository(
   private val dao: TokenDao,
   private val coinMarketCapApi: CoinMarketCapApi,
 ) : TokenRepository {
