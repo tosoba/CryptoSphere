@@ -27,25 +27,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
-import com.trm.cryptosphere.core.ui.SharedTransitionPreview
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.TokenItem
-import com.trm.cryptosphere.domain.model.mockTokenItems
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -201,43 +192,3 @@ fun NewsFeedItem(
     }
   }
 }
-
-@Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
-@Composable
-private fun NewsFeedItemPreview(
-  @PreviewParameter(NewsFeedItemPreviewRelatedTokensProvider::class) relatedTokens: List<TokenItem>
-) {
-  SharedTransitionPreview {
-    NewsFeedItem(
-      item = mockNewsItem(),
-      isCurrent = true,
-      relatedTokens = relatedTokens,
-      onRelatedTokenItemClick = { _, _ -> },
-    )
-  }
-}
-
-private class NewsFeedItemPreviewRelatedTokensProvider : PreviewParameterProvider<List<TokenItem>> {
-  override val values: Sequence<List<TokenItem>> = sequenceOf(emptyList(), mockTokenItems())
-}
-
-@OptIn(ExperimentalTime::class)
-private fun mockNewsItem(): NewsItem =
-  NewsItem(
-    id = "1",
-    searchKeyWords = listOf("dogecoin", "DOGE"),
-    feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
-    source = "U.Today",
-    title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
-    sourceLink = "https://u.today/",
-    imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
-    relatedCoins =
-      listOf(
-        "dogecoin",
-        "0x4206931337dc273a630d328da6441786bfad668f_ethereum",
-        "0x1a8e39ae59e5556b56b76fcba98d22c9ae557396_cronos",
-      ),
-    link =
-      "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
-    fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
-  )
