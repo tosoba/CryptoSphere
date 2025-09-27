@@ -31,6 +31,7 @@ import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.domain.model.NewsItem
 
 @Composable
 fun NewsFeedContent(
@@ -64,7 +65,7 @@ fun NewsFeedContent(
         ) {
           VerticalFeedPager(
             pagerState = pagerState,
-            key = newsItems.itemKey { it.id },
+            key = newsItems.itemKey(NewsItem::id),
             modifier = Modifier.fillMaxSize(),
           ) { page ->
             newsItems[page]?.let {

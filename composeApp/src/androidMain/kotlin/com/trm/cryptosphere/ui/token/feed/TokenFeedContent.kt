@@ -37,7 +37,6 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -54,7 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
@@ -123,15 +123,18 @@ fun TokenFeedContent(
     ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
       val scope = rememberCoroutineScope()
-      val tokens by component.tokens.collectAsStateWithLifecycle()
-      val pagerState = rememberPagerState(pageCount = tokens::size)
+      val tokens = component.tokens.collectAsLazyPagingItems()
+      val pagerState = rememberPagerState { tokens.itemCount }
 
       LaunchedEffect(pagerState.currentPage, tokens) {
-        onImageUrlChange(tokens.getOrNull(pagerState.currentPage)?.logoUrl)
+        if (pagerState.currentPage < tokens.itemCount) {
+          onImageUrlChange(tokens[pagerState.currentPage]?.logoUrl)
+        }
       }
 
       VerticalFeedPager(
         pagerState = pagerState,
+        key = tokens.itemKey(TokenItem::id),
         modifier =
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
@@ -148,7 +151,7 @@ fun TokenFeedContent(
             height = Dimension.fillToConstraints
           },
       ) { page ->
-        TokenFeedPagerItem(token = tokens[page], modifier = Modifier.fillMaxSize())
+        tokens[page]?.let { TokenFeedPagerItem(token = it, modifier = Modifier.fillMaxSize()) }
       }
 
       PagerWormIndicator(
@@ -196,7 +199,7 @@ fun TokenFeedContent(
             bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
-        onClick = { component.navigateToTokenDetails(tokens[pagerState.currentPage].symbol) },
+        onClick = { tokens[pagerState.currentPage]?.symbol?.let(component.navigateToTokenDetails) },
       ) {
         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
       }

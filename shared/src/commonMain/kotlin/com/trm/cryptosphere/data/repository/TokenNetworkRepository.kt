@@ -1,11 +1,17 @@
 package com.trm.cryptosphere.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.db.dao.TokenDao
 import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.mapper.toTokenItem
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.repository.TokenRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TokenNetworkRepository(
   private val dao: TokenDao,
@@ -28,6 +34,22 @@ class TokenNetworkRepository(
       ?.let { dao.selectTokensByNameOrSymbol(it) }
       ?.map(TokenEntity::toTokenItem) ?: emptyList()
 
-  override suspend fun getTokensBySharedTags(symbol: String): List<TokenItem> =
-    dao.selectTokensBySharedTags(symbol).map(TokenEntity::toTokenItem)
+  override suspend fun getTokensBySharedTags(symbol: String): Flow<PagingData<TokenItem>> =
+    Pager(
+        config =
+          PagingConfig(
+            pageSize = TOKEN_DB_PAGE_SIZE,
+            prefetchDistance = TOKEN_DB_PREFETCH_DISTANCE,
+            initialLoadSize = TOKEN_DB_PAGE_SIZE,
+          )
+      ) {
+        dao.selectTokensBySharedTags(symbol)
+      }
+      .flow
+      .map { it.map(TokenEntity::toTokenItem) }
+
+  companion object {
+    private const val TOKEN_DB_PAGE_SIZE = 100
+    private const val TOKEN_DB_PREFETCH_DISTANCE = 5
+  }
 }

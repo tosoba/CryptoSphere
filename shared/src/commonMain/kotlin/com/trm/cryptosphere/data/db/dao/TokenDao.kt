@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.data.db.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -70,8 +71,7 @@ interface TokenDao {
     WHERE T1.symbol = :symbol
     GROUP BY T2.id
     ORDER BY CASE WHEN T2.symbol = :symbol THEN 0 ELSE 1 END, sharedTagCount DESC, cmc_rank
-    LIMIT 100
     """
   )
-  suspend fun selectTokensBySharedTags(symbol: String): List<TokenEntity>
+  fun selectTokensBySharedTags(symbol: String): PagingSource<Int, TokenEntity>
 }

@@ -1,14 +1,15 @@
 package com.trm.cryptosphere.ui.token.feed
 
+import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.base.StateFlowInstance
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.domain.model.TokenItem
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface TokenFeedComponent {
   val mainTokenSymbol: StateFlowInstance<String>
-  val tokens: StateFlow<List<TokenItem>>
+  val tokens: Flow<PagingData<TokenItem>>
   val tokenCarouselConfig: TokenCarouselConfig
   val navigateToTokenDetails: (String) -> Unit
 
