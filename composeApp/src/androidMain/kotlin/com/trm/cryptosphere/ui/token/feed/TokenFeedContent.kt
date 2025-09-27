@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -63,9 +64,11 @@ import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
+import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
+import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -75,6 +78,7 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
+  val context = LocalContext.current
   val navigationSuiteType = currentWindowAdaptiveInfo().toNavigationSuiteType()
 
   Scaffold(
@@ -97,12 +101,12 @@ fun TokenFeedContent(
             clickableItem(
               onClick = {},
               icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null) },
-              label = "Go back",
+              label = MR.strings.go_back.resolve(context),
             )
             clickableItem(
               onClick = {},
               icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
-              label = "Go forward",
+              label = MR.strings.go_forward.resolve(context),
               enabled = false,
             )
           }
@@ -228,6 +232,8 @@ fun TokenFeedContent(
 
 @Composable
 private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
+  val context = LocalContext.current
+
   ConstraintLayout(modifier = modifier) {
     val isCompactHeight = currentWindowAdaptiveInfo().isCompactHeight()
     val (logoWithSymbol, tokenParametersColumn) = createRefs()
@@ -277,14 +283,42 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
     ) {
       val parameters = remember {
         buildList {
-          add(TokenParameter(label = "Price", value = token.quote.price.toString()))
-          add(TokenParameter(label = "Market Cap", value = token.quote.marketCap.toString()))
-          add(TokenParameter(label = "Volume (24h)", value = token.quote.volume24h.toString()))
           add(
-            TokenParameter(label = "Circulating supply", value = token.circulatingSupply.toString())
+            TokenParameter(
+              label = MR.strings.price.resolve(context),
+              value = token.quote.price.toString(),
+            )
           )
-          add(TokenParameter(label = "Total supply", value = token.totalSupply.toString()))
-          add(TokenParameter(label = "Max supply", value = token.maxSupply?.toString() ?: "--"))
+          add(
+            TokenParameter(
+              label = MR.strings.market_cap.resolve(context),
+              value = token.quote.marketCap.toString(),
+            )
+          )
+          add(
+            TokenParameter(
+              label = MR.strings.volume_24h.resolve(context),
+              value = token.quote.volume24h.toString(),
+            )
+          )
+          add(
+            TokenParameter(
+              label = MR.strings.circulating_supply.resolve(context),
+              value = token.circulatingSupply.toString(),
+            )
+          )
+          add(
+            TokenParameter(
+              label = MR.strings.total_supply.resolve(context),
+              value = token.totalSupply.toString(),
+            )
+          )
+          add(
+            TokenParameter(
+              label = MR.strings.max_supply.resolve(context),
+              value = token.maxSupply?.toString() ?: "--",
+            )
+          )
         }
       }
       TokenParameterCardsColumn(

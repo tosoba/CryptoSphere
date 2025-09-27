@@ -4,4 +4,12 @@
     <string name="prices">Prices</string>
     <string name="search">Search</string>
     <string name="history">History</string>
+    <string name="go_back">Go back</string>
+    <string name="go_forward">Go forward</string>
+    <string name="price">Price</string>
+    <string name="market_cap">Market Cap</string>
+    <string name="volume_24h">Volume (24h)</string>
+    <string name="circulating_supply">Circulating supply</string>
+    <string name="total_supply">Total supply</string>
+    <string name="max_supply">Max supply</string>
 </resources>
