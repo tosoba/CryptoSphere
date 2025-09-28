@@ -25,7 +25,7 @@ private fun NewsFeedItemPreview(
         NewsItem(
           id = "1",
           searchKeyWords = listOf("dogecoin", "DOGE"),
-          feedDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC),
+          feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
           source = "U.Today",
           title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
           sourceLink = "https://u.today/",
@@ -38,7 +38,7 @@ private fun NewsFeedItemPreview(
             ),
           link =
             "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
-          fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC),
+          fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
         ),
       isCurrent = true,
       relatedTokens = relatedTokens,
