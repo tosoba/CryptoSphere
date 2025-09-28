@@ -3,9 +3,9 @@ package com.trm.cryptosphere.ui.token.details
 import com.arkivanov.decompose.ComponentContext
 
 interface TokenDetailsComponent {
-  val symbol: String
+  val tokenId: Int
 
   fun interface Factory {
-    operator fun invoke(componentContext: ComponentContext, symbol: String): TokenDetailsComponent
+    operator fun invoke(componentContext: ComponentContext, tokenId: Int): TokenDetailsComponent
   }
 }

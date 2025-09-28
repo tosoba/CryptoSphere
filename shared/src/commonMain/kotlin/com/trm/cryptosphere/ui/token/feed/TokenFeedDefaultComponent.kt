@@ -20,25 +20,25 @@ import kotlinx.serialization.builtins.serializer
 
 class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
-  initialMainTokenSymbol: String,
+  initialMainTokenId: Int,
   override val tokenCarouselConfig: TokenCarouselConfig,
-  override val navigateToTokenDetails: (String) -> Unit,
+  override val navigateToTokenDetails: (Int) -> Unit,
   private val tokenRepository: TokenRepository,
   dispatchers: AppCoroutineDispatchers,
 ) : TokenFeedComponent, ComponentContext by componentContext {
   private val scope = coroutineScope(dispatchers.main + SupervisorJob())
 
-  override val mainTokenSymbol: StateFlowInstance<String> by
+  override val mainTokenId: StateFlowInstance<Int> by
     @OptIn(ExperimentalStateKeeperApi::class)
-    saveable(serializer = String.serializer(), state = { it.state.value }) { savedState ->
+    saveable(serializer = Int.serializer(), state = { it.state.value }) { savedState ->
       retainedInstance {
-        savedState?.let { StateFlowInstance(it) } ?: StateFlowInstance(initialMainTokenSymbol)
+        savedState?.let { StateFlowInstance(it) } ?: StateFlowInstance(initialMainTokenId)
       }
     }
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override val tokens: Flow<PagingData<TokenItem>> =
-    mainTokenSymbol.state.flatMapLatest {
+    mainTokenId.state.flatMapLatest {
       tokenRepository.getTokensBySharedTags(it).cachedIn(scope)
     }
 }

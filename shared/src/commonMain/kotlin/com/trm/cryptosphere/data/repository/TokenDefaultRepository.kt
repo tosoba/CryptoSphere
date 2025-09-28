@@ -34,7 +34,7 @@ class TokenDefaultRepository(
       ?.let { dao.selectTokensByNameOrSymbol(it) }
       ?.map(TokenEntity::toTokenItem) ?: emptyList()
 
-  override suspend fun getTokensBySharedTags(symbol: String): Flow<PagingData<TokenItem>> =
+  override suspend fun getTokensBySharedTags(id: Int): Flow<PagingData<TokenItem>> =
     Pager(
         config =
           PagingConfig(
@@ -43,7 +43,7 @@ class TokenDefaultRepository(
             initialLoadSize = TOKEN_DB_PAGE_SIZE,
           )
       ) {
-        dao.selectTokensBySharedTags(symbol)
+        dao.selectTokensBySharedTags(id)
       }
       .flow
       .map { it.map(TokenEntity::toTokenItem) }

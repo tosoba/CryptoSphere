@@ -83,12 +83,12 @@ class DependencyContainer(
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
     TokenFeedComponent.Factory {
       componentContext,
-      mainTokenSymbol,
+      mainTokenId,
       tokenCarouselConfig,
       navigateToTokenDetails ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        initialMainTokenSymbol = mainTokenSymbol,
+        initialMainTokenId = mainTokenId,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateToTokenDetails = navigateToTokenDetails,
         tokenRepository = tokenRepository.value,

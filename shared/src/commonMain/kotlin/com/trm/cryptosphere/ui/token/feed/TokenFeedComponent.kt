@@ -8,17 +8,17 @@ import com.trm.cryptosphere.domain.model.TokenItem
 import kotlinx.coroutines.flow.Flow
 
 interface TokenFeedComponent {
-  val mainTokenSymbol: StateFlowInstance<String>
+  val mainTokenId: StateFlowInstance<Int>
   val tokens: Flow<PagingData<TokenItem>>
   val tokenCarouselConfig: TokenCarouselConfig
-  val navigateToTokenDetails: (String) -> Unit
+  val navigateToTokenDetails: (Int) -> Unit
 
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      mainTokenSymbol: String,
+      mainTokenId: Int,
       tokenCarouselConfig: TokenCarouselConfig,
-      navigateToTokenDetails: (String) -> Unit,
+      navigateToTokenDetails: (Int) -> Unit,
     ): TokenFeedComponent
   }
 }

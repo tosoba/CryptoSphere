@@ -198,7 +198,7 @@ fun TokenFeedContent(
         tokens = component.tokenCarouselConfig.items,
         onItemClick = { item ->
           scope.launch { pagerState.animateScrollToPage(0) }
-          component.mainTokenSymbol.value = item.symbol
+          component.mainTokenId.value = item.id
         },
         modifier =
           Modifier.constrainAs(tokenCarousel) {
@@ -225,7 +225,7 @@ fun TokenFeedContent(
             bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
-        onClick = { tokens[pagerState.currentPage]?.symbol?.let(component.navigateToTokenDetails) },
+        onClick = { tokens[pagerState.currentPage]?.id?.let(component.navigateToTokenDetails) },
       ) {
         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
       }

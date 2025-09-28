@@ -68,10 +68,10 @@ interface TokenDao {
     JOIN token_tag AS TT1 ON T1.id = TT1.token_id
     JOIN token_tag AS TT2 ON TT1.tag_name = TT2.tag_name
     JOIN token AS T2 ON TT2.token_id = T2.id
-    WHERE T1.symbol = :symbol
+    WHERE T1.id = :id
     GROUP BY T2.id
-    ORDER BY CASE WHEN T2.symbol = :symbol THEN 0 ELSE 1 END, sharedTagCount DESC, cmc_rank
+    ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, sharedTagCount DESC, cmc_rank
     """
   )
-  fun selectTokensBySharedTags(symbol: String): PagingSource<Int, TokenEntity>
+  fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenEntity>
 }

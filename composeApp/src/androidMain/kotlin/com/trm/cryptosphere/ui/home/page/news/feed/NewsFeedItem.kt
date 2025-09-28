@@ -45,7 +45,7 @@ fun NewsFeedItem(
   isCurrent: Boolean,
   relatedTokens: List<TokenItem>,
   modifier: Modifier = Modifier,
-  onRelatedTokenItemClick: (String, TokenCarouselConfig) -> Unit,
+  onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
 ) {
   Box(modifier = modifier) {
     AsyncImage(
@@ -167,7 +167,7 @@ fun NewsFeedItem(
         TokenCarousel(
           tokens = relatedTokens,
           onItemClick = { token ->
-            onRelatedTokenItemClick(token.symbol, TokenCarouselConfig(item.id, relatedTokens))
+            onRelatedTokenItemClick(token.id, TokenCarouselConfig(item.id, relatedTokens))
           },
           modifier =
             Modifier.constrainAs(tokenCarousel) {

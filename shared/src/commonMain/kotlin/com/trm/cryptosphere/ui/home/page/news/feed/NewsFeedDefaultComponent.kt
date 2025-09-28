@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class NewsFeedDefaultComponent(
   componentContext: ComponentContext,
-  override val onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
+  override val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit,
   private val getNewsUseCase: GetNewsUseCase,
   private val getTokensRelatedToNewsItemUseCase: GetTokensRelatedToNewsItemUseCase,
   private val dispatchers: AppCoroutineDispatchers,

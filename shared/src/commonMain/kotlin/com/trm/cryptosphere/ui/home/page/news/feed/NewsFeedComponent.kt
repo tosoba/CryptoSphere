@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
 interface NewsFeedComponent {
   val newsItems: Flow<PagingData<NewsItem>>
   val relatedTokens: StateFlow<List<TokenItem>>
-  val onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit
+  val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit
 
   fun onCurrentItemChanged(item: NewsItem)
 
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      onTokenCarouselItemClick: (String, TokenCarouselConfig) -> Unit,
+      onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit,
     ): NewsFeedComponent
   }
 }

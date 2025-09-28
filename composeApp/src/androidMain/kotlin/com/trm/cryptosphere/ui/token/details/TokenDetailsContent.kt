@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.trm.cryptosphere.core.ui.localSharedElement
 
 @Composable
 fun TokenDetailsContent(component: TokenDetailsComponent, modifier: Modifier = Modifier) {
@@ -20,10 +19,9 @@ fun TokenDetailsContent(component: TokenDetailsComponent, modifier: Modifier = M
       contentAlignment = Alignment.Center,
     ) {
       Text(
-        text = component.symbol,
+        text = component.tokenId.toString(),
         style = MaterialTheme.typography.headlineLarge,
-        modifier =
-          Modifier.padding(16.dp).localSharedElement(key = "token-symbol-${component.symbol}"),
+        modifier = Modifier.padding(16.dp),
       )
     }
   }
