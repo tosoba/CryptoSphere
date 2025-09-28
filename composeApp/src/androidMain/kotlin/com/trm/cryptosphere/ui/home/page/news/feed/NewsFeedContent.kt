@@ -41,7 +41,7 @@ fun NewsFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val newsItems = component.newsItems.collectAsLazyPagingItems()
+  val newsItems = component.viewState.newsItems.collectAsLazyPagingItems()
   val relatedTokens by component.relatedTokens.collectAsStateWithLifecycle()
   val pagerState = rememberPagerState { newsItems.itemCount }
   var isRefreshing by remember { mutableStateOf(false) }

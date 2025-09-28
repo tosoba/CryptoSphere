@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.home.page.news.feed
 
-import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
@@ -12,7 +11,6 @@ import com.trm.cryptosphere.domain.usecase.GetNewsUseCase
 import com.trm.cryptosphere.domain.usecase.GetTokensRelatedToNewsItemUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,8 +27,8 @@ class NewsFeedDefaultComponent(
 ) : NewsFeedComponent, ComponentContext by componentContext {
   private val scope = coroutineScope(dispatchers.main + SupervisorJob())
 
-  override val newsItems: Flow<PagingData<NewsItem>> =
-    instanceKeeper.getOrCreate { NewsFeedViewState(getNewsUseCase, dispatchers) }.value
+  override val viewState: NewsFeedViewState =
+    instanceKeeper.getOrCreate { NewsFeedViewState(getNewsUseCase, dispatchers) }
 
   private val currentNewsItem = MutableSharedFlow<NewsItem>()
 
