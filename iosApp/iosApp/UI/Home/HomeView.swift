@@ -56,10 +56,10 @@ private struct PageView: View {
 
     var body: some View {
         switch onEnum(of: page) {
-        case let .newsFeed(newsFeedPage): NewsFeedView()
-        case let .prices(pricesPage): PricesView()
-        case let .search(searchPage): SearchView()
-        case let .history(historyPage): HistoryView()
+        case let .newsFeed(newsFeedPage): NewsFeedView(component: newsFeedPage.component)
+        case let .prices(pricesPage): PricesView(component: pricesPage.component)
+        case let .search(searchPage): SearchView(component: searchPage.component)
+        case let .history(historyPage): HistoryView(component: historyPage.component)
         }
     }
 }
