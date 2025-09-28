@@ -1,6 +1,9 @@
 package com.trm.cryptosphere.ui.token.feed
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +26,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FlexibleBottomAppBar
@@ -54,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
@@ -136,9 +141,8 @@ fun TokenFeedContent(
         }
       }
 
-      VerticalFeedPager(
-        pagerState = pagerState,
-        key = tokens.itemKey(TokenItem::id),
+      Crossfade(
+        targetState = tokens.loadState.refresh is LoadState.Loading,
         modifier =
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
@@ -154,23 +158,41 @@ fun TokenFeedContent(
             width = Dimension.fillToConstraints
             height = Dimension.fillToConstraints
           },
-      ) { page ->
-        tokens[page]?.let { TokenFeedPagerItem(token = it, modifier = Modifier.fillMaxSize()) }
+      ) {
+        if (it) {
+          Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+          }
+        } else {
+          VerticalFeedPager(
+            pagerState = pagerState,
+            key = tokens.itemKey(TokenItem::id),
+            modifier = Modifier.fillMaxSize(),
+          ) { page ->
+            tokens[page]?.let { token ->
+              TokenFeedPagerItem(token = token, modifier = Modifier.fillMaxSize())
+            }
+          }
+        }
       }
 
-      PagerWormIndicator(
-        pagerState = pagerState,
-        activeDotColor = Color.LightGray,
-        dotColor = Color.DarkGray,
-        dotCount = 5,
-        orientation = PagerIndicatorOrientation.Vertical,
+      AnimatedVisibility(
+        visible = tokens.loadState.refresh !is LoadState.Loading,
         modifier =
           Modifier.constrainAs(pagerIndicator) {
             top.linkTo(parent.top)
             bottom.linkTo(detailsButton.top)
             end.linkTo(parent.end, margin = 12.dp)
           },
-      )
+      ) {
+        PagerWormIndicator(
+          pagerState = pagerState,
+          activeDotColor = Color.LightGray,
+          dotColor = Color.DarkGray,
+          dotCount = 5,
+          orientation = PagerIndicatorOrientation.Vertical,
+        )
+      }
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
