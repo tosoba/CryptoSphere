@@ -12,4 +12,6 @@
     <string name="circulating_supply">Circulating supply</string>
     <string name="total_supply">Total supply</string>
     <string name="max_supply">Max supply</string>
+    <string name="retry">Retry</string>
+    <string name="error_occurred">Error occurred.</string>
 </resources>

@@ -31,7 +31,9 @@ import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsItem
+import com.trm.cryptosphere.shared.MR
 
 @Composable
 fun NewsFeedContent(
@@ -101,8 +103,8 @@ fun NewsFeedContent(
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.Center,
         ) {
-          Text(loadState.error.message ?: "Error occurred.")
-          Button(onClick = newsItems::retry) { Text("Retry") }
+          Text(loadState.error.message ?: MR.strings.error_occurred.resolve())
+          Button(onClick = newsItems::retry) { Text(MR.strings.retry.resolve()) }
         }
       }
     }
