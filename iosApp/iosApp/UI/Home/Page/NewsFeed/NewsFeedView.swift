@@ -18,14 +18,16 @@ struct NewsFeedView: View {
             case .loading, .none:
                 ProgressView()
             case .notLoading:
-                ScrollView(.vertical) {
-                    LazyVStack(spacing: 0) {
-                        ForEach(newsItems.items.indices, id: \.self) { index in
-                            let item = newsItems.itemAt(index: Int32(index))
-                            Text(item?.title ?? "")
+                GeometryReader { geometry in
+                    ScrollView(.vertical) {
+                        LazyVStack(spacing: 0) {
+                            ForEach(newsItems.items.indices, id: \.self) { index in
+                                NewsFeedItemView(item: newsItems.itemAt(index: Int32(index)), safeArea: geometry.safeAreaInsets)
+                            }
                         }
                     }
                 }
+                .ignoresSafeArea(.container, edges: .all)
                 .scrollIndicators(.hidden)
                 .scrollTargetBehavior(.paging)
             case .error:
@@ -36,5 +38,37 @@ struct NewsFeedView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: loadState?.refresh)
+    }
+}
+
+struct NewsFeedItemView: View {
+    let item: NewsItem?
+    let safeArea: EdgeInsets
+
+    var body: some View {
+        AsyncImage(url: URL(string: item?.imgUrl ?? "")) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
+            case let .success(image):
+                image
+                    .resizable()
+                    .scaledToFill()
+            case .failure:
+                Image(systemName: "dollarsign")
+                    .resizable()
+                    .scaledToFill()
+            @unknown default:
+                EmptyView()
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .containerRelativeFrame(.vertical)
+        .overlay(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(item?.title ?? "")
+                Spacer(minLength: safeArea.bottom)
+            }
+        }
     }
 }
