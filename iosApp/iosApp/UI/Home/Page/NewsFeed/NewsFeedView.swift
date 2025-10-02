@@ -3,18 +3,20 @@ import SwiftUI
 
 struct NewsFeedView: View {
     private let component: NewsFeedComponent
+
     @StateObject @KotlinStateFlow private var newsItems: NewsItemsSnapshotList
-    @StateObject @KotlinOptionalStateFlow private var loadState: CombinedLoadStates?
+    @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
     init(component: NewsFeedComponent) {
         self.component = component
+        
         _newsItems = .init(component.viewState.newsItemsSnapshotList)
-        _loadState = .init(component.viewState.newsItemsLoadState)
+        _loadStates = .init(component.viewState.newsItemsLoadState)
     }
 
     var body: some View {
         ZStack {
-            switch onEnum(of: loadState?.refresh) {
+            switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
                 ProgressView()
             case .notLoading:
@@ -22,26 +24,35 @@ struct NewsFeedView: View {
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
                             ForEach(newsItems.items.indices, id: \.self) { index in
-                                NewsFeedItemView(item: newsItems.itemAt(index: Int32(index)), safeArea: geometry.safeAreaInsets)
+                                NewsFeedItemView(
+                                    item: newsItems.itemAt(index: Int32(index)),
+                                    safeArea: geometry.safeAreaInsets
+                                )
                             }
                         }
                     }
+                    .ignoresSafeArea(.container, edges: .all)
+                    .scrollIndicators(.hidden)
+                    .scrollTargetBehavior(.paging)
                 }
-                .ignoresSafeArea(.container, edges: .all)
-                .scrollIndicators(.hidden)
-                .scrollTargetBehavior(.paging)
             case .error:
-                VStack(alignment: .center, spacing: 10) {
-                    Text("Error occurred")
-                    Button(action: { component.viewState.retry() }, label: { Text("Retry") })
+                VStack(alignment: .center, spacing: 8) {
+                    Text(String(\.error_occurred))
+                    Button(
+                        action: { component.viewState.retry() },
+                        label: { Text(String(\.retry)) }
+                    )
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: loadState?.refresh)
+        .animation(
+            .easeInOut(duration: 0.3),
+            value: loadStates?.refresh
+        )
     }
 }
 
-struct NewsFeedItemView: View {
+private struct NewsFeedItemView: View {
     let item: NewsItem?
     let safeArea: EdgeInsets
 
@@ -51,24 +62,55 @@ struct NewsFeedItemView: View {
             case .empty:
                 ProgressView()
             case let .success(image):
-                image
-                    .resizable()
-                    .scaledToFill()
+                image.resizable().scaledToFill()
             case .failure:
-                Image(systemName: "dollarsign")
-                    .resizable()
-                    .scaledToFill()
+                Image(systemName: "dollarsign").resizable().scaledToFill()
             @unknown default:
                 EmptyView()
             }
         }
-        .frame(maxWidth: .infinity)
         .containerRelativeFrame(.vertical)
-        .overlay(alignment: .bottom) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(item?.title ?? "")
-                Spacer(minLength: safeArea.bottom)
+        .overlay {
+            VStack(alignment: .leading) {
+                Spacer()
+
+                NewsFeedTextView(text: item?.title ?? "", font: .title)
+
+                Spacer().frame(height: 8).fixedSize()
+
+                if let source = item?.source {
+                    NewsFeedTextView(text: source, font: .subheadline)
+                }
+
+                Spacer().frame(height: safeArea.bottom).fixedSize()
+            }
+            .containerRelativeFrame(.horizontal)
+            .padding()
+            .background {
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.7)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
             }
         }
+    }
+}
+
+private struct NewsFeedTextView: View {
+    let text: String
+    let font: Font
+
+    var body: some View {
+        Text(text)
+            .font(font)
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 2)
+            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .foregroundStyle(.white)
     }
 }
