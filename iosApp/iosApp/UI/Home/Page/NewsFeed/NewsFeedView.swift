@@ -6,12 +6,16 @@ struct NewsFeedView: View {
 
     @StateObject @KotlinStateFlow private var newsItems: NewsItemsSnapshotList
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
+    @StateObject @KotlinStateFlow private var relatedTokens: [TokenItem]
+
+    @State private var currentNewsItemIndex: Int? = 0
 
     init(component: NewsFeedComponent) {
         self.component = component
 
         _newsItems = .init(component.viewState.newsItemsSnapshotList)
         _loadStates = .init(component.viewState.newsItemsLoadState)
+        _relatedTokens = .init(component.relatedTokens)
     }
 
     var body: some View {
@@ -26,14 +30,24 @@ struct NewsFeedView: View {
                             ForEach(newsItems.items.indices, id: \.self) { index in
                                 NewsFeedItemView(
                                     item: newsItems.itemAt(index: Int32(index)),
+                                    relatedTokens: relatedTokens,
                                     safeArea: geometry.safeAreaInsets
                                 )
+                                .id(index)
                             }
                         }
+                        .scrollTargetLayout()
                     }
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)
+                    .scrollPosition(id: $currentNewsItemIndex)
+                    .onScrollPhaseChange { _, newPhase in
+                        if newPhase != .idle { return }
+                        guard let index = currentNewsItemIndex else { return }
+                        guard let item = newsItems.itemAt(index: Int32(index)) else { return }
+                        component.onCurrentItemChanged(item: item)
+                    }
                 }
             case .error:
                 VStack(alignment: .center, spacing: 8) {
@@ -54,6 +68,7 @@ struct NewsFeedView: View {
 
 private struct NewsFeedItemView: View {
     let item: NewsItem?
+    let relatedTokens: [TokenItem]
     let safeArea: EdgeInsets
 
     var body: some View {
@@ -79,18 +94,27 @@ private struct NewsFeedItemView: View {
 
                     NewsFeedItemTextView(text: item?.title ?? "", font: .title)
 
-                    Spacer().frame(height: 8).fixedSize()
-
                     if let source = item?.source {
+                        Spacer().frame(height: 8).fixedSize()
                         NewsFeedItemTextView(text: source, font: .subheadline)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+
+                    if !relatedTokens.isEmpty {
+                        Spacer().frame(height: 8).fixedSize()
+                        TokenCarouselViewController(tokens: relatedTokens, onItemClick: { _ in })
+                            .frame(maxHeight: 90)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
 
                     Spacer().frame(height: safeArea.bottom).fixedSize()
                 }
+                .animation(.easeInOut(duration: 0.3), value: !relatedTokens.isEmpty)
+                .animation(.easeInOut(duration: 0.3), value: item?.source != nil)
 
                 Spacer(minLength: 0)
 
-                VStack(alignment: .trailing) {
+                VStack(alignment: .center) {
                     Button(action: {}) {
                         Image(systemName: "paperplane")
                             .font(.title2)
