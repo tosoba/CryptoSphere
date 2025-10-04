@@ -70,6 +70,8 @@ private struct NewsFeedItemView: View {
     let item: NewsItem?
     let relatedTokens: [TokenItem]
     let safeArea: EdgeInsets
+    
+    @State var tokenCarouselMeasuredHeight: CGFloat = 1000
 
     var body: some View {
         AsyncImage(url: URL(string: item?.imgUrl ?? "")) { phase in
@@ -96,15 +98,21 @@ private struct NewsFeedItemView: View {
 
                     if let source = item?.source {
                         Spacer().frame(height: 8).fixedSize()
+                        
                         NewsFeedItemTextView(text: source, font: .subheadline)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
 
                     if !relatedTokens.isEmpty {
                         Spacer().frame(height: 8).fixedSize()
-                        TokenCarouselViewController(tokens: relatedTokens, onItemClick: { _ in })
-                            .frame(maxHeight: 90)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                        
+                        TokenCarouselViewController(
+                            tokens: relatedTokens,
+                            onItemClick: { _ in },
+                            measuredHeight: $tokenCarouselMeasuredHeight
+                        )
+                        .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
 
                     Spacer().frame(height: safeArea.bottom).fixedSize()
