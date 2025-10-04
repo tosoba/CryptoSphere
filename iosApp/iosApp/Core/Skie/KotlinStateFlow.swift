@@ -2,7 +2,7 @@ import Shared
 import SwiftUI
 
 @propertyWrapper
-final class KotlinStateFlow<T: AnyObject>: ObservableObject {
+final class KotlinStateFlow<T>: ObservableObject {
     private let stateFlow: SkieSwiftStateFlow<T>
     @Published var wrappedValue: T
     private var publisher: Task<Void, Never>?
