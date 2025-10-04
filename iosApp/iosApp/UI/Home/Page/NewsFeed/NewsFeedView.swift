@@ -9,7 +9,7 @@ struct NewsFeedView: View {
 
     init(component: NewsFeedComponent) {
         self.component = component
-        
+
         _newsItems = .init(component.viewState.newsItemsSnapshotList)
         _loadStates = .init(component.viewState.newsItemsLoadState)
     }
@@ -71,18 +71,53 @@ private struct NewsFeedItemView: View {
         }
         .containerRelativeFrame(.vertical)
         .overlay {
-            VStack(alignment: .leading) {
-                Spacer()
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading) {
+                    Spacer()
 
-                NewsFeedTextView(text: item?.title ?? "", font: .title)
+                    NewsFeedItemTextView(text: item?.title ?? "", font: .title)
 
-                Spacer().frame(height: 8).fixedSize()
+                    Spacer().frame(height: 8).fixedSize()
 
-                if let source = item?.source {
-                    NewsFeedTextView(text: source, font: .subheadline)
+                    if let source = item?.source {
+                        NewsFeedItemTextView(text: source, font: .subheadline)
+                    }
+
+                    Spacer().frame(height: safeArea.bottom).fixedSize()
                 }
 
-                Spacer().frame(height: safeArea.bottom).fixedSize()
+                Spacer(minLength: 0)
+
+                VStack(alignment: .trailing) {
+                    Button(action: {}) {
+                        Image(systemName: "paperplane")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.bordered)
+                    .clipShape(.circle)
+
+                    Spacer().frame(height: 24).fixedSize()
+
+                    Button(action: {}) {
+                        Image(systemName: "star")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.bordered)
+                    .clipShape(.circle)
+
+                    Spacer().frame(height: 24).fixedSize()
+
+                    Button(action: {}) {
+                        Image(systemName: "safari")
+                            .font(.largeTitle)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .clipShape(.circle)
+
+                    Spacer().frame(height: safeArea.bottom).fixedSize()
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal)
             }
             .containerRelativeFrame(.horizontal)
             .padding()
@@ -97,7 +132,7 @@ private struct NewsFeedItemView: View {
     }
 }
 
-private struct NewsFeedTextView: View {
+private struct NewsFeedItemTextView: View {
     let text: String
     let font: Font
 
