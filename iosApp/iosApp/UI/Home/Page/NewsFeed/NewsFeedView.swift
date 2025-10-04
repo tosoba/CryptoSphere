@@ -64,7 +64,9 @@ private struct NewsFeedItemView: View {
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:
-                Image(systemName: "dollarsign").resizable().scaledToFill()
+                let screenSize = UIScreen.main.bounds.size
+                let size = min(screenSize.width, screenSize.height) / 2
+                Image(systemName: "bitcoinsign").resizable().scaledToFill().frame(width: size, height: size)
             @unknown default:
                 EmptyView()
             }
