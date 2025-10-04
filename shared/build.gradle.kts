@@ -19,6 +19,8 @@ plugins {
   alias(libs.plugins.room)
   alias(libs.plugins.buildkonfig)
   alias(libs.plugins.moko.resources)
+  alias(libs.plugins.composeMultiplatform)
+  alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
@@ -47,13 +49,24 @@ kotlin {
     androidMain.dependencies {
       implementation(libs.androidx.room.ktx)
       api(libs.moko.resources.compose)
+      implementation(libs.ktor.client.android)
     }
 
     commonMain.dependencies {
+      implementation(compose.components.resources)
+      implementation(compose.foundation)
+      implementation(compose.material3)
+      implementation(compose.materialIconsExtended)
+      implementation(compose.runtime)
+      implementation(compose.ui)
+
       implementation(libs.androidx.paging.common)
       implementation(libs.androidx.room.paging)
       implementation(libs.androidx.room.runtime)
       implementation(libs.androidx.sqlite.bundled)
+
+      api(libs.coil.compose)
+      implementation(libs.coil.network.ktor3)
 
       api(libs.decompose)
       api(libs.essenty.lifecycle)
@@ -79,6 +92,10 @@ kotlin {
     commonTest.dependencies {
       implementation(libs.kotlin.test)
       implementation(libs.kotlinx.coroutines.test)
+    }
+
+    iosMain.dependencies {
+      implementation(libs.ktor.client.darwin)
     }
   }
 }

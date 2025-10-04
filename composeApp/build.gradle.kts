@@ -20,8 +20,6 @@ kotlin {
       implementation(libs.androidx.constraintLayout.compose)
       implementation(libs.androidx.paging.compose)
 
-      implementation(libs.coil.compose)
-
       implementation(libs.decompose.extensions.compose)
       implementation(libs.decompose.extensions.compose.experimental)
 
