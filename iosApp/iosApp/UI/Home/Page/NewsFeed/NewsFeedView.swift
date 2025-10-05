@@ -81,9 +81,7 @@ private struct NewsFeedItemView: View {
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:
-                let screenSize = UIScreen.main.bounds.size
-                let size = min(screenSize.width, screenSize.height) / 2
-                Image(systemName: "bitcoinsign").resizable().scaledToFill().frame(width: size, height: size)
+                NewsFeedItemPlaceholderImageView()
             @unknown default:
                 EmptyView()
             }
@@ -177,5 +175,16 @@ private struct NewsFeedItemTextView: View {
             .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 2)
             .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
             .foregroundStyle(.white)
+    }
+}
+
+private struct NewsFeedItemPlaceholderImageView: View {
+    var body: some View {
+        let screenSize = UIScreen.main.bounds.size
+        let size = min(screenSize.width, screenSize.height) / 2
+        Image(systemName: "bitcoinsign")
+            .resizable()
+            .scaledToFill()
+            .frame(width: size, height: size)
     }
 }
