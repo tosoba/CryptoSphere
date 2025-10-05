@@ -4,7 +4,7 @@ import SwiftUI
 struct NewsFeedView: View {
     private let component: NewsFeedComponent
 
-    @StateObject @KotlinStateFlow private var newsFeedItems: NewsFeedItemsSnapshotList
+    @StateObject @KotlinStateFlow private var newsFeedItems: [NewsFeedItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
     init(component: NewsFeedComponent) {
@@ -23,7 +23,7 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(newsFeedItems.items as! [NewsFeedItem], id: \.news.id) { item in
+                            ForEach(newsFeedItems, id: \.news.id) { item in
                                 NewsFeedItemView(
                                     item: item,
                                     safeArea: geometry.safeAreaInsets
