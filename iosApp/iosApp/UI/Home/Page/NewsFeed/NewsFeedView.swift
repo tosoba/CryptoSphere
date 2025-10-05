@@ -8,7 +8,7 @@ struct NewsFeedView: View {
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
     @StateObject @KotlinStateFlow private var relatedTokens: [TokenItem]
 
-    @State private var currentNewsItemIndex: Int? = 0
+    @State private var currentNewsItem: NewsItem? = nil
 
     init(component: NewsFeedComponent) {
         self.component = component
@@ -27,13 +27,13 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(newsItems.items.indices, id: \.self) { index in
+                            ForEach(newsItems.items as! [NewsItem], id: \.id) { item in
                                 NewsFeedItemView(
-                                    item: newsItems.itemAt(index: Int32(index)),
+                                    item: item,
                                     relatedTokens: relatedTokens,
                                     safeArea: geometry.safeAreaInsets
                                 )
-                                .id(index)
+                                .id(item)
                             }
                         }
                         .scrollTargetLayout()
@@ -41,11 +41,10 @@ struct NewsFeedView: View {
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)
-                    .scrollPosition(id: $currentNewsItemIndex)
+                    .scrollPosition(id: $currentNewsItem)
                     .onScrollPhaseChange { _, newPhase in
                         if newPhase != .idle { return }
-                        guard let index = currentNewsItemIndex else { return }
-                        guard let item = newsItems.itemAt(index: Int32(index)) else { return }
+                        guard let item = currentNewsItem else { return }
                         component.onCurrentItemChanged(item: item)
                     }
                 }
@@ -67,14 +66,14 @@ struct NewsFeedView: View {
 }
 
 private struct NewsFeedItemView: View {
-    let item: NewsItem?
+    let item: NewsItem
     let relatedTokens: [TokenItem]
     let safeArea: EdgeInsets
-    
+
     @State var tokenCarouselMeasuredHeight: CGFloat = 1000
 
     var body: some View {
-        AsyncImage(url: URL(string: item?.imgUrl ?? "")) { phase in
+        AsyncImage(url: URL(string: item.imgUrl ?? "")) { phase in
             switch phase {
             case .empty:
                 ProgressView()
@@ -89,16 +88,16 @@ private struct NewsFeedItemView: View {
         .containerRelativeFrame(.vertical)
         .overlay {
             HStack(alignment: .bottom) {
+                Spacer().frame(width: safeArea.leading)
+                
                 VStack(alignment: .leading) {
                     Spacer()
 
-                    NewsFeedItemTextView(text: item?.title ?? "", font: .title)
+                    NewsFeedItemTextView(text: item.title, font: .title)
 
-                    if let source = item?.source {
-                        NewsFeedItemTextView(text: source, font: .subheadline)
-                            .padding(.top, 8)
-                            .transition(.scale.combined(with: .opacity))
-                    }
+                    NewsFeedItemTextView(text: item.source, font: .subheadline)
+                        .padding(.top, 8)
+                        .transition(.scale.combined(with: .opacity))
 
                     if !relatedTokens.isEmpty {
                         TokenCarouselViewController(
@@ -110,13 +109,14 @@ private struct NewsFeedItemView: View {
                         .padding(.top, 8)
                         .transition(.scale.combined(with: .opacity))
                     }
-
-                    Spacer().frame(height: safeArea.bottom).fixedSize()
+                    
+                    Spacer().frame(height: safeArea.bottom)
                 }
+                .padding(.vertical)
+                .padding(.leading, 8)
                 .animation(.easeInOut(duration: 0.3), value: !relatedTokens.isEmpty)
-                .animation(.easeInOut(duration: 0.3), value: item?.source != nil)
-
-                Spacer(minLength: 0)
+                
+                Spacer(minLength: 8)
 
                 VStack(alignment: .center) {
                     Button(action: {}) {
@@ -141,17 +141,19 @@ private struct NewsFeedItemView: View {
                     .buttonStyle(.borderedProminent)
                     .clipShape(.circle)
                     .padding(.top, 24)
-
-                    Spacer().frame(height: safeArea.bottom).fixedSize()
+                    
+                    Spacer().frame(height: safeArea.bottom)
                 }
                 .foregroundColor(.white)
-                .padding(.horizontal)
+                .padding(.vertical)
+                .padding(.trailing, 8)
+                
+                Spacer().frame(width: safeArea.trailing)
             }
             .containerRelativeFrame(.horizontal)
-            .padding()
             .background {
                 LinearGradient(
-                    colors: [.clear, .black.opacity(0.7)],
+                    colors: [.clear, .black.opacity(0.75)],
                     startPoint: .center,
                     endPoint: .bottom
                 )
