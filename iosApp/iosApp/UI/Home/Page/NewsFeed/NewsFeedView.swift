@@ -57,7 +57,7 @@ private struct NewsFeedItemView: View {
     let item: NewsFeedItem
     let safeArea: EdgeInsets
 
-    @State var tokenCarouselMeasuredHeight: CGFloat = 1000
+    @State var tokenCarouselMeasuredHeight: CGFloat = 90
 
     var body: some View {
         AsyncImage(url: URL(string: item.news.imgUrl ?? "")) { phase in
@@ -138,7 +138,7 @@ private struct NewsFeedItemView: View {
             .containerRelativeFrame(.horizontal)
             .background {
                 LinearGradient(
-                    colors: [.clear, .black.opacity(0.75)],
+                    colors: [.clear, .black],
                     startPoint: .center,
                     endPoint: .bottom
                 )
