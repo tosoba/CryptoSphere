@@ -74,75 +74,89 @@ private struct NewsFeedItemView: View {
         }
         .containerRelativeFrame(.vertical)
         .overlay {
-            HStack(alignment: .bottom) {
-                Spacer().frame(width: safeArea.leading)
-                
-                VStack(alignment: .leading) {
-                    Spacer()
+            VStack {
+                Spacer().frame(height: safeArea.top)
 
-                    NewsFeedItemTextView(text: item.news.title, font: .title)
+                Spacer()
 
-                    NewsFeedItemTextView(text: item.news.source, font: .subheadline)
-                        .padding(.top, 8)
-                        .transition(.scale.combined(with: .opacity))
+                HStack(alignment: .bottom) {
+                    Spacer().frame(width: safeArea.leading)
 
-                    if !item.relatedTokens.isEmpty {
-                        TokenCarouselViewController(
-                            tokens: item.relatedTokens,
-                            onItemClick: { _ in },
-                            measuredHeight: $tokenCarouselMeasuredHeight
-                        )
-                        .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
-                        .padding(.top, 8)
+                    VStack(alignment: .leading) {
+                        NewsFeedItemTextView(text: item.news.title, font: .title)
+
+                        NewsFeedItemTextView(text: item.news.source, font: .subheadline)
+                            .padding(.top, 8)
+                            .transition(.scale.combined(with: .opacity))
+
+                        if !item.relatedTokens.isEmpty {
+                            TokenCarouselViewController(
+                                tokens: item.relatedTokens,
+                                onItemClick: { _ in },
+                                measuredHeight: $tokenCarouselMeasuredHeight
+                            )
+                            .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
+                            .padding(.top, 8)
+                        }
+                        
+                        Spacer().frame(height: safeArea.bottom)
                     }
-                    
-                    Spacer().frame(height: safeArea.bottom)
+                    .padding(.vertical)
+                    .padding(.leading, 8)
+
+                    Spacer().frame(width: 16)
+
+                    VStack(alignment: .center) {
+                        Button(action: {}) {
+                            Image(systemName: "paperplane")
+                                .font(.title2)
+                        }
+                        .buttonStyle(.bordered)
+                        .clipShape(.circle)
+
+                        Button(action: {}) {
+                            Image(systemName: "star")
+                                .font(.title2)
+                        }
+                        .buttonStyle(.bordered)
+                        .clipShape(.circle)
+                        .padding(.top, 24)
+
+                        Button(action: {}) {
+                            Image(systemName: "safari")
+                                .font(.largeTitle)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(.circle)
+                        .padding(.top, 24)
+                        
+                        Spacer().frame(height: safeArea.bottom)
+                    }
+                    .foregroundColor(.white)
+                    .padding(.vertical)
+                    .padding(.trailing, 8)
+
+                    Spacer().frame(width: safeArea.trailing)
                 }
-                .padding(.vertical)
-                .padding(.leading, 8)
-                
-                Spacer(minLength: 8)
-
-                VStack(alignment: .center) {
-                    Button(action: {}) {
-                        Image(systemName: "paperplane")
-                            .font(.title2)
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(.circle)
-
-                    Button(action: {}) {
-                        Image(systemName: "star")
-                            .font(.title2)
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(.circle)
-                    .padding(.top, 24)
-
-                    Button(action: {}) {
-                        Image(systemName: "safari")
-                            .font(.largeTitle)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .clipShape(.circle)
-                    .padding(.top, 24)
-                    
-                    Spacer().frame(height: safeArea.bottom)
+                .background {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .mask {
+                            VStack(spacing: 0) {
+                                LinearGradient(
+                                    colors: [
+                                        .black.opacity(0),
+                                        .black.opacity(1),
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                                Rectangle()
+                            }
+                        }
                 }
-                .foregroundColor(.white)
-                .padding(.vertical)
-                .padding(.trailing, 8)
-                
-                Spacer().frame(width: safeArea.trailing)
             }
             .containerRelativeFrame(.horizontal)
-            .background {
-                LinearGradient(
-                    colors: [.clear, .black],
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
-            }
         }
     }
 }
