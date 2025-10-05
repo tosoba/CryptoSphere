@@ -14,17 +14,17 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 @Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
 @Composable
-private fun NewsFeedItemPreview(
-  @PreviewParameter(NewsFeedItemPreviewRelatedTokensProvider::class) relatedTokens: List<TokenItem>
+private fun NewsFeedItemContentPreview(
+  @PreviewParameter(RelatedTokensPreviewProvider::class) relatedTokens: List<TokenItem>
 ) {
   SharedTransitionPreview {
     NewsFeedItemContent(
       item =
         NewsFeedItem(
           news =
+            @OptIn(ExperimentalTime::class)
             NewsItem(
               id = "1",
               searchKeyWords = listOf("dogecoin", "DOGE"),
@@ -46,7 +46,7 @@ private fun NewsFeedItemPreview(
   }
 }
 
-private class NewsFeedItemPreviewRelatedTokensProvider : PreviewParameterProvider<List<TokenItem>> {
+private class RelatedTokensPreviewProvider : PreviewParameterProvider<List<TokenItem>> {
   override val values: Sequence<List<TokenItem>> =
     sequenceOf(
       emptyList(),
