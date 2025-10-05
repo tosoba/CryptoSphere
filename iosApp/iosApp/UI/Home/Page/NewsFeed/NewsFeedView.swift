@@ -97,22 +97,20 @@ private struct NewsFeedItemView: View {
                     NewsFeedItemTextView(text: item?.title ?? "", font: .title)
 
                     if let source = item?.source {
-                        Spacer().frame(height: 8).fixedSize()
-                        
                         NewsFeedItemTextView(text: source, font: .subheadline)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                            .padding(.top, 8)
+                            .transition(.scale.combined(with: .opacity))
                     }
 
                     if !relatedTokens.isEmpty {
-                        Spacer().frame(height: 8).fixedSize()
-                        
                         TokenCarouselViewController(
                             tokens: relatedTokens,
                             onItemClick: { _ in },
                             measuredHeight: $tokenCarouselMeasuredHeight
                         )
                         .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .padding(.top, 8)
+                        .transition(.scale.combined(with: .opacity))
                     }
 
                     Spacer().frame(height: safeArea.bottom).fixedSize()
@@ -130,16 +128,13 @@ private struct NewsFeedItemView: View {
                     .buttonStyle(.bordered)
                     .clipShape(.circle)
 
-                    Spacer().frame(height: 24).fixedSize()
-
                     Button(action: {}) {
                         Image(systemName: "star")
                             .font(.title2)
                     }
                     .buttonStyle(.bordered)
                     .clipShape(.circle)
-
-                    Spacer().frame(height: 24).fixedSize()
+                    .padding(.top, 24)
 
                     Button(action: {}) {
                         Image(systemName: "safari")
@@ -147,6 +142,7 @@ private struct NewsFeedItemView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .clipShape(.circle)
+                    .padding(.top, 24)
 
                     Spacer().frame(height: safeArea.bottom).fixedSize()
                 }
