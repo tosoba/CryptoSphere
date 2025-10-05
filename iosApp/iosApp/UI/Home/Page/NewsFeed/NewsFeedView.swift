@@ -4,18 +4,14 @@ import SwiftUI
 struct NewsFeedView: View {
     private let component: NewsFeedComponent
 
-    @StateObject @KotlinStateFlow private var newsItems: NewsItemsSnapshotList
+    @StateObject @KotlinStateFlow private var newsFeedItems: NewsFeedItemsSnapshotList
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
-    @StateObject @KotlinStateFlow private var relatedTokens: [TokenItem]
-
-    @State private var currentNewsItem: NewsItem? = nil
 
     init(component: NewsFeedComponent) {
         self.component = component
 
-        _newsItems = .init(component.viewState.newsItemsSnapshotList)
-        _loadStates = .init(component.viewState.newsItemsLoadState)
-        _relatedTokens = .init(component.relatedTokens)
+        _newsFeedItems = .init(component.viewState.newsFeedItemsSnapshotList)
+        _loadStates = .init(component.viewState.newsItemsLoadStates)
     }
 
     var body: some View {
@@ -27,13 +23,11 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(newsItems.items as! [NewsItem], id: \.id) { item in
+                            ForEach(newsFeedItems.items as! [NewsFeedItem], id: \.news.id) { item in
                                 NewsFeedItemView(
                                     item: item,
-                                    relatedTokens: relatedTokens,
                                     safeArea: geometry.safeAreaInsets
                                 )
-                                .id(item)
                             }
                         }
                         .scrollTargetLayout()
@@ -41,12 +35,6 @@ struct NewsFeedView: View {
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)
-                    .scrollPosition(id: $currentNewsItem)
-                    .onScrollPhaseChange { _, newPhase in
-                        if newPhase != .idle { return }
-                        guard let item = currentNewsItem else { return }
-                        component.onCurrentItemChanged(item: item)
-                    }
                 }
             case .error:
                 VStack(alignment: .center, spacing: 8) {
@@ -66,14 +54,13 @@ struct NewsFeedView: View {
 }
 
 private struct NewsFeedItemView: View {
-    let item: NewsItem
-    let relatedTokens: [TokenItem]
+    let item: NewsFeedItem
     let safeArea: EdgeInsets
 
     @State var tokenCarouselMeasuredHeight: CGFloat = 1000
 
     var body: some View {
-        AsyncImage(url: URL(string: item.imgUrl ?? "")) { phase in
+        AsyncImage(url: URL(string: item.news.imgUrl ?? "")) { phase in
             switch phase {
             case .empty:
                 ProgressView()
@@ -93,28 +80,26 @@ private struct NewsFeedItemView: View {
                 VStack(alignment: .leading) {
                     Spacer()
 
-                    NewsFeedItemTextView(text: item.title, font: .title)
+                    NewsFeedItemTextView(text: item.news.title, font: .title)
 
-                    NewsFeedItemTextView(text: item.source, font: .subheadline)
+                    NewsFeedItemTextView(text: item.news.source, font: .subheadline)
                         .padding(.top, 8)
                         .transition(.scale.combined(with: .opacity))
 
-                    if !relatedTokens.isEmpty {
+                    if !item.relatedTokens.isEmpty {
                         TokenCarouselViewController(
-                            tokens: relatedTokens,
+                            tokens: item.relatedTokens,
                             onItemClick: { _ in },
                             measuredHeight: $tokenCarouselMeasuredHeight
                         )
                         .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
                         .padding(.top, 8)
-                        .transition(.scale.combined(with: .opacity))
                     }
                     
                     Spacer().frame(height: safeArea.bottom)
                 }
                 .padding(.vertical)
                 .padding(.leading, 8)
-                .animation(.easeInOut(duration: 0.3), value: !relatedTokens.isEmpty)
                 
                 Spacer(minLength: 8)
 

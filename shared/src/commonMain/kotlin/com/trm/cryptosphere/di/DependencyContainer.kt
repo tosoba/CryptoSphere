@@ -11,8 +11,7 @@ import com.trm.cryptosphere.data.repository.NewsDefaultRepository
 import com.trm.cryptosphere.data.repository.TokenDefaultRepository
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
-import com.trm.cryptosphere.domain.usecase.GetNewsUseCase
-import com.trm.cryptosphere.domain.usecase.GetTokensRelatedToNewsItemUseCase
+import com.trm.cryptosphere.domain.usecase.GetNewsFeedUseCase
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.home.HomeDefaultComponent
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
@@ -45,19 +44,15 @@ class DependencyContainer(
   private val newsRepository: Lazy<NewsRepository> = lazy {
     NewsDefaultRepository(coinStatsApi.value)
   },
-  private val getNewsUseCase: Lazy<GetNewsUseCase> = lazy {
-    GetNewsUseCase(newsRepository.value, tokenRepository.value)
-  },
-  private val getTokensRelatedToNewsItemUseCase: Lazy<GetTokensRelatedToNewsItemUseCase> = lazy {
-    GetTokensRelatedToNewsItemUseCase(tokenRepository.value)
+  private val getNewsFeedUseCase: Lazy<GetNewsFeedUseCase> = lazy {
+    GetNewsFeedUseCase(newsRepository.value, tokenRepository.value)
   },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =
     NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
       NewsFeedDefaultComponent(
         componentContext = componentContext,
         onTokenCarouselItemClick = onTokenCarouselItemClick,
-        getNewsUseCase = getNewsUseCase.value,
-        getTokensRelatedToNewsItemUseCase = getTokensRelatedToNewsItemUseCase.value,
+        getNewsFeedUseCase = getNewsFeedUseCase.value,
         dispatchers = appCoroutineDispatchers,
       )
     },

@@ -35,21 +35,21 @@ import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
-import com.trm.cryptosphere.domain.model.NewsItem
-import com.trm.cryptosphere.domain.model.TokenItem
+import com.trm.cryptosphere.domain.model.NewsFeedItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun NewsFeedItem(
-  item: NewsItem,
+fun NewsFeedItemContent(
+  item: NewsFeedItem,
   isCurrent: Boolean,
-  relatedTokens: List<TokenItem>,
   modifier: Modifier = Modifier,
   onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
 ) {
+  val (news, relatedTokens) = item
+
   Box(modifier = modifier) {
     AsyncImage(
-      model = item.imgUrl, // TODO: loading/error placeholders
+      model = news.imgUrl, // TODO: loading/error placeholders
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier = Modifier.fillMaxSize(),
@@ -115,7 +115,7 @@ fun NewsFeedItem(
         }
 
         Text(
-          text = item.title,
+          text = news.title,
           color = Color.White,
           style =
             MaterialTheme.typography.headlineSmall.copy(
@@ -139,7 +139,7 @@ fun NewsFeedItem(
         )
 
         Text(
-          text = item.source,
+          text = news.source,
           color = Color.White,
           style =
             MaterialTheme.typography.bodyMedium.copy(
@@ -167,7 +167,7 @@ fun NewsFeedItem(
         TokenCarousel(
           tokens = relatedTokens,
           onItemClick = { token ->
-            onRelatedTokenItemClick(token.id, TokenCarouselConfig(item.id, relatedTokens))
+            onRelatedTokenItemClick(token.id, TokenCarouselConfig(news.id, relatedTokens))
           },
           modifier =
             Modifier.constrainAs(tokenCarousel) {
@@ -179,7 +179,7 @@ fun NewsFeedItem(
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
               }
-              .localSharedElement(key = tokenCarouselSharedTransitionKey(item.id)),
+              .localSharedElement(key = tokenCarouselSharedTransitionKey(news.id)),
           contentPadding = PaddingValues(start = 16.dp),
           labelStyle =
             MaterialTheme.typography.labelMedium.copy(

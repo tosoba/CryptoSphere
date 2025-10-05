@@ -5,13 +5,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.trm.cryptosphere.core.ui.SharedTransitionPreview
+import com.trm.cryptosphere.domain.model.NewsFeedItem
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.TokenQuote
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
@@ -20,28 +21,26 @@ private fun NewsFeedItemPreview(
   @PreviewParameter(NewsFeedItemPreviewRelatedTokensProvider::class) relatedTokens: List<TokenItem>
 ) {
   SharedTransitionPreview {
-    NewsFeedItem(
+    NewsFeedItemContent(
       item =
-        NewsItem(
-          id = "1",
-          searchKeyWords = listOf("dogecoin", "DOGE"),
-          feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
-          source = "U.Today",
-          title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
-          sourceLink = "https://u.today/",
-          imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
-          relatedCoins =
-            listOf(
-              "dogecoin",
-              "0x4206931337dc273a630d328da6441786bfad668f_ethereum",
-              "0x1a8e39ae59e5556b56b76fcba98d22c9ae557396_cronos",
+        NewsFeedItem(
+          news =
+            NewsItem(
+              id = "1",
+              searchKeyWords = listOf("dogecoin", "DOGE"),
+              feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+              source = "U.Today",
+              title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
+              sourceLink = "https://u.today/",
+              imgUrl = "https://u.today/sites/default/files/styles/736x/public/2025-06/s7426.jpg",
+              relatedCoins = emptyList(),
+              link =
+                "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
+              fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
             ),
-          link =
-            "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
-          fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+          relatedTokens = relatedTokens,
         ),
       isCurrent = true,
-      relatedTokens = relatedTokens,
       onRelatedTokenItemClick = { _, _ -> },
     )
   }

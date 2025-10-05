@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -32,7 +31,6 @@ import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.util.resolve
-import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.shared.MR
 
 @Composable
@@ -41,8 +39,7 @@ fun NewsFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val newsItems = component.viewState.newsItems.collectAsLazyPagingItems()
-  val relatedTokens by component.relatedTokens.collectAsStateWithLifecycle()
+  val newsItems = component.viewState.newsFeedItems.collectAsLazyPagingItems()
   val pagerState = rememberPagerState { newsItems.itemCount }
   var isRefreshing by remember { mutableStateOf(false) }
 
@@ -55,9 +52,7 @@ fun NewsFeedContent(
       }
       is LoadState.NotLoading -> {
         LaunchedEffect(pagerState.currentPage, newsItems) {
-          val item = newsItems[pagerState.currentPage]
-          onImageUrlChange(item?.imgUrl)
-          item?.let(component::onCurrentItemChanged)
+          onImageUrlChange(newsItems[pagerState.currentPage]?.news?.imgUrl)
         }
 
         PullToRefreshBox(
@@ -67,14 +62,13 @@ fun NewsFeedContent(
         ) {
           VerticalFeedPager(
             pagerState = pagerState,
-            key = newsItems.itemKey(NewsItem::id),
+            key = newsItems.itemKey { it.news.id },
             modifier = Modifier.fillMaxSize(),
           ) { page ->
             newsItems[page]?.let {
-              NewsFeedItem(
+              NewsFeedItemContent(
                 item = it,
                 isCurrent = page == pagerState.currentPage,
-                relatedTokens = relatedTokens,
                 onRelatedTokenItemClick = component.onTokenCarouselItemClick,
               )
             }
