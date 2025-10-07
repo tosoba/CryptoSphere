@@ -6,6 +6,8 @@ struct NewsFeedView: View {
 
     @StateObject @KotlinStateFlow private var newsFeedItems: [NewsFeedItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
+    
+    @State private var tokenCarouselMeasuredHeight: CGFloat = 90
 
     init(component: NewsFeedComponent) {
         self.component = component
@@ -29,7 +31,8 @@ struct NewsFeedView: View {
                             ForEach(newsFeedItems, id: \.news.id) { item in
                                 NewsFeedItemView(
                                     item: item,
-                                    safeArea: geometry.safeAreaInsets
+                                    safeArea: geometry.safeAreaInsets,
+                                    tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight
                                 )
                             }
                         }
@@ -60,7 +63,7 @@ private struct NewsFeedItemView: View {
     let item: NewsFeedItem
     let safeArea: EdgeInsets
 
-    @State var tokenCarouselMeasuredHeight: CGFloat = 90
+    @Binding var tokenCarouselMeasuredHeight: CGFloat
 
     var body: some View {
         AsyncImage(url: URL(string: item.news.imgUrl ?? "")) { phase in
