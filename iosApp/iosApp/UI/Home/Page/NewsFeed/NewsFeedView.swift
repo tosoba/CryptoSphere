@@ -19,6 +19,9 @@ struct NewsFeedView: View {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
                 ProgressView()
+                    .foregroundStyle(.white)
+                    .containerRelativeFrame([.vertical, .horizontal])
+                    .background(.black)
             case .notLoading:
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
@@ -72,7 +75,8 @@ private struct NewsFeedItemView: View {
                 EmptyView()
             }
         }
-        .containerRelativeFrame(.vertical)
+        .containerRelativeFrame([.vertical, .horizontal])
+        .background(.black)
         .overlay {
             VStack {
                 Spacer().frame(height: safeArea.top)
@@ -156,7 +160,6 @@ private struct NewsFeedItemView: View {
                         }
                 }
             }
-            .containerRelativeFrame(.horizontal)
         }
     }
 }
@@ -187,5 +190,6 @@ private struct NewsFeedItemPlaceholderImageView: View {
             .resizable()
             .scaledToFill()
             .frame(width: size, height: size)
+            .foregroundStyle(.white)
     }
 }
