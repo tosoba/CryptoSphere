@@ -168,7 +168,7 @@ private struct NewsFeedItemTextView: View {
     var body: some View {
         Text(text)
             .font(font)
-            .lineLimit(nil)
+            .lineLimit(5)
             .multilineTextAlignment(.leading)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
