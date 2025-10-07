@@ -102,7 +102,7 @@ private struct NewsFeedItemView: View {
                             .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
                             .padding(.top, 8)
                         }
-                        
+
                         Spacer().frame(height: safeArea.bottom)
                     }
                     .padding(.vertical)
@@ -133,7 +133,7 @@ private struct NewsFeedItemView: View {
                         .buttonStyle(.borderedProminent)
                         .clipShape(.circle)
                         .padding(.top, 24)
-                        
+
                         Spacer().frame(height: safeArea.bottom)
                     }
                     .foregroundColor(.white)
@@ -148,10 +148,7 @@ private struct NewsFeedItemView: View {
                         .mask {
                             VStack(spacing: 0) {
                                 LinearGradient(
-                                    colors: [
-                                        .black.opacity(0),
-                                        .black.opacity(1),
-                                    ],
+                                    colors: [.black.opacity(0), .black.opacity(0.75), .black],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
