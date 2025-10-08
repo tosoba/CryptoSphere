@@ -6,7 +6,7 @@ struct NewsFeedView: View {
 
     @StateObject @KotlinStateFlow private var newsFeedItems: [NewsFeedItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
-    
+
     @State private var tokenCarouselMeasuredHeight: CGFloat = 90
 
     init(component: NewsFeedComponent) {
@@ -65,6 +65,65 @@ private struct NewsFeedItemView: View {
 
     @Binding var tokenCarouselMeasuredHeight: CGFloat
 
+    private var newsInformationBody: some View {
+        VStack(alignment: .leading) {
+            NewsFeedItemTextView(text: item.news.title, font: .title)
+
+            NewsFeedItemTextView(text: item.news.source, font: .subheadline)
+                .padding(.top, 8)
+                .transition(.scale.combined(with: .opacity))
+
+            if !item.relatedTokens.isEmpty {
+                TokenCarouselViewController(
+                    tokens: item.relatedTokens,
+                    onItemClick: { _ in },
+                    measuredHeight: $tokenCarouselMeasuredHeight
+                )
+                .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
+                .padding(.top, 8)
+            }
+
+            Spacer().frame(height: safeArea.bottom)
+        }
+        .padding(.vertical)
+        .padding(.leading, 8)
+    }
+
+    private var newsActionsBody: some View {
+        VStack(alignment: .center) {
+            Button(action: {}) {
+                Image(systemName: "paperplane")
+                    .font(.title2)
+            }
+            .buttonStyle(.bordered)
+            .feedShadow()
+            .clipShape(.circle)
+
+            Button(action: {}) {
+                Image(systemName: "star")
+                    .font(.title2)
+            }
+            .buttonStyle(.bordered)
+            .feedShadow()
+            .clipShape(.circle)
+            .padding(.top, 24)
+
+            Button(action: {}) {
+                Image(systemName: "safari")
+                    .font(.largeTitle)
+            }
+            .buttonStyle(.borderedProminent)
+            .feedShadow()
+            .clipShape(.circle)
+            .padding(.top, 24)
+
+            Spacer().frame(height: safeArea.bottom)
+        }
+        .foregroundColor(.white)
+        .padding(.vertical)
+        .padding(.trailing, 8)
+    }
+
     var body: some View {
         AsyncImage(url: URL(string: item.news.imgUrl ?? "")) { phase in
             switch phase {
@@ -88,64 +147,9 @@ private struct NewsFeedItemView: View {
 
                 HStack(alignment: .bottom) {
                     Spacer().frame(width: safeArea.leading)
-
-                    VStack(alignment: .leading) {
-                        NewsFeedItemTextView(text: item.news.title, font: .title)
-
-                        NewsFeedItemTextView(text: item.news.source, font: .subheadline)
-                            .padding(.top, 8)
-                            .transition(.scale.combined(with: .opacity))
-
-                        if !item.relatedTokens.isEmpty {
-                            TokenCarouselViewController(
-                                tokens: item.relatedTokens,
-                                onItemClick: { _ in },
-                                measuredHeight: $tokenCarouselMeasuredHeight
-                            )
-                            .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
-                            .padding(.top, 8)
-                        }
-
-                        Spacer().frame(height: safeArea.bottom)
-                    }
-                    .padding(.vertical)
-                    .padding(.leading, 8)
-
+                    newsInformationBody
                     Spacer().frame(width: 16)
-
-                    VStack(alignment: .center) {
-                        Button(action: {}) {
-                            Image(systemName: "paperplane")
-                                .font(.title2)
-                        }
-                        .buttonStyle(.bordered)
-                        .feedShadow()
-                        .clipShape(.circle)
-
-                        Button(action: {}) {
-                            Image(systemName: "star")
-                                .font(.title2)
-                        }
-                        .buttonStyle(.bordered)
-                        .feedShadow()
-                        .clipShape(.circle)
-                        .padding(.top, 24)
-
-                        Button(action: {}) {
-                            Image(systemName: "safari")
-                                .font(.largeTitle)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .feedShadow()
-                        .clipShape(.circle)
-                        .padding(.top, 24)
-
-                        Spacer().frame(height: safeArea.bottom)
-                    }
-                    .foregroundColor(.white)
-                    .padding(.vertical)
-                    .padding(.trailing, 8)
-
+                    newsActionsBody
                     Spacer().frame(width: safeArea.trailing)
                 }
                 .background {
@@ -154,7 +158,12 @@ private struct NewsFeedItemView: View {
                         .mask {
                             VStack(spacing: 0) {
                                 LinearGradient(
-                                    colors: [.black.opacity(0), .black.opacity(0.9), .black.opacity(0.95), .black],
+                                    colors: [
+                                        .black.opacity(0),
+                                        .black.opacity(0.9),
+                                        .black.opacity(0.95),
+                                        .black,
+                                    ],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
