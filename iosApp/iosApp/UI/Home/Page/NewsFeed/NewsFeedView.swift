@@ -119,6 +119,7 @@ private struct NewsFeedItemView: View {
                                 .font(.title2)
                         }
                         .buttonStyle(.bordered)
+                        .feedShadow()
                         .clipShape(.circle)
 
                         Button(action: {}) {
@@ -126,6 +127,7 @@ private struct NewsFeedItemView: View {
                                 .font(.title2)
                         }
                         .buttonStyle(.bordered)
+                        .feedShadow()
                         .clipShape(.circle)
                         .padding(.top, 24)
 
@@ -134,6 +136,7 @@ private struct NewsFeedItemView: View {
                                 .font(.largeTitle)
                         }
                         .buttonStyle(.borderedProminent)
+                        .feedShadow()
                         .clipShape(.circle)
                         .padding(.top, 24)
 
@@ -151,7 +154,7 @@ private struct NewsFeedItemView: View {
                         .mask {
                             VStack(spacing: 0) {
                                 LinearGradient(
-                                    colors: [.black.opacity(0), .black.opacity(0.75), .black],
+                                    colors: [.black.opacity(0), .black.opacity(0.9), .black.opacity(0.95), .black],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
@@ -171,13 +174,13 @@ private struct NewsFeedItemTextView: View {
     var body: some View {
         Text(text)
             .font(font)
+            .fontWeight(.medium)
             .lineLimit(5)
             .multilineTextAlignment(.leading)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
-            .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 2)
-            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .feedShadow()
             .foregroundStyle(.white)
     }
 }
