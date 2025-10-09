@@ -21,9 +21,11 @@ struct NewsFeedView: View {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
                 ProgressView()
-                    .foregroundStyle(.white)
+                    .scaleEffect(1.5)
                     .containerRelativeFrame([.vertical, .horizontal])
                     .background(.black)
+                    .foregroundStyle(.white)
+                    .transition(.opacity)
             case .notLoading:
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
@@ -41,6 +43,7 @@ struct NewsFeedView: View {
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)
+                    .transition(.opacity)
                 }
             case .error:
                 VStack(alignment: .center, spacing: 8) {
@@ -50,12 +53,10 @@ struct NewsFeedView: View {
                         label: { Text(String(\.retry)) }
                     )
                 }
+                .transition(.opacity)
             }
         }
-        .animation(
-            .easeInOut(duration: 0.3),
-            value: loadStates?.refresh
-        )
+        .animation(.default, value: loadStates?.refresh)
     }
 }
 
@@ -71,7 +72,6 @@ private struct NewsFeedItemView: View {
 
             NewsFeedItemTextView(text: item.news.source, font: .subheadline)
                 .padding(.top, 8)
-                .transition(.scale.combined(with: .opacity))
 
             if !item.relatedTokens.isEmpty {
                 TokenCarouselViewController(
@@ -125,10 +125,13 @@ private struct NewsFeedItemView: View {
     }
 
     var body: some View {
-        AsyncImage(url: URL(string: item.news.imgUrl ?? "")) { phase in
+        AsyncImage(
+            url: URL(string: item.news.imgUrl ?? ""),
+            transaction: Transaction(animation: .default)
+        ) { phase in
             switch phase {
             case .empty:
-                ProgressView()
+                ProgressView().scaleEffect(1.5)
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:
