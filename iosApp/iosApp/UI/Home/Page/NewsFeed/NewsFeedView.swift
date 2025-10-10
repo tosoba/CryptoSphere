@@ -34,7 +34,13 @@ struct NewsFeedView: View {
                                 NewsFeedItemView(
                                     item: item,
                                     safeArea: geometry.safeAreaInsets,
-                                    tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight
+                                    tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight,
+                                    onTokenCarouselItemClick: { id, config in
+                                        component.onTokenCarouselItemClick(
+                                            KotlinInt(value: id),
+                                            config
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -63,8 +69,8 @@ struct NewsFeedView: View {
 private struct NewsFeedItemView: View {
     let item: NewsFeedItem
     let safeArea: EdgeInsets
-
     @Binding var tokenCarouselMeasuredHeight: CGFloat
+    let onTokenCarouselItemClick: (Int32, TokenCarouselConfig) -> Void
 
     private var newsInformationBody: some View {
         VStack(alignment: .leading) {
@@ -76,7 +82,12 @@ private struct NewsFeedItemView: View {
             if !item.relatedTokens.isEmpty {
                 TokenCarouselViewController(
                     tokens: item.relatedTokens,
-                    onItemClick: { _ in },
+                    onItemClick: { token in
+                        onTokenCarouselItemClick(
+                            token.id,
+                            TokenCarouselConfig(items: item.relatedTokens)
+                        )
+                    },
                     measuredHeight: $tokenCarouselMeasuredHeight
                 )
                 .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
