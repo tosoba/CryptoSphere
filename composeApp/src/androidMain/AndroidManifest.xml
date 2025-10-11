@@ -29,7 +29,11 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="com.trm.cryptosphere.core.worker.WorkManagerInitializer"
+                android:name="com.trm.cryptosphere.core.initializer.WorkManagerInitializer"
+                android:value="androidx.startup" />
+
+            <meta-data
+                android:name="com.trm.cryptosphere.core.initializer.PeriodicTokenSyncInitializer"
                 android:value="androidx.startup" />
 
             <meta-data

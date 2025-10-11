@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.core.worker
+package com.trm.cryptosphere.core.initializer
 
 import android.content.Context
 import androidx.startup.Initializer

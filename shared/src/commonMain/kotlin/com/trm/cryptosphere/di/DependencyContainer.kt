@@ -48,7 +48,7 @@ class DependencyContainer(
   private val newsRepository: Lazy<NewsRepository> = lazy {
     NewsDefaultRepository(coinStatsApi.value)
   },
-  private val enqueuePeriodicTokenSyncUseCase: Lazy<EnqueuePeriodicTokenSyncUseCase> = lazy {
+  val enqueuePeriodicTokenSyncUseCase: Lazy<EnqueuePeriodicTokenSyncUseCase> = lazy {
     EnqueuePeriodicTokenSyncUseCase(tokenRepository.value, backgroundJobsManager)
   },
   private val performInitialTokensSyncUseCase: Lazy<PerformInitialTokensSyncUseCase> = lazy {
