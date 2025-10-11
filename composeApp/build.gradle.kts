@@ -19,6 +19,7 @@ kotlin {
       implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
       implementation(libs.androidx.constraintLayout.compose)
       implementation(libs.androidx.paging.compose)
+      implementation(libs.androidx.startup.runtime)
 
       implementation(libs.decompose.extensions.compose)
       implementation(libs.decompose.extensions.compose.experimental)

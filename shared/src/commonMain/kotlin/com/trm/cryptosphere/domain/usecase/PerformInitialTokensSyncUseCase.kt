@@ -10,7 +10,7 @@ class PerformInitialTokensSyncUseCase(
   suspend operator fun invoke() {
     if (tokenRepository.getTokensCount() == 0) {
       tokenRepository.performFullTokensSync()
-      backgroundJobsManager.enqueuePeriodicTokenSync()
+      backgroundJobsManager.enqueuePeriodicTokensSync()
     }
   }
 }

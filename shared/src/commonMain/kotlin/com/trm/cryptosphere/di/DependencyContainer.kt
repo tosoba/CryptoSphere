@@ -39,7 +39,7 @@ class DependencyContainer(
   private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
-  private val tokenRepository: Lazy<TokenRepository> = lazy {
+  val tokenRepository: Lazy<TokenRepository> = lazy {
     TokenDefaultRepository(
       dao = database.value.tokenDao(),
       coinMarketCapApi = coinMarketCapApi.value,
