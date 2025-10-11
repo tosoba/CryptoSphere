@@ -16,7 +16,9 @@ struct iOSApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
 
-    private lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer()
+    private lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer(
+        backgroundJobsManager: IosBackgroundJobsManager()
+    )
 
     fileprivate lazy var root: RootComponent = dependencyContainer.createRootComponent(
         DefaultComponentContext(

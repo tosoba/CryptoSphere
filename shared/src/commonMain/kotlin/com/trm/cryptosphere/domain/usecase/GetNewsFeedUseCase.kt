@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class GetNewsFeedUseCase(
+  private val performInitialTokensSyncUseCase: PerformInitialTokensSyncUseCase,
   private val newsRepository: NewsRepository,
   private val tokenRepository: TokenRepository,
 ) {
@@ -33,9 +34,7 @@ class GetNewsFeedUseCase(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NewsFeedItem> =
       cancellableRunCatching {
           coroutineScope {
-            val tokensSync = launch {
-              if (tokenRepository.getTokensCount() == 0) tokenRepository.performFullTokensSync()
-            }
+            val tokensSync = launch { performInitialTokensSyncUseCase() }
             val page = params.key ?: 0
             val newsItems = async {
               newsRepository.getNewsPage(page = page, limit = params.loadSize)
