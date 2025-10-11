@@ -62,6 +62,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.trm.cryptosphere.core.base.decimalFormat
+import com.trm.cryptosphere.core.base.toMarketCapFormat
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
@@ -308,37 +310,37 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
           add(
             TokenParameter(
               label = MR.strings.price.resolve(context),
-              value = token.quote.price.toString(),
+              value = token.quote.price.decimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.market_cap.resolve(context),
-              value = token.quote.marketCap.toString(),
+              value = token.quote.marketCap.toMarketCapFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.volume_24h.resolve(context),
-              value = token.quote.volume24h.toString(),
+              value = token.quote.volume24h.decimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.circulating_supply.resolve(context),
-              value = token.circulatingSupply.toString(),
+              value = token.circulatingSupply.decimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.total_supply.resolve(context),
-              value = token.totalSupply.toString(),
+              value = token.totalSupply.decimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.max_supply.resolve(context),
-              value = token.maxSupply?.toString() ?: "--",
+              value = token.maxSupply?.decimalFormat() ?: "--",
             )
           )
         }
