@@ -36,6 +36,7 @@ kotlin {
       export(libs.essenty.lifecycle)
       export(libs.essenty.stateKeeper)
       export(libs.moko.resources)
+      export(libs.kermit)
     }
   }
 

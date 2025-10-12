@@ -3,7 +3,7 @@ package com.trm.cryptosphere.domain.usecase
 import com.trm.cryptosphere.domain.manager.BackgroundJobsManager
 import com.trm.cryptosphere.domain.repository.TokenRepository
 
-class EnqueuePeriodicTokenSyncUseCase(
+class EnqueuePeriodicTokensSyncUseCase(
   private val tokenRepository: TokenRepository,
   private val backgroundJobsManager: BackgroundJobsManager,
 ) {

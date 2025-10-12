@@ -12,7 +12,7 @@ import com.trm.cryptosphere.data.repository.TokenDefaultRepository
 import com.trm.cryptosphere.domain.manager.BackgroundJobsManager
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
-import com.trm.cryptosphere.domain.usecase.EnqueuePeriodicTokenSyncUseCase
+import com.trm.cryptosphere.domain.usecase.EnqueuePeriodicTokensSyncUseCase
 import com.trm.cryptosphere.domain.usecase.GetNewsFeedUseCase
 import com.trm.cryptosphere.domain.usecase.PerformInitialTokensSyncUseCase
 import com.trm.cryptosphere.ui.home.HomeComponent
@@ -48,8 +48,8 @@ class DependencyContainer(
   private val newsRepository: Lazy<NewsRepository> = lazy {
     NewsDefaultRepository(coinStatsApi.value)
   },
-  val enqueuePeriodicTokenSyncUseCase: Lazy<EnqueuePeriodicTokenSyncUseCase> = lazy {
-    EnqueuePeriodicTokenSyncUseCase(tokenRepository.value, backgroundJobsManager)
+  val enqueuePeriodicTokensSyncUseCase: Lazy<EnqueuePeriodicTokensSyncUseCase> = lazy {
+    EnqueuePeriodicTokensSyncUseCase(tokenRepository.value, backgroundJobsManager)
   },
   private val performInitialTokensSyncUseCase: Lazy<PerformInitialTokensSyncUseCase> = lazy {
     PerformInitialTokensSyncUseCase(tokenRepository.value, backgroundJobsManager)

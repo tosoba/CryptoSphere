@@ -33,7 +33,7 @@
                 android:value="androidx.startup" />
 
             <meta-data
-                android:name="com.trm.cryptosphere.core.initializer.PeriodicTokenSyncInitializer"
+                android:name="com.trm.cryptosphere.core.initializer.PeriodicTokensSyncInitializer"
                 android:value="androidx.startup" />
 
             <meta-data
