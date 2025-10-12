@@ -62,8 +62,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
-import com.trm.cryptosphere.core.base.decimalFormat
-import com.trm.cryptosphere.core.base.toMarketCapFormat
+import com.trm.cryptosphere.core.base.fullDecimalFormat
+import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
 import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
@@ -310,37 +310,37 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
           add(
             TokenParameter(
               label = MR.strings.price.resolve(context),
-              value = token.quote.price.decimalFormat(),
+              value = token.quote.price.fullDecimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.market_cap.resolve(context),
-              value = token.quote.marketCap.toMarketCapFormat(),
+              value = token.quote.marketCap.shortDecimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.volume_24h.resolve(context),
-              value = token.quote.volume24h.decimalFormat(),
+              value = token.quote.volume24h.shortDecimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.circulating_supply.resolve(context),
-              value = token.circulatingSupply.decimalFormat(),
+              value = token.circulatingSupply.shortDecimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.total_supply.resolve(context),
-              value = token.totalSupply.decimalFormat(),
+              value = token.totalSupply.shortDecimalFormat(),
             )
           )
           add(
             TokenParameter(
               label = MR.strings.max_supply.resolve(context),
-              value = token.maxSupply?.decimalFormat() ?: "--",
+              value = token.maxSupply?.shortDecimalFormat() ?: "--",
             )
           )
         }

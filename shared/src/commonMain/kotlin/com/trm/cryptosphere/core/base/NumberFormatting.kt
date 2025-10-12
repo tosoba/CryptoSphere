@@ -7,7 +7,7 @@ import kotlin.math.pow
 import kotlin.math.round
 import kotlin.math.sign
 
-fun Double.toMarketCapFormat(): String {
+fun Double.shortDecimalFormat(): String {
   val trillion = 1_000_000_000_000.0
   val billion = 1_000_000_000.0
   val million = 1_000_000.0
@@ -21,13 +21,13 @@ fun Double.toMarketCapFormat(): String {
   }
 }
 
-fun Double.decimalFormat(significantDecimals: Int = 3, signed: Boolean = false): String =
+fun Double.fullDecimalFormat(significantDecimals: Int = 3, signed: Boolean = false): String =
   buildString {
-    val absValue = abs(this@decimalFormat)
+    val absValue = abs(this@fullDecimalFormat)
 
     if (signed) {
-      append(if (this@decimalFormat.sign >= 0.0) "+" else "-")
-    } else if (this@decimalFormat < 0) {
+      append(if (this@fullDecimalFormat.sign >= 0.0) "+" else "-")
+    } else if (this@fullDecimalFormat < 0) {
       append("-")
     }
 
