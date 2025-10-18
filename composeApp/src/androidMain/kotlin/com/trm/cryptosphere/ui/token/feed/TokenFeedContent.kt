@@ -42,7 +42,6 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,7 +75,6 @@ import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +131,6 @@ fun TokenFeedContent(
           )
     ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
-      val scope = rememberCoroutineScope()
       val tokens = component.tokens.collectAsLazyPagingItems()
       val pagerState = rememberPagerState { tokens.itemCount }
 
@@ -141,6 +138,10 @@ fun TokenFeedContent(
         if (pagerState.currentPage < tokens.itemCount) {
           onImageUrlChange(tokens[pagerState.currentPage]?.logoUrl)
         }
+      }
+
+      LaunchedEffect(Unit) {
+        component.mainTokenId.state.collect { pagerState.animateScrollToPage(0) }
       }
 
       Crossfade(
@@ -198,10 +199,7 @@ fun TokenFeedContent(
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
-        onItemClick = { item ->
-          scope.launch { pagerState.animateScrollToPage(0) }
-          component.mainTokenId.value = item.id
-        },
+        onItemClick = { item -> component.mainTokenId.value = item.id },
         modifier =
           Modifier.constrainAs(tokenCarousel) {
               start.linkTo(parent.start)
