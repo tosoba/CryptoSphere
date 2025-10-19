@@ -97,7 +97,7 @@ fun TokenFeedContent(
           AppBarRow(
             overflowIndicator = { menuState ->
               IconButton(
-                onClick = { if (menuState.isExpanded) menuState.dismiss() else menuState.show() }
+                onClick = { if (menuState.isShowing) menuState.dismiss() else menuState.show() }
               ) {
                 Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
               }
