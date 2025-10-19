@@ -4,11 +4,11 @@ import UIKit
 
 class TokensSyncWorker {
     private static let TAG = "TokensSyncWorker"
-    
+
     private var dependencyContainer: DependencyContainer {
         (UIApplication.shared.delegate as! AppDelegate).dependencyContainer
     }
-    
+
     func performTokensSync(task: BGProcessingTask) {
         Task(priority: .background) {
             do {

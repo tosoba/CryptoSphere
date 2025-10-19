@@ -17,7 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private static let TAG = "AppDelegate"
 
     private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
-    private lazy var backgroundJobsManager: IosBackgroundJobsManager = IosBackgroundJobsManager()
+    private lazy var backgroundJobsManager: IosBackgroundJobsManager = .init()
 
     lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer(
         backgroundJobsManager: backgroundJobsManager
