@@ -24,7 +24,7 @@ struct NewsFeedView: View {
                     .scaleEffect(1.5)
                     .containerRelativeFrame([.vertical, .horizontal])
                     .background(.black)
-                    .foregroundStyle(.white)
+                    .tint(.white)
                     .transition(.opacity)
             case .notLoading:
                 GeometryReader { geometry in
@@ -142,7 +142,7 @@ private struct NewsFeedItemView: View {
         ) { phase in
             switch phase {
             case .empty:
-                ProgressView().scaleEffect(1.5)
+                ProgressView().scaleEffect(1.5).tint(.white)
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:
@@ -174,8 +174,7 @@ private struct NewsFeedItemView: View {
                                 LinearGradient(
                                     colors: [
                                         .black.opacity(0),
-                                        .black.opacity(0.9),
-                                        .black.opacity(0.95),
+                                        .black.opacity(0.75),
                                         .black,
                                     ],
                                     startPoint: .top,
