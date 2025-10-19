@@ -8,8 +8,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.automirrored.filled.ReadMore
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -111,7 +112,11 @@ fun NewsFeedItemContent(
             },
           onClick = {},
         ) {
-          Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+          Icon(
+            imageVector = Icons.AutoMirrored.Filled.ReadMore,
+            contentDescription = null,
+            modifier = Modifier.size(32.dp),
+          )
         }
 
         Text(
