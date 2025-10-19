@@ -14,4 +14,5 @@
     <string name="max_supply">Max supply</string>
     <string name="retry">Retry</string>
     <string name="error_occurred">Error occurred.</string>
+    <string name="see_more">See more</string>
 </resources>

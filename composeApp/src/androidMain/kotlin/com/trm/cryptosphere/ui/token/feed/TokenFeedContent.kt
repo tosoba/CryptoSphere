@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -105,12 +106,19 @@ fun TokenFeedContent(
           ) {
             clickableItem(
               onClick = {},
-              icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null) },
+              icon = {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+              },
               label = MR.strings.go_back.resolve(context),
             )
             clickableItem(
               onClick = {},
-              icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
+              icon = {
+                Icon(
+                  imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                  contentDescription = null,
+                )
+              },
               label = MR.strings.go_forward.resolve(context),
               enabled = false,
             )
@@ -134,14 +142,12 @@ fun TokenFeedContent(
       val tokens = component.tokens.collectAsLazyPagingItems()
       val pagerState = rememberPagerState { tokens.itemCount }
 
+      fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
+
       LaunchedEffect(pagerState.currentPage, tokens) {
         if (pagerState.currentPage < tokens.itemCount) {
-          onImageUrlChange(tokens[pagerState.currentPage]?.logoUrl)
+          onImageUrlChange(currentToken()?.logoUrl)
         }
-      }
-
-      LaunchedEffect(Unit) {
-        component.mainTokenId.state.collect { pagerState.animateScrollToPage(0) }
       }
 
       Crossfade(
@@ -161,8 +167,8 @@ fun TokenFeedContent(
             width = Dimension.fillToConstraints
             height = Dimension.fillToConstraints
           },
-      ) {
-        if (it) {
+      ) { isLoading ->
+        if (isLoading) {
           Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
           }
@@ -173,7 +179,11 @@ fun TokenFeedContent(
             modifier = Modifier.fillMaxSize(),
           ) { page ->
             tokens[page]?.let { token ->
-              TokenFeedPagerItem(token = token, modifier = Modifier.fillMaxSize())
+              TokenFeedPagerItem(
+                token = token,
+                onSeeMoreClick = { currentToken()?.id?.let(component.navigateToTokenDetails) },
+                modifier = Modifier.fillMaxSize(),
+              )
             }
           }
         }
@@ -225,9 +235,9 @@ fun TokenFeedContent(
             bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
-        onClick = { tokens[pagerState.currentPage]?.id?.let(component.navigateToTokenDetails) },
+        onClick = { currentToken()?.id?.let { component.mainTokenId.value = it } },
       ) {
-        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+        Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
       }
 
       if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
@@ -241,10 +251,10 @@ fun TokenFeedContent(
             },
         ) {
           IconButton(onClick = {}) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
           }
           IconButton(onClick = {}, enabled = false) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
           }
         }
       }
@@ -253,7 +263,11 @@ fun TokenFeedContent(
 }
 
 @Composable
-private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) {
+private fun TokenFeedPagerItem(
+  token: TokenItem,
+  onSeeMoreClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
   val context = LocalContext.current
 
   ConstraintLayout(modifier = modifier) {
@@ -290,7 +304,7 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
         Modifier.constrainAs(tokenParametersColumn) {
           top.linkTo(
             anchor = if (isCompactHeight) parent.top else logoWithSymbol.bottom,
-            margin = if (isCompactHeight) 0.dp else 32.dp,
+            margin = if (isCompactHeight) 0.dp else 16.dp,
           )
           start.linkTo(
             anchor = if (isCompactHeight) logoWithSymbol.end else parent.start,
@@ -343,11 +357,15 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
           )
         }
       }
+      val seeMoreButtonHeight = 40.dp
       TokenParameterCardsColumn(
-        parameters.take(
-          maxHeight.value.toInt() /
-            calculateTokenParametersCardColumnHeight(parameters.size).value.toInt()
-        ),
+        parameters =
+          parameters.take(
+            ((maxHeight - seeMoreButtonHeight).value /
+                calculateTokenParametersCardColumnHeight(parameters.size).value)
+              .toInt()
+          ),
+        onSeeMoreClick = onSeeMoreClick,
         modifier =
           if (isCompactHeight) Modifier.fillMaxWidth().align(Alignment.Center)
           else Modifier.fillMaxSize(),
@@ -359,6 +377,7 @@ private fun TokenFeedPagerItem(token: TokenItem, modifier: Modifier = Modifier) 
 @Composable
 private fun TokenParameterCardsColumn(
   parameters: List<TokenParameter>,
+  onSeeMoreClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
@@ -387,17 +406,26 @@ private fun TokenParameterCardsColumn(
         Spacer(modifier = Modifier.height(2.dp))
       }
     }
+
+    TextButton(onClick = onSeeMoreClick, modifier = Modifier.fillMaxWidth()) {
+      Text(MR.strings.see_more.resolve())
+    }
   }
 }
 
 @Composable
-private fun calculateTokenParametersCardColumnHeight(parametersCount: Int): Dp =
-  with(LocalDensity.current) { MaterialTheme.typography.labelSmall.lineHeight.value.sp.toDp() } +
-    with(LocalDensity.current) {
-      MaterialTheme.typography.headlineSmall.lineHeight.value.sp.toDp()
-    } +
-    32.dp +
-    (parametersCount - 1) * 2.dp
+private fun calculateTokenParametersCardColumnHeight(parametersCount: Int): Dp {
+  val parameterLabelTextHeight =
+    with(LocalDensity.current) { MaterialTheme.typography.labelSmall.lineHeight.value.sp.toDp() }
+  val parameterValueTextHeight =
+    with(LocalDensity.current) { MaterialTheme.typography.headlineSmall.lineHeight.value.sp.toDp() }
+  val totalVerticalPadding = 16.dp
+  val totalSpacersHeight = (parametersCount - 1) * 2.dp
+  return parameterLabelTextHeight +
+    parameterValueTextHeight +
+    totalVerticalPadding +
+    totalSpacersHeight
+}
 
 private data class TokenParameter(val label: String, val value: String)
 
@@ -408,7 +436,7 @@ private fun TokenParameterCard(
   modifier: Modifier = Modifier,
 ) {
   Card(modifier = modifier, shape = shape) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
       Text(
         text = parameter.label,
         style = MaterialTheme.typography.labelSmall,
