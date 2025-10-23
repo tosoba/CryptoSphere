@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -43,6 +43,8 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -140,7 +142,29 @@ fun TokenFeedContent(
     ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
       val tokens = component.tokens.collectAsLazyPagingItems()
-      val pagerState = rememberPagerState { tokens.itemCount }
+      val pagerState =
+        rememberSaveable(
+          tokens.loadState.refresh,
+          saver =
+            listSaver(
+              save = {
+                listOf(
+                  it.currentPage,
+                  (it.currentPageOffsetFraction).coerceIn(-.5f, .5f),
+                  it.pageCount,
+                )
+              },
+              restore = { (currentPage, currentPageOffsetFraction, pageCount) ->
+                PagerState(
+                  currentPage = currentPage as Int,
+                  currentPageOffsetFraction = currentPageOffsetFraction as Float,
+                  pageCount = { pageCount as Int },
+                )
+              },
+            ),
+        ) {
+          PagerState(pageCount = tokens::itemCount)
+        }
 
       fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
 

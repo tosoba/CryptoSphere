@@ -49,7 +49,9 @@ fun PagerWormIndicator(
   PagerWormIndicator(
     pageCount = pagerState.pageCount,
     currentPageFraction =
-      remember { derivedStateOf { pagerState.currentPage + pagerState.currentPageOffsetFraction } },
+      remember(pagerState) {
+        derivedStateOf { pagerState.currentPage + pagerState.currentPageOffsetFraction }
+      },
     modifier = modifier,
     activeDotSize = activeDotSize,
     minDotSize = minDotSize,
@@ -316,7 +318,7 @@ internal fun Modifier.onDotClick(
 
 @Composable
 internal fun wormLinePosAsState(currentPageFraction: State<Float>): State<Pair<Float, Float>> {
-  return remember {
+  return remember(currentPageFraction) {
     var lastAnchor = currentPageFraction.value.toInt()
 
     derivedStateOf {
