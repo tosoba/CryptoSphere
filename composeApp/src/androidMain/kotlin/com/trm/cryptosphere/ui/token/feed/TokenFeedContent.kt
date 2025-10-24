@@ -62,7 +62,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.shortDecimalFormat
@@ -142,9 +141,10 @@ fun TokenFeedContent(
     ) {
       val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
       val tokens = component.tokens.collectAsLazyPagingItems()
+      val tokensCount = tokens.itemCount
       val pagerState =
         rememberSaveable(
-          tokens.loadState.refresh,
+          tokensCount == 0,
           saver =
             listSaver(
               save = {
@@ -166,16 +166,17 @@ fun TokenFeedContent(
           PagerState(pageCount = tokens::itemCount)
         }
 
-      fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
+      fun currentToken(): TokenItem? =
+        pagerState.currentPage.takeIf { it < tokensCount }?.let { tokens[it] }
 
       LaunchedEffect(pagerState.currentPage, tokens) {
-        if (pagerState.currentPage < tokens.itemCount) {
+        if (pagerState.currentPage < tokensCount) {
           onImageUrlChange(currentToken()?.logoUrl)
         }
       }
 
       Crossfade(
-        targetState = tokens.loadState.refresh is LoadState.Loading,
+        targetState = tokens.loadState.refresh is LoadState.Loading || tokensCount == 0,
         modifier =
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)
@@ -199,22 +200,25 @@ fun TokenFeedContent(
         } else {
           VerticalFeedPager(
             pagerState = pagerState,
-            key = tokens.itemKey(TokenItem::id),
+            key = { index -> runCatching { tokens[index]?.id ?: index }.getOrDefault(-1) },
             modifier = Modifier.fillMaxSize(),
           ) { page ->
-            tokens[page]?.let { token ->
-              TokenFeedPagerItem(
-                token = token,
-                onSeeMoreClick = { currentToken()?.id?.let(component.navigateToTokenDetails) },
-                modifier = Modifier.fillMaxSize(),
-              )
-            }
+            page
+              .takeIf { it < tokensCount }
+              ?.let { tokens[it] }
+              ?.let { token ->
+                TokenFeedPagerItem(
+                  token = token,
+                  onSeeMoreClick = { component.navigateToTokenDetails(token.id) },
+                  modifier = Modifier.fillMaxSize(),
+                )
+              }
           }
         }
       }
 
       AnimatedVisibility(
-        visible = tokens.loadState.refresh !is LoadState.Loading,
+        visible = tokens.loadState.refresh !is LoadState.Loading && tokensCount != 0,
         modifier =
           Modifier.constrainAs(pagerIndicator) {
             top.linkTo(parent.top)

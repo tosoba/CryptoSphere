@@ -15,7 +15,8 @@ import com.trm.cryptosphere.domain.repository.TokenRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.serialization.builtins.serializer
 
 class TokenFeedDefaultComponent(
@@ -38,7 +39,10 @@ class TokenFeedDefaultComponent(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override val tokens: Flow<PagingData<TokenItem>> =
-    mainTokenId.state.flatMapLatest {
-      tokenRepository.getTokensBySharedTags(it).cachedIn(scope)
-    }
+    mainTokenId.state
+      .transformLatest {
+        emit(PagingData.empty())
+        emitAll(tokenRepository.getTokensBySharedTags(it))
+      }
+      .cachedIn(scope)
 }
