@@ -71,6 +71,7 @@ interface TokenDao {
 
   @Transaction
   suspend fun insertTokensWithTags(cmcTokens: List<CmcTokenItem>) {
+    deleteAllTokens()
     insertTags(cmcTokens.flatMap(CmcTokenItem::tags).map { TagEntity(name = it) })
     insertTokens(cmcTokens.map(CmcTokenItem::toEntity))
     insertTokenTags(
