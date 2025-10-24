@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1150cd8a5a9ff3d9279fb7cbce1ca5e9",
+    "identityHash": "cc7a2a0a2a834b2bbf3d8fecef34f7d4",
     "entities": [
       {
         "tableName": "token",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `symbol` TEXT NOT NULL, `slug` TEXT NOT NULL, `num_market_pairs` INTEGER NOT NULL, `date_added` TEXT NOT NULL, `max_supply` REAL, `circulating_supply` REAL NOT NULL, `total_supply` REAL NOT NULL, `infinite_supply` INTEGER NOT NULL, `cmc_rank` INTEGER NOT NULL, `self_reported_circulating_supply` REAL, `self_reported_market_cap` REAL, `tvl_ratio` REAL, `last_updated` TEXT NOT NULL, `usd_quote_price` REAL NOT NULL, `usd_quote_volume_24h` REAL NOT NULL, `usd_quote_volume_change_24h` REAL NOT NULL, `usd_quote_percent_change_1h` REAL NOT NULL, `usd_quote_percent_change_24h` REAL NOT NULL, `usd_quote_percent_change_7d` REAL NOT NULL, `usd_quote_percent_change_30d` REAL NOT NULL, `usd_quote_percent_change_60d` REAL NOT NULL, `usd_quote_percent_change_90d` REAL NOT NULL, `usd_quote_market_cap` REAL NOT NULL, `usd_quote_market_cap_dominance` REAL NOT NULL, `usd_quote_fully_diluted_market_cap` REAL NOT NULL, `usd_quote_tvl` REAL, `usd_quote_last_updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `symbol` TEXT NOT NULL COLLATE NOCASE, `slug` TEXT NOT NULL, `num_market_pairs` INTEGER NOT NULL, `date_added` TEXT NOT NULL, `max_supply` REAL, `circulating_supply` REAL NOT NULL, `total_supply` REAL NOT NULL, `infinite_supply` INTEGER NOT NULL, `cmc_rank` INTEGER NOT NULL, `self_reported_circulating_supply` REAL, `self_reported_market_cap` REAL, `tvl_ratio` REAL, `last_updated` TEXT NOT NULL, `usd_quote_price` REAL NOT NULL, `usd_quote_volume_24h` REAL NOT NULL, `usd_quote_volume_change_24h` REAL NOT NULL, `usd_quote_percent_change_1h` REAL NOT NULL, `usd_quote_percent_change_24h` REAL NOT NULL, `usd_quote_percent_change_7d` REAL NOT NULL, `usd_quote_percent_change_30d` REAL NOT NULL, `usd_quote_percent_change_60d` REAL NOT NULL, `usd_quote_percent_change_90d` REAL NOT NULL, `usd_quote_market_cap` REAL NOT NULL, `usd_quote_market_cap_dominance` REAL NOT NULL, `usd_quote_fully_diluted_market_cap` REAL NOT NULL, `usd_quote_tvl` REAL, `usd_quote_last_updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -186,14 +186,51 @@
         },
         "indices": [
           {
-            "name": "index_token_name_symbol",
+            "name": "index_token_name_cmc_rank",
             "unique": false,
             "columnNames": [
               "name",
+              "cmc_rank"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_name_cmc_rank` ON `${TABLE_NAME}` (`name`, `cmc_rank`)"
+          },
+          {
+            "name": "index_token_symbol_cmc_rank",
+            "unique": false,
+            "columnNames": [
+              "symbol",
+              "cmc_rank"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_symbol_cmc_rank` ON `${TABLE_NAME}` (`symbol`, `cmc_rank`)"
+          },
+          {
+            "name": "index_token_cmc_rank",
+            "unique": false,
+            "columnNames": [
+              "cmc_rank"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_cmc_rank` ON `${TABLE_NAME}` (`cmc_rank`)"
+          },
+          {
+            "name": "index_token_name",
+            "unique": false,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_token_symbol",
+            "unique": false,
+            "columnNames": [
               "symbol"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_name_symbol` ON `${TABLE_NAME}` (`name`, `symbol`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_token_symbol` ON `${TABLE_NAME}` (`symbol`)"
           }
         ]
       },
@@ -297,7 +334,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1150cd8a5a9ff3d9279fb7cbce1ca5e9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc7a2a0a2a834b2bbf3d8fecef34f7d4')"
     ]
   }
 }

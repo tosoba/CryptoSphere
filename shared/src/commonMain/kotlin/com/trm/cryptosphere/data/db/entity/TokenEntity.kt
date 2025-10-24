@@ -7,7 +7,17 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.trm.cryptosphere.data.db.entity.embedded.TokenQuoteEmbedded
 
-@Entity(tableName = "token", indices = [Index(value = ["name", "symbol"])])
+@Entity(
+  tableName = "token",
+  indices =
+    [
+      Index(value = ["name", "cmc_rank"]),
+      Index(value = ["symbol", "cmc_rank"]),
+      Index(value = ["cmc_rank"]),
+      Index(value = ["name"]),
+      Index(value = ["symbol"]),
+    ],
+)
 data class TokenEntity(
   @PrimaryKey val id: Int,
   @ColumnInfo(collate = ColumnInfo.NOCASE) val name: String,

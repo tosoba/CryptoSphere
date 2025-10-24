@@ -24,7 +24,26 @@ interface TokenDao {
   @Query("SELECT * FROM token") fun selectAllTokens(): Flow<List<TokenEntity>>
 
   @Query(
-    "SELECT * FROM token WHERE name IN (:searchTerms) OR symbol IN (:searchTerms) ORDER BY cmc_rank"
+    """
+    SELECT * FROM token 
+    WHERE (name IN (:searchTerms) OR symbol IN (:searchTerms)) 
+    AND usd_quote_market_cap > 0 
+    AND circulating_supply > 0
+    AND id IN (
+      SELECT id FROM token AS t1
+      WHERE cmc_rank = (SELECT MIN(cmc_rank) FROM token AS t2 WHERE t2.name = t1.name)
+    )
+    AND id IN (
+      SELECT id FROM token AS t1
+      WHERE cmc_rank = (SELECT MIN(cmc_rank) FROM token AS t2 WHERE t2.symbol = t1.symbol)
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM token AS t2
+      WHERE LOWER(t2.name) = LOWER(token.symbol) 
+      AND t2.cmc_rank < token.cmc_rank
+    )
+    ORDER BY cmc_rank
+    """
   )
   suspend fun selectTokensByNameOrSymbol(searchTerms: List<String>): List<TokenEntity>
 
