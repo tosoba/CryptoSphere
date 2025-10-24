@@ -71,8 +71,23 @@ interface TokenDao {
     JOIN token_tag AS TT2 ON TT1.tag_name = TT2.tag_name
     JOIN token AS T2 ON TT2.token_id = T2.id
     WHERE T1.id = :id
+    AND T2.usd_quote_market_cap > 0 
+    AND T2.circulating_supply > 0
+    AND T2.id IN (
+      SELECT id FROM token AS t1
+      WHERE cmc_rank = (SELECT MIN(cmc_rank) FROM token AS t2 WHERE t2.name = t1.name)
+    )
+    AND T2.id IN (
+      SELECT id FROM token AS t1
+      WHERE cmc_rank = (SELECT MIN(cmc_rank) FROM token AS t2 WHERE t2.symbol = t1.symbol)
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM token AS t2
+      WHERE LOWER(t2.name) = LOWER(T2.symbol) 
+      AND t2.cmc_rank < T2.cmc_rank
+    )
     GROUP BY T2.id
-    ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, sharedTagCount DESC, cmc_rank
+    ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, sharedTagCount DESC, T2.cmc_rank
     """
   )
   fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenEntity>
