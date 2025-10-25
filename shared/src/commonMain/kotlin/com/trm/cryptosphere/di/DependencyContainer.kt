@@ -94,11 +94,13 @@ class DependencyContainer(
       componentContext,
       mainTokenId,
       tokenCarouselConfig,
+      navigateToTokenFeed,
       navigateToTokenDetails ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        initialMainTokenId = mainTokenId,
+        mainTokenId = mainTokenId,
         tokenCarouselConfig = tokenCarouselConfig,
+        navigateToTokenFeed = navigateToTokenFeed,
         navigateToTokenDetails = navigateToTokenDetails,
         tokenRepository = tokenRepository.value,
         dispatchers = appCoroutineDispatchers,

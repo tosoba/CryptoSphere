@@ -61,6 +61,7 @@ class RootDefaultComponent(
             componentContext = componentContext,
             mainTokenId = config.mainTokenId,
             tokenCarouselConfig = config.tokenCarouselConfig,
+            navigateToTokenFeed = ::navigateToTokenFeed,
             navigateToTokenDetails = ::navigateToTokenDetails,
           )
         )
