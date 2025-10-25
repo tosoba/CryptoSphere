@@ -3,10 +3,12 @@ package com.trm.cryptosphere.ui.token.feed
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -21,14 +23,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AppBarRow
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -85,44 +86,28 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val context = LocalContext.current
   val navigationSuiteType = currentWindowAdaptiveInfo().toNavigationSuiteType()
 
   Scaffold(
     modifier = modifier,
     bottomBar = {
       if (navigationSuiteType == NavigationSuiteType.NavigationBar) {
-        FlexibleBottomAppBar(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = BottomAppBarDefaults.FlexibleFixedHorizontalArrangement,
-        ) {
-          AppBarRow(
-            overflowIndicator = { menuState ->
-              IconButton(
-                onClick = { if (menuState.isShowing) menuState.dismiss() else menuState.show() }
-              ) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-              }
-            }
+        FlexibleBottomAppBar(modifier = Modifier.fillMaxWidth()) {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
           ) {
-            clickableItem(
-              onClick = {},
-              icon = {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-              },
-              label = MR.strings.go_back.resolve(context),
-            )
-            clickableItem(
-              onClick = {},
-              icon = {
-                Icon(
-                  imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                  contentDescription = null,
-                )
-              },
-              label = MR.strings.go_forward.resolve(context),
-              enabled = false,
-            )
+            IconButton({}) {
+              Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+
+            FilledTonalIconButton({}) {
+              Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
+            }
+
+            IconButton({}, enabled = false) {
+              Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+            }
           }
         }
       }
@@ -280,6 +265,9 @@ fun TokenFeedContent(
         ) {
           IconButton(onClick = {}) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+          }
+          FilledTonalIconButton({}) {
+            Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
           }
           IconButton(onClick = {}, enabled = false) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
