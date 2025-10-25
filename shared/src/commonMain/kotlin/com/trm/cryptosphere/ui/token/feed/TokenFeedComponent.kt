@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 interface TokenFeedComponent {
   val tokens: Flow<PagingData<TokenItem>>
   val tokenCarouselConfig: TokenCarouselConfig
+  val navigateBack: () -> Unit
+  val navigateHome: () -> Unit
   val navigateToTokenDetails: (Int) -> Unit
 
   fun navigateToTokenFeed(mainTokenId: Int)
@@ -18,6 +20,8 @@ interface TokenFeedComponent {
       componentContext: ComponentContext,
       mainTokenId: Int,
       tokenCarouselConfig: TokenCarouselConfig,
+      navigateBack: () -> Unit,
+      navigateHome: () -> Unit,
       navigateToTokenFeed: (Int, TokenCarouselConfig) -> Unit,
       navigateToTokenDetails: (Int) -> Unit,
     ): TokenFeedComponent

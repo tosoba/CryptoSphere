@@ -15,6 +15,8 @@ class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
   mainTokenId: Int,
   override val tokenCarouselConfig: TokenCarouselConfig,
+  override val navigateBack: () -> Unit,
+  override val navigateHome: () -> Unit,
   private val navigateToTokenFeed: (Int, TokenCarouselConfig) -> Unit,
   override val navigateToTokenDetails: (Int) -> Unit,
   tokenRepository: TokenRepository,

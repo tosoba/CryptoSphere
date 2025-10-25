@@ -96,11 +96,11 @@ fun TokenFeedContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
           ) {
-            IconButton({}) {
+            IconButton(onClick = component.navigateBack) {
               Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
 
-            FilledTonalIconButton({}) {
+            FilledTonalIconButton(onClick = component.navigateHome) {
               Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
             }
 
@@ -235,10 +235,10 @@ fun TokenFeedContent(
               end.linkTo(pagerIndicator.start, margin = 12.dp)
             },
         ) {
-          IconButton(onClick = {}) {
+          IconButton(onClick = component.navigateBack) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
           }
-          FilledTonalIconButton({}) {
+          FilledTonalIconButton(onClick = component.navigateHome) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
           }
           IconButton(onClick = {}, enabled = false) {
