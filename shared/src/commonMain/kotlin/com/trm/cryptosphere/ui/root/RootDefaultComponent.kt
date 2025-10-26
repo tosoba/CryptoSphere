@@ -3,6 +3,7 @@ package com.trm.cryptosphere.ui.root
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
@@ -79,7 +80,7 @@ class RootDefaultComponent(
     }
 
   private fun navigateToTokenFeed(mainTokenId: Int, tokenCarouselConfig: TokenCarouselConfig) {
-    navigation.pushNew(ChildConfig.TokenFeed(mainTokenId, tokenCarouselConfig))
+    navigation.bringToFront(ChildConfig.TokenFeed(mainTokenId, tokenCarouselConfig))
   }
 
   private fun navigateToTokenDetails(id: Int) {
