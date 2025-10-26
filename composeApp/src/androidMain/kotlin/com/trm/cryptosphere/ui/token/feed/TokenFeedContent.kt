@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.token.feed
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +45,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,8 +63,6 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.shortDecimalFormat
-import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
-import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -123,7 +119,7 @@ fun TokenFeedContent(
             )
           )
     ) {
-      val (pager, pagerIndicator, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
+      val (pager, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
       val tokens = component.tokens.collectAsLazyPagingItems()
       val pagerState = rememberPagerState { tokens.itemCount }
 
@@ -143,10 +139,9 @@ fun TokenFeedContent(
             bottom.linkTo(tokenCarousel.top)
             start.linkTo(parent.start, margin = 32.dp)
             end.linkTo(
-              if (navigationSuiteType == NavigationSuiteType.NavigationBar) pagerIndicator.start
+              if (navigationSuiteType == NavigationSuiteType.NavigationBar) parent.end
               else floatingToolbar.start,
-              margin =
-                if (navigationSuiteType == NavigationSuiteType.NavigationBar) 16.dp else 32.dp,
+              margin = 32.dp,
             )
 
             width = Dimension.fillToConstraints
@@ -172,24 +167,6 @@ fun TokenFeedContent(
             }
           }
         }
-      }
-
-      AnimatedVisibility(
-        visible = tokens.loadState.refresh !is LoadState.Loading,
-        modifier =
-          Modifier.constrainAs(pagerIndicator) {
-            top.linkTo(parent.top)
-            bottom.linkTo(detailsButton.top)
-            end.linkTo(parent.end, margin = 12.dp)
-          },
-      ) {
-        PagerWormIndicator(
-          pagerState = pagerState,
-          activeDotColor = Color.LightGray,
-          dotColor = Color.DarkGray,
-          dotCount = 5,
-          orientation = PagerIndicatorOrientation.Vertical,
-        )
       }
 
       TokenCarousel(
@@ -232,7 +209,7 @@ fun TokenFeedContent(
             Modifier.constrainAs(floatingToolbar) {
               top.linkTo(parent.top, margin = 16.dp)
               bottom.linkTo(detailsButton.top, margin = 16.dp)
-              end.linkTo(pagerIndicator.start, margin = 12.dp)
+              end.linkTo(parent.end, margin = 16.dp)
             },
         ) {
           IconButton(onClick = component.navigateBack) {

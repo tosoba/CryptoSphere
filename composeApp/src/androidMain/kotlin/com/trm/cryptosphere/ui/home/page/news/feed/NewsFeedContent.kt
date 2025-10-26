@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,13 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.trm.cryptosphere.core.ui.PagerIndicatorOrientation
-import com.trm.cryptosphere.core.ui.PagerWormIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
@@ -73,15 +68,6 @@ fun NewsFeedContent(
               )
             }
           }
-
-          PagerWormIndicator(
-            pagerState = pagerState,
-            activeDotColor = Color.White,
-            dotColor = Color.LightGray,
-            dotCount = 5,
-            orientation = PagerIndicatorOrientation.Vertical,
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
-          )
 
           AnimatedVisibility(
             visible = newsItems.loadState.append is LoadState.Loading,

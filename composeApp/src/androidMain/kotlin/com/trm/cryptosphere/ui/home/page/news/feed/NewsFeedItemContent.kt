@@ -79,7 +79,6 @@ fun NewsFeedItemContent(
           modifier =
             Modifier.constrainAs(shareButton) {
               bottom.linkTo(starButton.top, margin = 16.dp)
-              start.linkTo(linkButton.start)
               end.linkTo(linkButton.end)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
@@ -93,7 +92,6 @@ fun NewsFeedItemContent(
           modifier =
             Modifier.constrainAs(starButton) {
               bottom.linkTo(linkButton.top, margin = 16.dp)
-              start.linkTo(linkButton.start)
               end.linkTo(linkButton.end)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
