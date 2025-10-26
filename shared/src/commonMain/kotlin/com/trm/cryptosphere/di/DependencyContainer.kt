@@ -3,6 +3,7 @@ package com.trm.cryptosphere.di
 import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.PlatformContext
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
+import com.trm.cryptosphere.core.cache.disk.createDiskCacheStorage
 import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
@@ -31,12 +32,14 @@ import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
 import com.trm.cryptosphere.ui.token.details.TokenDetailsDefaultComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
+import io.ktor.client.plugins.cache.storage.CacheStorage
 
 class DependencyContainer(
   private val context: PlatformContext,
   private val backgroundJobsManager: BackgroundJobsManager,
   private val appCoroutineDispatchers: AppCoroutineDispatchers = AppCoroutineDispatchers.default(),
-  private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi() },
+  private val diskCacheStorage: CacheStorage = context.createDiskCacheStorage(),
+  private val coinStatsApi: Lazy<CoinStatsApi> = lazy { CoinStatsApi(diskCacheStorage) },
   private val coinMarketCapApi: Lazy<CoinMarketCapApi> = lazy { CoinMarketCapApi() },
   private val database: Lazy<CryptoSphereDatabase> = lazy { buildCryptoSphereDatabase(context) },
   val tokenRepository: Lazy<TokenRepository> = lazy {

@@ -7,6 +7,7 @@ import com.trm.cryptosphere.shared.BuildKonfig
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.plugins.cache.storage.CacheStorage
 
 interface CoinStatsApi {
   @GET("news")
@@ -22,6 +23,7 @@ interface CoinStatsApi {
     const val MAX_LIMIT = 100
     const val MAX_PAGE = 100
 
-    operator fun invoke(): CoinStatsApi = buildKtorfit(BASE_URL).createCoinStatsApi()
+    operator fun invoke(cacheStorage: CacheStorage?): CoinStatsApi =
+      buildKtorfit(baseUrl = BASE_URL, cacheStorage = cacheStorage).createCoinStatsApi()
   }
 }
