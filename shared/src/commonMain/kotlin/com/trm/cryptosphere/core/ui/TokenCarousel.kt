@@ -53,7 +53,11 @@ fun TokenCarousel(
           .aspectRatio(1.5f)
           .maskClip(MaterialTheme.shapes.medium)
           .maskBorder(
-            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
+            border =
+              BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = .5f),
+              ),
             shape = MaterialTheme.shapes.medium,
           ),
       color = MaterialTheme.colorScheme.surfaceContainer.run { copy(alpha = alpha * .25f) },
