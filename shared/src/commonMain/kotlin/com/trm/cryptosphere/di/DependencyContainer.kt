@@ -103,7 +103,7 @@ class DependencyContainer(
       navigateToTokenDetails ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        mainTokenId = mainTokenId,
+        tokenId = mainTokenId,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateBack = navigateBack,
         navigateHome = navigateHome,

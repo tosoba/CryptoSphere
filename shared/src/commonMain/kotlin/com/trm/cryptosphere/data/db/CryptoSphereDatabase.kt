@@ -7,7 +7,10 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.trm.cryptosphere.data.db.converter.LocalDateTimeConverter
 import com.trm.cryptosphere.data.db.converter.StringListConverter
+import com.trm.cryptosphere.data.db.dao.HistoryDao
 import com.trm.cryptosphere.data.db.dao.TokenDao
+import com.trm.cryptosphere.data.db.entity.HistoryEntity
+import com.trm.cryptosphere.data.db.entity.HistoryItemEntity
 import com.trm.cryptosphere.data.db.entity.TagEntity
 import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.entity.TokenTagEntity
@@ -18,6 +21,8 @@ import com.trm.cryptosphere.data.db.entity.TokenTagEntity
       TokenEntity::class,
       TagEntity::class,
       TokenTagEntity::class,
+      HistoryEntity::class,
+      HistoryItemEntity::class,
     ],
   version = 1,
 )
@@ -25,6 +30,8 @@ import com.trm.cryptosphere.data.db.entity.TokenTagEntity
 @TypeConverters(StringListConverter::class, LocalDateTimeConverter::class)
 abstract class CryptoSphereDatabase : RoomDatabase() {
   abstract fun tokenDao(): TokenDao
+
+  abstract fun historyDao(): HistoryDao
 
   companion object {
     const val DATABASE_NAME = "cryptosphere.db"

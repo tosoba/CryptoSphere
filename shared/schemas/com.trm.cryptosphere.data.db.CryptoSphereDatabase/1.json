@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cc7a2a0a2a834b2bbf3d8fecef34f7d4",
+    "identityHash": "7f685552eac86f6dc22e41302fcf753d",
     "entities": [
       {
         "tableName": "token",
@@ -330,11 +330,113 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "history_item",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`history_id` INTEGER NOT NULL, `token_id` INTEGER NOT NULL, `last_update_at` INTEGER NOT NULL, PRIMARY KEY(`history_id`, `token_id`), FOREIGN KEY(`history_id`) REFERENCES `history`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`token_id`) REFERENCES `token`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "historyId",
+            "columnName": "history_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tokenId",
+            "columnName": "token_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastUpdateAt",
+            "columnName": "last_update_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "history_id",
+            "token_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_history_item_history_id",
+            "unique": false,
+            "columnNames": [
+              "history_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_history_item_history_id` ON `${TABLE_NAME}` (`history_id`)"
+          },
+          {
+            "name": "index_history_item_token_id",
+            "unique": false,
+            "columnNames": [
+              "token_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_history_item_token_id` ON `${TABLE_NAME}` (`token_id`)"
+          },
+          {
+            "name": "index_history_item_last_update_at",
+            "unique": false,
+            "columnNames": [
+              "last_update_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_history_item_last_update_at` ON `${TABLE_NAME}` (`last_update_at`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "history",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "history_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "token",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "token_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc7a2a0a2a834b2bbf3d8fecef34f7d4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7f685552eac86f6dc22e41302fcf753d')"
     ]
   }
 }

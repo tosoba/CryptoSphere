@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 
 class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
-  mainTokenId: Int,
+  tokenId: Int,
   override val tokenCarouselConfig: TokenCarouselConfig,
   override val navigateBack: () -> Unit,
   override val navigateHome: () -> Unit,
@@ -25,7 +25,7 @@ class TokenFeedDefaultComponent(
   private val scope = coroutineScope(dispatchers.main + SupervisorJob())
 
   override val tokens: Flow<PagingData<TokenItem>> =
-    tokenRepository.getTokensBySharedTags(mainTokenId).cachedIn(scope)
+    tokenRepository.getTokensBySharedTags(tokenId).cachedIn(scope)
 
   override fun navigateToTokenFeed(mainTokenId: Int) {
     navigateToTokenFeed(mainTokenId, tokenCarouselConfig)
