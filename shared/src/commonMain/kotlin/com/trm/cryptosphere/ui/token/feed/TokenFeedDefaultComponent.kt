@@ -1,33 +1,53 @@
 package com.trm.cryptosphere.ui.token.feed
 
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
+import com.arkivanov.essenty.instancekeeper.retainedInstance
+import com.arkivanov.essenty.statekeeper.ExperimentalStateKeeperApi
+import com.arkivanov.essenty.statekeeper.saveable
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
-import com.trm.cryptosphere.domain.model.TokenItem
+import com.trm.cryptosphere.domain.repository.HistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.builtins.nullable
+import kotlinx.serialization.builtins.serializer
 
 class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
-  tokenId: Int,
+  private val mode: TokenFeedMode,
   override val tokenCarouselConfig: TokenCarouselConfig,
   override val navigateBack: () -> Unit,
   override val navigateHome: () -> Unit,
-  private val navigateToTokenFeed: (Int, TokenCarouselConfig) -> Unit,
+  private val navigateToTokenFeed: (TokenFeedMode, TokenCarouselConfig) -> Unit,
   override val navigateToTokenDetails: (Int) -> Unit,
   tokenRepository: TokenRepository,
+  private val historyRepository: HistoryRepository,
   dispatchers: AppCoroutineDispatchers,
 ) : TokenFeedComponent, ComponentContext by componentContext {
-  private val scope = coroutineScope(dispatchers.main + SupervisorJob())
+  @OptIn(ExperimentalStateKeeperApi::class)
+  override val viewState: TokenFeedViewState by
+    saveable(serializer = Long.serializer().nullable, state = { it.historyId.value.valueOrNull }) {
+      historyId ->
+      retainedInstance {
+        TokenFeedViewState(
+          historyId = historyId,
+          mode = mode,
+          tokenRepository = tokenRepository,
+          historyRepository = historyRepository,
+          dispatchers = dispatchers,
+        )
+      }
+    }
 
-  override val tokens: Flow<PagingData<TokenItem>> =
-    tokenRepository.getTokensBySharedTags(tokenId).cachedIn(scope)
-
-  override fun navigateToTokenFeed(mainTokenId: Int) {
-    navigateToTokenFeed(mainTokenId, tokenCarouselConfig)
+  override fun navigateToTokenFeed(tokenId: Int) {
+    viewState.historyId.value.valueOrNull?.let {
+      navigateToTokenFeed(
+        TokenFeedMode.HistoryContinuation(
+          historyId = it,
+          previousTokenId = mode.tokenId,
+          tokenId = tokenId,
+        ),
+        tokenCarouselConfig,
+      )
+    }
   }
 }

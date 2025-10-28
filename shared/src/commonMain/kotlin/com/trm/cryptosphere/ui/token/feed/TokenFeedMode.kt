@@ -6,10 +6,11 @@ import kotlinx.serialization.Serializable
 sealed interface TokenFeedMode {
   val tokenId: Int
 
-  data class HistoryFirst(override val tokenId: Int) : TokenFeedMode
+  @Serializable data class HistoryFirst(override val tokenId: Int) : TokenFeedMode
 
+  @Serializable
   data class HistoryContinuation(
-    val historyId: Int,
+    val historyId: Long,
     val previousTokenId: Int,
     override val tokenId: Int,
   ) : TokenFeedMode

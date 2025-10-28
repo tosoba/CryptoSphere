@@ -8,9 +8,11 @@ import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
+import com.trm.cryptosphere.data.repository.HistoryDefaultRepository
 import com.trm.cryptosphere.data.repository.NewsDefaultRepository
 import com.trm.cryptosphere.data.repository.TokenDefaultRepository
 import com.trm.cryptosphere.domain.manager.BackgroundJobsManager
+import com.trm.cryptosphere.domain.repository.HistoryRepository
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
 import com.trm.cryptosphere.domain.usecase.EnqueuePeriodicTokensSyncUseCase
@@ -50,6 +52,9 @@ class DependencyContainer(
   },
   private val newsRepository: Lazy<NewsRepository> = lazy {
     NewsDefaultRepository(coinStatsApi.value)
+  },
+  private val historyRepository: Lazy<HistoryRepository> = lazy {
+    HistoryDefaultRepository(database.value.historyDao())
   },
   val enqueuePeriodicTokensSyncUseCase: Lazy<EnqueuePeriodicTokensSyncUseCase> = lazy {
     EnqueuePeriodicTokensSyncUseCase(tokenRepository.value, backgroundJobsManager)
@@ -95,7 +100,7 @@ class DependencyContainer(
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
     TokenFeedComponent.Factory {
       componentContext,
-      mainTokenId,
+      mode,
       tokenCarouselConfig,
       navigateBack,
       navigateHome,
@@ -103,13 +108,14 @@ class DependencyContainer(
       navigateToTokenDetails ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        tokenId = mainTokenId,
+        mode = mode,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateBack = navigateBack,
         navigateHome = navigateHome,
         navigateToTokenFeed = navigateToTokenFeed,
         navigateToTokenDetails = navigateToTokenDetails,
         tokenRepository = tokenRepository.value,
+        historyRepository = historyRepository.value,
         dispatchers = appCoroutineDispatchers,
       )
     },

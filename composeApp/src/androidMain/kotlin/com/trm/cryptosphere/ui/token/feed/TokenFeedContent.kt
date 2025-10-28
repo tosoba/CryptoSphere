@@ -42,6 +42,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,10 +58,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.trm.cryptosphere.core.base.LoadableState
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.TokenCarousel
@@ -120,7 +123,10 @@ fun TokenFeedContent(
           )
     ) {
       val (pager, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
-      val tokens = component.tokens.collectAsLazyPagingItems()
+      val historyIdState by component.viewState.historyId.collectAsStateWithLifecycle()
+      val tokens = component.viewState.tokens.collectAsLazyPagingItems()
+      val isLoading =
+        tokens.loadState.refresh is LoadState.Loading || historyIdState is LoadableState.Loading
       val pagerState = rememberPagerState { tokens.itemCount }
 
       fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
@@ -132,7 +138,7 @@ fun TokenFeedContent(
       }
 
       Crossfade(
-        targetState = tokens.loadState.refresh is LoadState.Loading,
+        targetState = isLoading,
         modifier =
           Modifier.constrainAs(pager) {
             top.linkTo(parent.top)

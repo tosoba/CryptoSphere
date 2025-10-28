@@ -16,6 +16,7 @@ import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenDetails
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
 import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
+import com.trm.cryptosphere.ui.token.feed.TokenFeedMode
 import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
@@ -52,7 +53,12 @@ class RootDefaultComponent(
         Home(
           homeComponentFactory(
             componentContext = componentContext,
-            onTokenCarouselItemClick = ::navigateToTokenFeed,
+            onTokenCarouselItemClick = { tokenId, config ->
+              navigateToTokenFeed(
+                mode = TokenFeedMode.HistoryFirst(tokenId),
+                tokenCarouselConfig = config,
+              )
+            },
           )
         )
       }
@@ -60,7 +66,7 @@ class RootDefaultComponent(
         TokenFeed(
           tokenFeedComponentFactory(
             componentContext = componentContext,
-            mainTokenId = config.mainTokenId,
+            mode = config.mode,
             tokenCarouselConfig = config.tokenCarouselConfig,
             navigateBack = ::onBackClicked,
             navigateHome = { onBackClicked(0) },
@@ -79,8 +85,8 @@ class RootDefaultComponent(
       }
     }
 
-  private fun navigateToTokenFeed(mainTokenId: Int, tokenCarouselConfig: TokenCarouselConfig) {
-    navigation.pushToFront(ChildConfig.TokenFeed(mainTokenId, tokenCarouselConfig))
+  private fun navigateToTokenFeed(mode: TokenFeedMode, tokenCarouselConfig: TokenCarouselConfig) {
+    navigation.pushToFront(ChildConfig.TokenFeed(mode, tokenCarouselConfig))
   }
 
   private fun navigateToTokenDetails(id: Int) {
@@ -92,7 +98,7 @@ class RootDefaultComponent(
     @Serializable data object Home : ChildConfig
 
     @Serializable
-    data class TokenFeed(val mainTokenId: Int, val tokenCarouselConfig: TokenCarouselConfig) :
+    data class TokenFeed(val mode: TokenFeedMode, val tokenCarouselConfig: TokenCarouselConfig) :
       ChildConfig
 
     @Serializable data class TokenDetails(val tokenId: Int) : ChildConfig

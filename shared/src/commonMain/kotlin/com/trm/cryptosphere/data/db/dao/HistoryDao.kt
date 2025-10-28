@@ -38,7 +38,7 @@ interface HistoryDao {
   suspend fun getHistoryItem(historyId: Long, tokenId: Int): HistoryItemEntity?
 
   @Transaction
-  suspend fun upsertHistoryItem(historyId: Long, previousItemTokenId: Int, newItemTokenId: Int) {
+  suspend fun addHistoryItem(historyId: Long, previousItemTokenId: Int, newItemTokenId: Int) {
     getHistoryItem(historyId = historyId, tokenId = previousItemTokenId)?.let {
       deleteWhere(historyId = historyId, lastUpdateAtAfter = it.lastUpdateAt)
     }
