@@ -9,12 +9,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,10 +35,10 @@ fun TokenCarousel(
   contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
-  HorizontalUncontainedCarousel(
+  HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier = modifier,
-    itemWidth = 120.dp,
+    preferredItemWidth = 120.dp,
     itemSpacing = 8.dp,
     contentPadding = contentPadding,
   ) { index ->
@@ -49,8 +48,7 @@ fun TokenCarousel(
 
     Surface(
       modifier =
-        Modifier.width(120.dp)
-          .aspectRatio(1.5f)
+        Modifier.height(80.dp)
           .maskClip(MaterialTheme.shapes.medium)
           .maskBorder(
             border =
