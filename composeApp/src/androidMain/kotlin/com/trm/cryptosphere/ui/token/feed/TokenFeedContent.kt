@@ -2,8 +2,6 @@ package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.interaction.Interaction
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -70,6 +68,7 @@ import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.LoadableState
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.shortDecimalFormat
+import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -80,8 +79,6 @@ import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -440,12 +437,4 @@ private fun TokenParameterCard(
       )
     }
   }
-}
-
-class NoRippleInteractionSource : MutableInteractionSource {
-  override val interactions: Flow<Interaction> = emptyFlow()
-
-  override suspend fun emit(interaction: Interaction) = Unit
-
-  override fun tryEmit(interaction: Interaction) = true
 }
