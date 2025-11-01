@@ -3,7 +3,7 @@ package com.trm.cryptosphere.ui.home.page.news.feed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
 import com.trm.cryptosphere.core.ui.SharedTransitionPreview
 import com.trm.cryptosphere.domain.model.NewsFeedItem
 import com.trm.cryptosphere.domain.model.NewsItem
@@ -46,9 +46,9 @@ private fun NewsFeedItemContentPreview(
   }
 }
 
-private class RelatedTokensPreviewProvider : PreviewParameterProvider<List<TokenItem>> {
-  override val values: Sequence<List<TokenItem>> =
-    sequenceOf(
+private class RelatedTokensPreviewProvider :
+  CollectionPreviewParameterProvider<List<TokenItem>>(
+    listOf(
       emptyList(),
       listOf(
         TokenItem(
@@ -393,4 +393,4 @@ private class RelatedTokensPreviewProvider : PreviewParameterProvider<List<Token
         ),
       ),
     )
-}
+  )
