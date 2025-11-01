@@ -2,6 +2,8 @@ package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -30,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FlexibleBottomAppBar
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -76,6 +80,8 @@ import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -122,7 +128,7 @@ fun TokenFeedContent(
             )
           )
     ) {
-      val (pager, tokenCarousel, detailsButton, floatingToolbar) = createRefs()
+      val (pager, tokenCarousel, switchTokenButton, floatingToolbar) = createRefs()
       val historyIdState by component.viewState.historyId.collectAsStateWithLifecycle()
       val tokens = component.viewState.tokens.collectAsLazyPagingItems()
       val isLoading =
@@ -181,9 +187,9 @@ fun TokenFeedContent(
         modifier =
           Modifier.constrainAs(tokenCarousel) {
               start.linkTo(parent.start)
-              end.linkTo(detailsButton.start, margin = 16.dp)
-              top.linkTo(detailsButton.top)
-              bottom.linkTo(detailsButton.bottom)
+              end.linkTo(switchTokenButton.start, margin = 16.dp)
+              top.linkTo(switchTokenButton.top)
+              bottom.linkTo(switchTokenButton.bottom)
 
               width = Dimension.fillToConstraints
               height = Dimension.fillToConstraints
@@ -199,11 +205,21 @@ fun TokenFeedContent(
 
       MediumFloatingActionButton(
         modifier =
-          Modifier.constrainAs(detailsButton) {
-            bottom.linkTo(parent.bottom, margin = 16.dp)
-            end.linkTo(parent.end, margin = 16.dp)
-          },
-        onClick = { currentToken()?.id?.let(component::navigateToTokenFeed) },
+          Modifier.constrainAs(switchTokenButton) {
+              bottom.linkTo(parent.bottom, margin = 16.dp)
+              end.linkTo(parent.end, margin = 16.dp)
+            }
+            .alpha(if (pagerState.currentPage == 0) .38f else 1f),
+        containerColor =
+          if (pagerState.currentPage != 0) MaterialTheme.colorScheme.primaryContainer
+          else MaterialTheme.colorScheme.surfaceVariant,
+        elevation =
+          if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
+          else FloatingActionButtonDefaults.elevation(),
+        interactionSource = NoRippleInteractionSource(),
+        onClick = {
+          if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
+        },
       ) {
         Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
       }
@@ -214,7 +230,7 @@ fun TokenFeedContent(
           modifier =
             Modifier.constrainAs(floatingToolbar) {
               top.linkTo(parent.top, margin = 16.dp)
-              bottom.linkTo(detailsButton.top, margin = 16.dp)
+              bottom.linkTo(switchTokenButton.top, margin = 16.dp)
               end.linkTo(parent.end, margin = 16.dp)
             },
         ) {
@@ -424,4 +440,12 @@ private fun TokenParameterCard(
       )
     }
   }
+}
+
+class NoRippleInteractionSource : MutableInteractionSource {
+  override val interactions: Flow<Interaction> = emptyFlow()
+
+  override suspend fun emit(interaction: Interaction) = Unit
+
+  override fun tryEmit(interaction: Interaction) = true
 }
