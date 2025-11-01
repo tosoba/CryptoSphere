@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import com.trm.cryptosphere.data.db.dao.TokenDao
 import com.trm.cryptosphere.data.db.entity.TokenEntity
+import com.trm.cryptosphere.data.db.entity.junction.TokenWithTagNamesJunction
 import com.trm.cryptosphere.data.db.mapper.toTokenItem
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.repository.TokenRepository
@@ -46,7 +47,7 @@ class TokenDefaultRepository(
         dao.selectTokensBySharedTags(id)
       }
       .flow
-      .map { it.map(TokenEntity::toTokenItem) }
+      .map { it.map(TokenWithTagNamesJunction::toTokenItem) }
 
   companion object {
     private const val TOKEN_DB_PAGE_SIZE = 100

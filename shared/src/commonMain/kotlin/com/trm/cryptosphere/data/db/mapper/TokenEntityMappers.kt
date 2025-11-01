@@ -4,6 +4,7 @@ import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokenItem
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokenQuote
 import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.entity.embedded.TokenQuoteEmbedded
+import com.trm.cryptosphere.data.db.entity.junction.TokenWithTagNamesJunction
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.TokenQuote
 
@@ -43,6 +44,27 @@ private fun CmcTokenQuote.toEmbedded() =
     fullyDilutedMarketCap = fullyDilutedMarketCap,
     tvl = tvl,
     lastUpdated = lastUpdated,
+  )
+
+fun TokenWithTagNamesJunction.toTokenItem() =
+  TokenItem(
+    id = token.id,
+    name = token.name,
+    symbol = token.symbol,
+    slug = token.slug,
+    numMarketPairs = token.numMarketPairs,
+    dateAdded = token.dateAdded,
+    maxSupply = token.maxSupply,
+    circulatingSupply = token.circulatingSupply,
+    totalSupply = token.totalSupply,
+    infiniteSupply = token.infiniteSupply,
+    cmcRank = token.cmcRank,
+    selfReportedCirculatingSupply = token.selfReportedCirculatingSupply,
+    selfReportedMarketCap = token.selfReportedMarketCap,
+    tvlRatio = token.tvlRatio,
+    lastUpdated = token.lastUpdated,
+    quote = token.usdQuote.toTokenQuote(),
+    tagNames = tagNames?.split(",").orEmpty(),
   )
 
 fun TokenEntity.toTokenItem() =

@@ -10,6 +10,7 @@ import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokenItem
 import com.trm.cryptosphere.data.db.entity.TagEntity
 import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.entity.TokenTagEntity
+import com.trm.cryptosphere.data.db.entity.junction.TokenWithTagNamesJunction
 import com.trm.cryptosphere.data.db.mapper.toEntity
 
 @Dao
@@ -65,7 +66,7 @@ interface TokenDao {
 
   @Query(
     """
-    SELECT T2.*
+    SELECT T2.*, GROUP_CONCAT(TT2.tag_name) as tag_names
     FROM token AS T1
     JOIN token_tag AS TT1 ON T1.id = TT1.token_id
     JOIN token_tag AS TT2 ON TT1.tag_name = TT2.tag_name
@@ -90,5 +91,5 @@ interface TokenDao {
     ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, COUNT(TT2.tag_name) DESC, T2.cmc_rank
     """
   )
-  fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenEntity>
+  fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenWithTagNamesJunction>
 }
