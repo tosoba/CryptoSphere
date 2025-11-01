@@ -2,6 +2,7 @@ package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,6 +39,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalFloatingToolbar
@@ -281,6 +285,24 @@ private fun TokenFeedPagerItem(
         text = token.symbol,
         style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
       )
+
+      if (token.tagNames.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+          token.tagNames.forEachIndexed { index, name ->
+            SuggestionChip(
+              onClick = {},
+              label = { Text(name) },
+              interactionSource = NoRippleInteractionSource(),
+            )
+
+            if (index != token.tagNames.lastIndex) {
+              Spacer(modifier = Modifier.width(4.dp))
+            }
+          }
+        }
+      }
     }
 
     BoxWithConstraints(
