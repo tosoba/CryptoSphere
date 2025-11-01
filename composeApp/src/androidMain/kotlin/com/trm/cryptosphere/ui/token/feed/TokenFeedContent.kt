@@ -208,12 +208,12 @@ fun TokenFeedContent(
             }
             .alpha(if (pagerState.currentPage == 0) .38f else 1f),
         containerColor =
-          if (pagerState.currentPage != 0) MaterialTheme.colorScheme.primaryContainer
-          else MaterialTheme.colorScheme.surfaceVariant,
+          if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
+          else MaterialTheme.colorScheme.primaryContainer,
         elevation =
           if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
           else FloatingActionButtonDefaults.elevation(),
-        interactionSource = NoRippleInteractionSource(),
+        interactionSource = if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
         onClick = {
           if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
         },
