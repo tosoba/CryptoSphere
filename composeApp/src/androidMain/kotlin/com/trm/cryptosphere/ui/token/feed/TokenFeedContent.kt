@@ -137,12 +137,6 @@ fun TokenFeedContent(
 
       fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
 
-      LaunchedEffect(pagerState.currentPage, tokens) {
-        if (pagerState.currentPage < tokens.itemCount) {
-          onImageUrlChange(currentToken()?.logoUrl)
-        }
-      }
-
       Crossfade(
         targetState = isLoading,
         modifier =
@@ -176,6 +170,12 @@ fun TokenFeedContent(
                 onSeeMoreClick = { currentToken()?.id?.let(component.navigateToTokenDetails) },
                 modifier = Modifier.fillMaxSize(),
               )
+            }
+          }
+
+          LaunchedEffect(pagerState.currentPage, tokens) {
+            if (pagerState.currentPage < tokens.itemCount) {
+              onImageUrlChange(currentToken()?.logoUrl)
             }
           }
         }
