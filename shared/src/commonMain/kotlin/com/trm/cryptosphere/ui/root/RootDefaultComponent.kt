@@ -6,15 +6,12 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
-import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenDetails
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
-import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedMode
 import kotlinx.serialization.Serializable
@@ -23,7 +20,6 @@ class RootDefaultComponent(
   componentContext: ComponentContext,
   private val homeComponentFactory: HomeComponent.Factory,
   private val tokenFeedComponentFactory: TokenFeedComponent.Factory,
-  private val tokenDetailsComponentFactory: TokenDetailsComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -71,15 +67,6 @@ class RootDefaultComponent(
             navigateBack = ::onBackClicked,
             navigateHome = { onBackClicked(0) },
             navigateToTokenFeed = ::navigateToTokenFeed,
-            navigateToTokenDetails = ::navigateToTokenDetails,
-          )
-        )
-      }
-      is ChildConfig.TokenDetails -> {
-        TokenDetails(
-          tokenDetailsComponentFactory(
-            componentContext = componentContext,
-            tokenId = config.tokenId,
           )
         )
       }
@@ -89,10 +76,6 @@ class RootDefaultComponent(
     navigation.pushToFront(ChildConfig.TokenFeed(mode, tokenCarouselConfig))
   }
 
-  private fun navigateToTokenDetails(id: Int) {
-    navigation.pushNew(ChildConfig.TokenDetails(id))
-  }
-
   @Serializable
   private sealed interface ChildConfig {
     @Serializable data object Home : ChildConfig
@@ -100,7 +83,5 @@ class RootDefaultComponent(
     @Serializable
     data class TokenFeed(val mode: TokenFeedMode, val tokenCarouselConfig: TokenCarouselConfig) :
       ChildConfig
-
-    @Serializable data class TokenDetails(val tokenId: Int) : ChildConfig
   }
 }

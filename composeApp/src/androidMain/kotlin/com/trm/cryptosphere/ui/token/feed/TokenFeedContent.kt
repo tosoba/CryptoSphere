@@ -168,7 +168,7 @@ fun TokenFeedContent(
             tokens[page]?.let { token ->
               TokenFeedPagerItem(
                 token = token,
-                onSeeMoreClick = { currentToken()?.id?.let(component.navigateToTokenDetails) },
+                onSeeMoreClick = {},
                 modifier = Modifier.fillMaxSize(),
               )
             }

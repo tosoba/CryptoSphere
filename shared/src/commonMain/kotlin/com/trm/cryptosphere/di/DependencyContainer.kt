@@ -28,8 +28,6 @@ import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesDefaultComponent
 import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
-import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
-import com.trm.cryptosphere.ui.token.details.TokenDetailsDefaultComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
 import io.ktor.client.plugins.cache.storage.CacheStorage
@@ -90,8 +88,6 @@ class DependencyContainer(
         createHistoryComponent = createHistoryComponent,
       )
     },
-  val tokenDetailsComponentFactory: TokenDetailsComponent.Factory =
-    TokenDetailsComponent.Factory(::TokenDetailsDefaultComponent),
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
     TokenFeedComponent.Factory {
       componentContext,
@@ -99,8 +95,7 @@ class DependencyContainer(
       tokenCarouselConfig,
       navigateBack,
       navigateHome,
-      navigateToTokenFeed,
-      navigateToTokenDetails ->
+      navigateToTokenFeed ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
         mode = mode,
@@ -108,7 +103,6 @@ class DependencyContainer(
         navigateBack = navigateBack,
         navigateHome = navigateHome,
         navigateToTokenFeed = navigateToTokenFeed,
-        navigateToTokenDetails = navigateToTokenDetails,
         tokenRepository = tokenRepository.value,
         historyRepository = historyRepository.value,
         dispatchers = appCoroutineDispatchers,
@@ -119,7 +113,6 @@ class DependencyContainer(
       componentContext = componentContext,
       homeComponentFactory = homeComponentFactory,
       tokenFeedComponentFactory = tokenFeedComponentFactory,
-      tokenDetailsComponentFactory = tokenDetailsComponentFactory,
     )
   },
 )

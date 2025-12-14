@@ -33,7 +33,6 @@ import com.trm.cryptosphere.core.ui.DynamicTheme
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.ui.home.HomeContent
-import com.trm.cryptosphere.ui.token.details.TokenDetailsContent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @OptIn(
@@ -94,12 +93,6 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
                   component = instance.component,
                   modifier = Modifier.fillMaxSize(),
                   onImageUrlChange = { themeImageUrl = it },
-                )
-              }
-              is RootComponent.Child.TokenDetails -> {
-                TokenDetailsContent(
-                  component = instance.component,
-                  modifier = Modifier.fillMaxSize(),
                 )
               }
             }

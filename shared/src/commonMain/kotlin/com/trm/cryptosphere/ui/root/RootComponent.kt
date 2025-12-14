@@ -4,7 +4,6 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.trm.cryptosphere.ui.home.HomeComponent
-import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 
 interface RootComponent : BackHandlerOwner {
@@ -18,7 +17,5 @@ interface RootComponent : BackHandlerOwner {
     class Home(val component: HomeComponent) : Child
 
     class TokenFeed(val component: TokenFeedComponent) : Child
-
-    class TokenDetails(val component: TokenDetailsComponent) : Child
   }
 }
