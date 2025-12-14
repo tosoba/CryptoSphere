@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 enum class HomePageConfig {
   FEED,
   PRICES,
-  SEARCH,
   HISTORY,
 }

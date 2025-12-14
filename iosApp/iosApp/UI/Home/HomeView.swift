@@ -30,7 +30,6 @@ private extension HomeComponentPage {
         switch onEnum(of: self) {
         case .newsFeed: String(\.feed)
         case .prices: String(\.prices)
-        case .search: String(\.search)
         case .history: String(\.history)
         }
     }
@@ -39,7 +38,6 @@ private extension HomeComponentPage {
         switch onEnum(of: self) {
         case .newsFeed: "list.bullet.below.rectangle"
         case .prices: "dollarsign.circle"
-        case .search: "magnifyingglass"
         case .history: "archivebox"
         }
     }
@@ -58,7 +56,6 @@ private struct PageView: View {
         switch onEnum(of: page) {
         case let .newsFeed(newsFeedPage): NewsFeedView(component: newsFeedPage.component)
         case let .prices(pricesPage): PricesView(component: pricesPage.component)
-        case let .search(searchPage): SearchView(component: searchPage.component)
         case let .history(historyPage): HistoryView(component: historyPage.component)
         }
     }

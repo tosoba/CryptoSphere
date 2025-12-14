@@ -7,7 +7,6 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
-import com.trm.cryptosphere.ui.home.page.search.SearchComponent
 
 interface HomeComponent {
   val pages: Value<ChildPages<*, Page>>
@@ -18,8 +17,6 @@ interface HomeComponent {
     class NewsFeed(val component: NewsFeedComponent) : Page
 
     class Prices(val component: PricesComponent) : Page
-
-    class Search(val component: SearchComponent) : Page
 
     class History(val component: HistoryComponent) : Page
   }

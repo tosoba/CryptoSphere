@@ -26,8 +26,6 @@ import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedDefaultComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesDefaultComponent
-import com.trm.cryptosphere.ui.home.page.search.SearchComponent
-import com.trm.cryptosphere.ui.home.page.search.SearchDefaultComponent
 import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
 import com.trm.cryptosphere.ui.token.details.TokenDetailsComponent
@@ -80,8 +78,6 @@ class DependencyContainer(
     },
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
     ::PricesDefaultComponent,
-  private val createSearchComponent: (ComponentContext) -> SearchComponent =
-    ::SearchDefaultComponent,
   private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
     ::HistoryDefaultComponent,
   val homeComponentFactory: HomeComponent.Factory =
@@ -91,7 +87,6 @@ class DependencyContainer(
         onTokenCarouselItemClick = onTokenCarouselItemClick,
         newsFeedComponentFactory = newsFeedComponentFactory,
         createPricesComponent = createPricesComponent,
-        createSearchComponent = createSearchComponent,
         createHistoryComponent = createHistoryComponent,
       )
     },

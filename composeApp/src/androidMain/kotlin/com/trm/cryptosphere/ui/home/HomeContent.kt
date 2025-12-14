@@ -19,7 +19,6 @@ import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
-import com.trm.cryptosphere.ui.home.page.search.SearchContent
 
 @Composable
 fun HomeContent(
@@ -75,9 +74,6 @@ fun HomeContent(
           is HomeComponent.Page.Prices -> {
             PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
-          is HomeComponent.Page.Search -> {
-            SearchContent(component = page.component, modifier = Modifier.fillMaxSize())
-          }
           is HomeComponent.Page.History -> {
             HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
           }
@@ -93,6 +89,5 @@ private val HomePageConfig.label: String
     when (this) {
       HomePageConfig.FEED -> MR.strings.feed
       HomePageConfig.PRICES -> MR.strings.prices
-      HomePageConfig.SEARCH -> MR.strings.search
       HomePageConfig.HISTORY -> MR.strings.history
     }.resolve()
