@@ -9,6 +9,6 @@ struct TokenFeedView: View {
     }
 
     var body: some View {
-        Text("Token Feed")
+        Text(String(\.feed))
     }
 }

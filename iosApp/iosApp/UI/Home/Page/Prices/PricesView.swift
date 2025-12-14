@@ -9,6 +9,6 @@ struct PricesView: View {
     }
 
     var body: some View {
-        Text("Prices")
+        Text(String(\.prices))
     }
 }

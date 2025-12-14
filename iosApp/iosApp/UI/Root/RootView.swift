@@ -11,7 +11,7 @@ struct RootView: View {
     var body: some View {
         StackView(
             stackValue: StateValue(component.stack),
-            getTitle: { _ in "CryptoSphere" },
+            getTitle: { _ in String(\.app_name) },
             onBack: component.onBackClicked
         ) { child in
             switch onEnum(of: child) {
