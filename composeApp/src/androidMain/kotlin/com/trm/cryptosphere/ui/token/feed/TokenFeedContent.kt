@@ -426,9 +426,9 @@ private fun TokenParameterCardsColumn(
 @Composable
 private fun calculateTokenParametersCardColumnHeight(parametersCount: Int): Dp {
   val parameterLabelTextHeight =
-    with(LocalDensity.current) { MaterialTheme.typography.labelSmall.lineHeight.value.sp.toDp() }
+    with(LocalDensity.current) { MaterialTheme.typography.labelSmall.fontSize.value.sp.toDp() }
   val parameterValueTextHeight =
-    with(LocalDensity.current) { MaterialTheme.typography.headlineSmall.lineHeight.value.sp.toDp() }
+    with(LocalDensity.current) { MaterialTheme.typography.headlineSmall.fontSize.value.sp.toDp() }
   val totalVerticalPadding = 16.dp
   val totalSpacersHeight = (parametersCount - 1) * 2.dp
   return parameterLabelTextHeight +
