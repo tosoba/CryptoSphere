@@ -289,7 +289,11 @@ private fun TokenFeedPagerItem(
       if (token.tagNames.isNotEmpty()) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+        Row(
+          modifier =
+            Modifier.fillMaxWidth(if (isCompactHeight) .5f else 1f)
+              .horizontalScroll(rememberScrollState())
+        ) {
           token.tagNames.forEachIndexed { index, name ->
             SuggestionChip(
               onClick = {},
