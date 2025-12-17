@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,11 +34,7 @@ import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
-@OptIn(
-  ExperimentalMaterial3ExpressiveApi::class,
-  ExperimentalSharedTransitionApi::class,
-  ExperimentalDecomposeApi::class,
-)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable
 fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
   var themeImageUrl: String? by remember { mutableStateOf(null) }

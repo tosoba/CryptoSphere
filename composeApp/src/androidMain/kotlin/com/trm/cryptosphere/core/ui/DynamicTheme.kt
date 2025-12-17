@@ -3,7 +3,6 @@ package com.trm.cryptosphere.core.ui
 import android.content.Context
 import androidx.collection.lruCache
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +23,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DynamicTheme(
   imageUrl: String?,
