@@ -50,6 +50,7 @@ kotlin {
     androidMain.dependencies {
       implementation(libs.androidx.room.ktx)
       api(libs.androidx.work.runtime.ktx)
+      implementation(libs.androidx.core.ktx)
 
       api(libs.moko.resources.compose)
 

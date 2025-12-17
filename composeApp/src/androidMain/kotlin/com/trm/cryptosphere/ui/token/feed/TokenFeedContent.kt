@@ -71,6 +71,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.LoadableState
 import com.trm.cryptosphere.core.base.fullDecimalFormat
+import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
 import com.trm.cryptosphere.core.ui.TokenCarousel
@@ -84,6 +85,8 @@ import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
 
+private const val CMC_CURRENCIES_URL_PREFIX = "https://coinmarketcap.com/currencies/"
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TokenFeedContent(
@@ -91,6 +94,7 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
+  val context = LocalContext.current
   val navigationSuiteType = currentWindowAdaptiveInfo().toNavigationSuiteType()
 
   Scaffold(
@@ -168,7 +172,7 @@ fun TokenFeedContent(
             tokens[page]?.let { token ->
               TokenFeedPagerItem(
                 token = token,
-                onSeeMoreClick = {},
+                onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
                 modifier = Modifier.fillMaxSize(),
               )
             }
