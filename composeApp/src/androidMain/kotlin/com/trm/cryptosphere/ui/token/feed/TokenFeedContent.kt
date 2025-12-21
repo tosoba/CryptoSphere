@@ -32,6 +32,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -39,7 +40,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalFloatingToolbar
@@ -302,10 +302,10 @@ private fun TokenFeedPagerItem(
               .horizontalScroll(rememberScrollState())
         ) {
           token.tagNames.forEachIndexed { index, name ->
-            SuggestionChip(
+            FilterChip(
               onClick = {},
               label = { Text(name) },
-              enabled = name in mainTokenTagNames,
+              selected = name in mainTokenTagNames,
               interactionSource = NoRippleInteractionSource(),
             )
 
