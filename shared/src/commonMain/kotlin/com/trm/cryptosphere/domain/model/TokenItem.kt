@@ -20,7 +20,7 @@ data class TokenItem(
   val tvlRatio: Double?,
   val lastUpdated: String,
   val quote: TokenQuote,
-  val tagNames: Set<String> = emptySet(),
+  val tagNames: List<String> = emptyList(),
 )
 
 val TokenItem.logoUrl: String

@@ -66,11 +66,7 @@ fun TokenWithTagNamesJunction.toTokenItem(): TokenItem {
     lastUpdated = token.lastUpdated,
     quote = token.usdQuote.toTokenQuote(),
     tagNames =
-      allTagNames
-        ?.split(",")
-        ?.sortedBy { if (sharedTagNames.contains(it)) 0 else 1 }
-        ?.toSet()
-        .orEmpty(),
+      allTagNames?.split(",")?.sortedBy { if (sharedTagNames.contains(it)) 0 else 1 }.orEmpty(),
   )
 }
 

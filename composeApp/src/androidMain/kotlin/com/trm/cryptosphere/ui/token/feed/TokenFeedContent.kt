@@ -2,7 +2,6 @@ package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,9 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -79,6 +79,7 @@ import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
+import com.trm.cryptosphere.core.util.isExpandedHeight
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
@@ -172,7 +173,7 @@ fun TokenFeedContent(
             tokens[page]?.let { token ->
               TokenFeedPagerItem(
                 token = token,
-                mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty(),
+                mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty().toSet(),
                 onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
                 modifier = Modifier.fillMaxSize(),
               )
@@ -266,7 +267,8 @@ private fun TokenFeedPagerItem(
   val context = LocalContext.current
 
   ConstraintLayout(modifier = modifier) {
-    val isCompactHeight = currentWindowAdaptiveInfo().isCompactHeight()
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+    val isCompactHeight = windowAdaptiveInfo.isCompactHeight()
     val (logoWithSymbol, tokenParametersColumn) = createRefs()
 
     Column(
@@ -296,22 +298,27 @@ private fun TokenFeedPagerItem(
       if (token.tagNames.isNotEmpty()) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
+        val rowCount =
+          when {
+            isCompactHeight -> 2
+            windowAdaptiveInfo.isExpandedHeight() -> 5
+            else -> 3
+          }
+        LazyHorizontalStaggeredGrid(
+          rows = StaggeredGridCells.Fixed(rowCount),
           modifier =
             Modifier.fillMaxWidth(if (isCompactHeight) .5f else 1f)
-              .horizontalScroll(rememberScrollState())
+              .height(32.dp * rowCount + 4.dp * (rowCount - 1)),
+          horizontalItemSpacing = 4.dp,
+          verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-          token.tagNames.forEachIndexed { index, name ->
+          items(token.tagNames) { name ->
             FilterChip(
               onClick = {},
               label = { Text(name) },
               selected = name in mainTokenTagNames,
               interactionSource = NoRippleInteractionSource(),
             )
-
-            if (index != token.tagNames.size - 1) {
-              Spacer(modifier = Modifier.width(4.dp))
-            }
           }
         }
       }
