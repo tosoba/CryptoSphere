@@ -6,5 +6,6 @@ import com.trm.cryptosphere.data.db.entity.TokenEntity
 
 data class TokenWithTagNamesJunction(
   @Embedded val token: TokenEntity,
-  @ColumnInfo(name = "tag_names") val tagNames: String?,
+  @ColumnInfo(name = "all_tag_names") val allTagNames: String?,
+  @ColumnInfo(name = "shared_tag_names") val sharedTagNames: String?,
 )

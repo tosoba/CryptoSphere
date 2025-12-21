@@ -46,8 +46,9 @@ private fun CmcTokenQuote.toEmbedded() =
     lastUpdated = lastUpdated,
   )
 
-fun TokenWithTagNamesJunction.toTokenItem() =
-  TokenItem(
+fun TokenWithTagNamesJunction.toTokenItem(): TokenItem {
+  val sharedTagNames = sharedTagNames?.split(",")?.toSet().orEmpty()
+  return TokenItem(
     id = token.id,
     name = token.name,
     symbol = token.symbol,
@@ -64,8 +65,14 @@ fun TokenWithTagNamesJunction.toTokenItem() =
     tvlRatio = token.tvlRatio,
     lastUpdated = token.lastUpdated,
     quote = token.usdQuote.toTokenQuote(),
-    tagNames = tagNames?.split(",")?.toSet().orEmpty(),
+    tagNames =
+      allTagNames
+        ?.split(",")
+        ?.sortedBy { if (sharedTagNames.contains(it)) 0 else 1 }
+        ?.toSet()
+        .orEmpty(),
   )
+}
 
 fun TokenEntity.toTokenItem() =
   TokenItem(
