@@ -172,6 +172,7 @@ fun TokenFeedContent(
             tokens[page]?.let { token ->
               TokenFeedPagerItem(
                 token = token,
+                mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty(),
                 onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
                 modifier = Modifier.fillMaxSize(),
               )
@@ -258,6 +259,7 @@ fun TokenFeedContent(
 @Composable
 private fun TokenFeedPagerItem(
   token: TokenItem,
+  mainTokenTagNames: Set<String>,
   onSeeMoreClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -303,10 +305,11 @@ private fun TokenFeedPagerItem(
             SuggestionChip(
               onClick = {},
               label = { Text(name) },
+              enabled = name in mainTokenTagNames,
               interactionSource = NoRippleInteractionSource(),
             )
 
-            if (index != token.tagNames.lastIndex) {
+            if (index != token.tagNames.size - 1) {
               Spacer(modifier = Modifier.width(4.dp))
             }
           }

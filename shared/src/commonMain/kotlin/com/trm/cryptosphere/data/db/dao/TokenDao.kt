@@ -66,11 +66,12 @@ interface TokenDao {
 
   @Query(
     """
-    SELECT T2.*, GROUP_CONCAT(TT2.tag_name) as tag_names
+    SELECT T2.*, GROUP_CONCAT(TT3.tag_name) as tag_names
     FROM token AS T1
     JOIN token_tag AS TT1 ON T1.id = TT1.token_id
     JOIN token_tag AS TT2 ON TT1.tag_name = TT2.tag_name
     JOIN token AS T2 ON TT2.token_id = T2.id
+    JOIN token_tag AS TT3 ON TT3.token_id = T2.id
     WHERE T1.id = :id
     AND T2.usd_quote_market_cap > 0 
     AND T2.circulating_supply > 0

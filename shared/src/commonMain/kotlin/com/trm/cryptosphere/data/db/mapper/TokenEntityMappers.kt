@@ -64,7 +64,7 @@ fun TokenWithTagNamesJunction.toTokenItem() =
     tvlRatio = token.tvlRatio,
     lastUpdated = token.lastUpdated,
     quote = token.usdQuote.toTokenQuote(),
-    tagNames = tagNames?.split(",").orEmpty(),
+    tagNames = tagNames?.split(",")?.toSet().orEmpty(),
   )
 
 fun TokenEntity.toTokenItem() =
