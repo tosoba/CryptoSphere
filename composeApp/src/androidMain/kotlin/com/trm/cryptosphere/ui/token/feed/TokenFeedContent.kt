@@ -147,8 +147,8 @@ fun TokenFeedContent(
         targetState = isLoading,
         modifier =
           Modifier.constrainAs(pager) {
-            top.linkTo(parent.top)
-            bottom.linkTo(tokenCarousel.top)
+            top.linkTo(parent.top, margin = 16.dp)
+            bottom.linkTo(tokenCarousel.top, margin = 16.dp)
             start.linkTo(parent.start, margin = 32.dp)
             end.linkTo(
               if (navigationSuiteType == NavigationSuiteType.NavigationBar) parent.end
@@ -274,7 +274,7 @@ private fun TokenFeedPagerItem(
     Column(
       modifier =
         Modifier.constrainAs(logoWithSymbol) {
-          top.linkTo(parent.top, margin = if (isCompactHeight) 0.dp else 16.dp)
+          top.linkTo(parent.top)
           start.linkTo(parent.start)
           if (!isCompactHeight) end.linkTo(parent.end)
           if (isCompactHeight) bottom.linkTo(parent.bottom)
