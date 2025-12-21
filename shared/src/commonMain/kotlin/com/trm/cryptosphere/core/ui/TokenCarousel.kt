@@ -32,6 +32,7 @@ fun TokenCarousel(
   tokens: List<TokenItem>,
   onItemClick: (TokenItem) -> Unit,
   modifier: Modifier = Modifier,
+  highlightedTokenId: Int? = null,
   contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
@@ -54,11 +55,17 @@ fun TokenCarousel(
             border =
               BorderStroke(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = .5f),
+                color =
+                  MaterialTheme.colorScheme.outline.copy(
+                    alpha = if (token.id == highlightedTokenId) 1f else .5f
+                  ),
               ),
             shape = MaterialTheme.shapes.medium,
           ),
-      color = MaterialTheme.colorScheme.surfaceContainer.run { copy(alpha = alpha * .25f) },
+      color =
+        MaterialTheme.colorScheme.surfaceContainer.run {
+          if (token.id == highlightedTokenId) this else copy(alpha = alpha * .25f)
+        },
       onClick = { onItemClick(token) },
     ) {
       Column(

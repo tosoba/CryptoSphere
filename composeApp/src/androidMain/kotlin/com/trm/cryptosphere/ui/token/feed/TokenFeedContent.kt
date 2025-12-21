@@ -188,6 +188,7 @@ fun TokenFeedContent(
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
+        highlightedTokenId = component.viewState.mode.tokenId,
         onItemClick = { item -> component.navigateToTokenFeed(item.id) },
         modifier =
           Modifier.constrainAs(tokenCarousel) {

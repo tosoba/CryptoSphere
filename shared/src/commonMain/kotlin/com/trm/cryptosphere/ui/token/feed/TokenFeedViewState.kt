@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class TokenFeedViewState(
   historyId: Long?,
-  mode: TokenFeedMode,
+  val mode: TokenFeedMode,
   tokenRepository: TokenRepository,
   private val historyRepository: HistoryRepository,
   dispatchers: AppCoroutineDispatchers,
