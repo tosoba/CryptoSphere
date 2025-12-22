@@ -325,11 +325,14 @@ private fun TokenFeedPagerItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         val rowCount =
-          when {
-            isCompactHeight -> 2
-            windowAdaptiveInfo.isExpandedHeight() -> 5
-            else -> 3
-          }
+          minOf(
+            when {
+              isCompactHeight -> 2
+              windowAdaptiveInfo.isExpandedHeight() -> 5
+              else -> 3
+            },
+            token.tagNames.size,
+          )
         LazyHorizontalStaggeredGrid(
           rows = StaggeredGridCells.Fixed(rowCount),
           modifier =
