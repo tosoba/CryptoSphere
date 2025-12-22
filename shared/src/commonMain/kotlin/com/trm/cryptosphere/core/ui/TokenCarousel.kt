@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.domain.model.TokenItem
@@ -34,12 +35,13 @@ fun TokenCarousel(
   modifier: Modifier = Modifier,
   highlightedTokenId: Int? = null,
   contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
+  itemHeight: Dp = 80.dp,
   labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
   HorizontalMultiBrowseCarousel(
     state = rememberCarouselState(itemCount = tokens::size),
     modifier = modifier,
-    preferredItemWidth = 120.dp,
+    preferredItemWidth = itemHeight * 3 / 2,
     itemSpacing = 8.dp,
     contentPadding = contentPadding,
   ) { index ->
@@ -49,7 +51,7 @@ fun TokenCarousel(
 
     Surface(
       modifier =
-        Modifier.height(80.dp)
+        Modifier.height(itemHeight)
           .maskClip(MaterialTheme.shapes.medium)
           .maskBorder(
             border =

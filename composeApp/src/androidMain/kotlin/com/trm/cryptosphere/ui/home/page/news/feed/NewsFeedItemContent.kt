@@ -14,12 +14,14 @@ import androidx.compose.material.icons.automirrored.filled.ReadMore
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +38,7 @@ import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
+import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.domain.model.NewsFeedItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -46,6 +49,7 @@ fun NewsFeedItemContent(
   modifier: Modifier = Modifier,
   onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
 ) {
+  val adaptiveInfo = currentWindowAdaptiveInfo()
   val (news, relatedTokens) = item
 
   Box(modifier = modifier) {
@@ -102,19 +106,36 @@ fun NewsFeedItemContent(
           Icon(Icons.Outlined.StarOutline, contentDescription = null)
         }
 
-        MediumFloatingActionButton(
-          modifier =
-            Modifier.constrainAs(linkButton) {
-              bottom.linkTo(parent.bottom, margin = 24.dp)
-              end.linkTo(parent.end, margin = 16.dp)
-            },
-          onClick = {},
-        ) {
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.ReadMore,
-            contentDescription = null,
-            modifier = Modifier.size(32.dp),
-          )
+        if (adaptiveInfo.isCompactHeight()) {
+          FloatingActionButton(
+            modifier =
+              Modifier.constrainAs(linkButton) {
+                bottom.linkTo(parent.bottom, margin = 24.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+              },
+            onClick = {},
+          ) {
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.ReadMore,
+              contentDescription = null,
+              modifier = Modifier.size(32.dp),
+            )
+          }
+        } else {
+          MediumFloatingActionButton(
+            modifier =
+              Modifier.constrainAs(linkButton) {
+                bottom.linkTo(parent.bottom, margin = 24.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+              },
+            onClick = {},
+          ) {
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.ReadMore,
+              contentDescription = null,
+              modifier = Modifier.size(32.dp),
+            )
+          }
         }
 
         Text(
@@ -172,6 +193,7 @@ fun NewsFeedItemContent(
           onItemClick = { token ->
             onRelatedTokenItemClick(token.id, TokenCarouselConfig(news.id, relatedTokens))
           },
+          itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
           modifier =
             Modifier.constrainAs(tokenCarousel) {
                 top.linkTo(linkButton.top)

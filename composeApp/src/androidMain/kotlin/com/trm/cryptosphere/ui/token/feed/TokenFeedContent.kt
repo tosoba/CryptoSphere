@@ -34,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FlexibleBottomAppBar
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -96,7 +97,8 @@ fun TokenFeedContent(
   onImageUrlChange: (String?) -> Unit,
 ) {
   val context = LocalContext.current
-  val navigationSuiteType = currentWindowAdaptiveInfo().toNavigationSuiteType()
+  val adaptiveInfo = currentWindowAdaptiveInfo()
+  val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
 
   Scaffold(
     modifier = modifier,
@@ -137,7 +139,7 @@ fun TokenFeedContent(
       val tokens = component.viewState.tokens.collectAsLazyPagingItems()
       val isLoading =
         tokens.loadState.refresh is LoadState.Loading || historyIdState is LoadableState.Loading
-      val pagerState = rememberPagerState { tokens.itemCount }
+      val pagerState = rememberPagerState(pageCount = tokens::itemCount)
 
       fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
 
@@ -190,6 +192,7 @@ fun TokenFeedContent(
         tokens = component.tokenCarouselConfig.items,
         highlightedTokenId = component.viewState.mode.tokenId,
         onItemClick = { item -> component.navigateToTokenFeed(item.id) },
+        itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
         modifier =
           Modifier.constrainAs(tokenCarousel) {
               start.linkTo(parent.start)
@@ -209,25 +212,50 @@ fun TokenFeedContent(
         contentPadding = PaddingValues(start = 16.dp),
       )
 
-      MediumFloatingActionButton(
-        modifier =
-          Modifier.constrainAs(switchTokenButton) {
-              bottom.linkTo(parent.bottom, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
-            }
-            .alpha(if (pagerState.currentPage == 0) .38f else 1f),
-        containerColor =
-          if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
-          else MaterialTheme.colorScheme.primaryContainer,
-        elevation =
-          if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
-          else FloatingActionButtonDefaults.elevation(),
-        interactionSource = if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
-        onClick = {
-          if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
-        },
-      ) {
-        Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+      if (adaptiveInfo.isCompactHeight()) {
+        FloatingActionButton(
+          modifier =
+            Modifier.constrainAs(switchTokenButton) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+              }
+              .alpha(if (pagerState.currentPage == 0) .38f else 1f),
+          containerColor =
+            if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
+            else MaterialTheme.colorScheme.primaryContainer,
+          elevation =
+            if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            else FloatingActionButtonDefaults.elevation(),
+          interactionSource =
+            if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
+          onClick = {
+            if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
+          },
+        ) {
+          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+        }
+      } else {
+        MediumFloatingActionButton(
+          modifier =
+            Modifier.constrainAs(switchTokenButton) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+              }
+              .alpha(if (pagerState.currentPage == 0) .38f else 1f),
+          containerColor =
+            if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
+            else MaterialTheme.colorScheme.primaryContainer,
+          elevation =
+            if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            else FloatingActionButtonDefaults.elevation(),
+          interactionSource =
+            if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
+          onClick = {
+            if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
+          },
+        ) {
+          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+        }
       }
 
       if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
