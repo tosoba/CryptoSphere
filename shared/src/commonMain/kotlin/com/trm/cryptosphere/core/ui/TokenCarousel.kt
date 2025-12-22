@@ -68,6 +68,7 @@ fun TokenCarousel(
         MaterialTheme.colorScheme.surfaceContainer.run {
           if (token.id == highlightedTokenId) this else copy(alpha = alpha * .25f)
         },
+      enabled = token.id != highlightedTokenId,
       onClick = { onItemClick(token) },
     ) {
       Column(

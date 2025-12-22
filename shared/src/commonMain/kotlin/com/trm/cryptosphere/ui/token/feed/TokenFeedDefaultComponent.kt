@@ -38,6 +38,7 @@ class TokenFeedDefaultComponent(
     }
 
   override fun navigateToTokenFeed(tokenId: Int) {
+    if (viewState.mode.tokenId == tokenId) return
     viewState.historyId.value.valueOrNull?.let {
       navigateToTokenFeed(
         TokenFeedMode.HistoryContinuation(
