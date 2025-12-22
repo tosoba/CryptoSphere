@@ -24,9 +24,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -110,13 +110,11 @@ fun TokenFeedContent(
             IconButton(onClick = component.navigateBack) {
               Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
-
             FilledTonalIconButton(onClick = component.navigateHome) {
-              Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
+              Icon(imageVector = Icons.Filled.Home, contentDescription = null)
             }
-
-            IconButton({}, enabled = false) {
-              Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+            IconButton(onClick = {}, enabled = false) {
+              Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
             }
           }
         }
@@ -246,10 +244,10 @@ fun TokenFeedContent(
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
           }
           FilledTonalIconButton(onClick = component.navigateHome) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
+            Icon(imageVector = Icons.Filled.Home, contentDescription = null)
           }
           IconButton(onClick = {}, enabled = false) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
           }
         }
       }
