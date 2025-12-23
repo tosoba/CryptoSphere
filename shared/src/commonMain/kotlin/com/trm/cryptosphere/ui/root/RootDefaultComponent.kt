@@ -65,6 +65,7 @@ class RootDefaultComponent(
             mode = config.mode,
             tokenCarouselConfig = config.tokenCarouselConfig,
             navigateBack = ::onBackClicked,
+            navigateBackToIndex = ::onBackClicked,
             navigateHome = { onBackClicked(0) },
             navigateToTokenFeed = ::navigateToTokenFeed,
           )

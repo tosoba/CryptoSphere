@@ -41,7 +41,7 @@ class TokenFeedViewState(
                   historyRepository
                     .addItemToHistory(
                       historyId = mode.historyId,
-                      previousItemTokenId = mode.previousTokenId,
+                      previousItemTokenId = mode.previousTokenIds.last(),
                       newItemTokenId = mode.tokenId,
                     )
                     .run { mode.historyId }

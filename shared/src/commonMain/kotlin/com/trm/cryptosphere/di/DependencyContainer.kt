@@ -94,6 +94,7 @@ class DependencyContainer(
       mode,
       tokenCarouselConfig,
       navigateBack,
+      navigateBackToIndex,
       navigateHome,
       navigateToTokenFeed ->
       TokenFeedDefaultComponent(
@@ -101,6 +102,7 @@ class DependencyContainer(
         mode = mode,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateBack = navigateBack,
+        navigateBackToIndex = navigateBackToIndex,
         navigateHome = navigateHome,
         navigateToTokenFeed = navigateToTokenFeed,
         tokenRepository = tokenRepository.value,

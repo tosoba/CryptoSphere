@@ -11,7 +11,7 @@ sealed interface TokenFeedMode {
   @Serializable
   data class HistoryContinuation(
     val historyId: Long,
-    val previousTokenId: Int,
+    val previousTokenIds: List<Int>,
     override val tokenId: Int,
   ) : TokenFeedMode
 }

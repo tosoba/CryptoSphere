@@ -16,6 +16,7 @@ class TokenFeedDefaultComponent(
   private val mode: TokenFeedMode,
   override val tokenCarouselConfig: TokenCarouselConfig,
   override val navigateBack: () -> Unit,
+  override val navigateBackToIndex: (Int) -> Unit,
   override val navigateHome: () -> Unit,
   private val navigateToTokenFeed: (TokenFeedMode, TokenCarouselConfig) -> Unit,
   tokenRepository: TokenRepository,
@@ -38,12 +39,24 @@ class TokenFeedDefaultComponent(
     }
 
   override fun navigateToTokenFeed(tokenId: Int) {
-    if (viewState.mode.tokenId == tokenId) return
+    if (mode.tokenId == tokenId) return
+
     viewState.historyId.value.valueOrNull?.let {
       navigateToTokenFeed(
         TokenFeedMode.HistoryContinuation(
           historyId = it,
-          previousTokenId = mode.tokenId,
+          previousTokenIds =
+            buildList {
+              when (mode) {
+                is TokenFeedMode.HistoryFirst -> {
+                  add(mode.tokenId)
+                }
+                is TokenFeedMode.HistoryContinuation -> {
+                  addAll(mode.previousTokenIds)
+                  add(mode.tokenId)
+                }
+              }
+            },
           tokenId = tokenId,
         ),
         tokenCarouselConfig,
