@@ -135,12 +135,13 @@ fun TokenFeedContent(
           )
     ) {
       val (pager, tokenCarousel, switchTokenButton, floatingToolbar) = createRefs()
-      val historyIdState by component.viewState.historyId.collectAsStateWithLifecycle()
+
+      val historyState by component.viewState.historyState.collectAsStateWithLifecycle()
       val tokens = component.viewState.tokens.collectAsLazyPagingItems()
       val isLoading =
-        tokens.loadState.refresh is LoadState.Loading || historyIdState is LoadableState.Loading
-      val pagerState = rememberPagerState(pageCount = tokens::itemCount)
+        tokens.loadState.refresh is LoadState.Loading || historyState is LoadableState.Loading
 
+      val pagerState = rememberPagerState(pageCount = tokens::itemCount)
       fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
 
       Crossfade(
