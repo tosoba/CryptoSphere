@@ -91,7 +91,7 @@ class DependencyContainer(
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
     TokenFeedComponent.Factory {
       componentContext,
-      mode,
+      history,
       tokenCarouselConfig,
       navigateBack,
       navigateBackToIndex,
@@ -99,7 +99,7 @@ class DependencyContainer(
       navigateToTokenFeed ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        mode = mode,
+        history = history,
         tokenCarouselConfig = tokenCarouselConfig,
         navigateBack = navigateBack,
         navigateBackToIndex = navigateBackToIndex,

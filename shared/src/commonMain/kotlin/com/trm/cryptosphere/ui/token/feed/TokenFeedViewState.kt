@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class TokenFeedViewState(
-  val mode: TokenFeedMode,
+  val history: TokenFeedHistory,
   tokenRepository: TokenRepository,
   private val tokenHistoryRepository: TokenHistoryRepository,
   dispatchers: AppCoroutineDispatchers,
@@ -26,7 +26,7 @@ class TokenFeedViewState(
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
 
   val historyState: StateFlow<LoadableState<Unit>> =
-    loadableStateFlowOf { tokenHistoryRepository.addTokenToHistory(mode.tokenId) }
+    loadableStateFlowOf { tokenHistoryRepository.addTokenToHistory(history.tokenId) }
       .stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,
@@ -34,7 +34,7 @@ class TokenFeedViewState(
       )
 
   val tokens: Flow<PagingData<TokenItem>> =
-    tokenRepository.getTokensBySharedTags(mode.tokenId).cachedIn(scope)
+    tokenRepository.getTokensBySharedTags(history.tokenId).cachedIn(scope)
 
   override fun onDestroy() {
     scope.cancel()

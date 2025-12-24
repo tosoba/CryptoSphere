@@ -9,12 +9,12 @@ import com.trm.cryptosphere.domain.repository.TokenRepository
 
 class TokenFeedDefaultComponent(
   componentContext: ComponentContext,
-  private val mode: TokenFeedMode,
+  private val history: TokenFeedHistory,
   override val tokenCarouselConfig: TokenCarouselConfig,
   override val navigateBack: () -> Unit,
   override val navigateBackToIndex: (Int) -> Unit,
   override val navigateHome: () -> Unit,
-  private val navigateToTokenFeed: (TokenFeedMode, TokenCarouselConfig) -> Unit,
+  private val navigateToTokenFeed: (TokenFeedHistory, TokenCarouselConfig) -> Unit,
   tokenRepository: TokenRepository,
   private val tokenHistoryRepository: TokenHistoryRepository,
   dispatchers: AppCoroutineDispatchers,
@@ -22,7 +22,7 @@ class TokenFeedDefaultComponent(
   override val viewState: TokenFeedViewState =
     instanceKeeper.getOrCreate {
       TokenFeedViewState(
-        mode = mode,
+        history = history,
         tokenRepository = tokenRepository,
         tokenHistoryRepository = tokenHistoryRepository,
         dispatchers = dispatchers,
@@ -30,25 +30,11 @@ class TokenFeedDefaultComponent(
     }
 
   override fun navigateToTokenFeed(tokenId: Int) {
-    if (mode.tokenId == tokenId) return
+    if (history.tokenId == tokenId) return
 
     viewState.historyState.value.valueOrNull?.let {
       navigateToTokenFeed(
-        TokenFeedMode.HistoryContinuation(
-          previousTokenIds =
-            buildList {
-              when (mode) {
-                is TokenFeedMode.HistoryFirst -> {
-                  add(mode.tokenId)
-                }
-                is TokenFeedMode.HistoryContinuation -> {
-                  addAll(mode.previousTokenIds)
-                  add(mode.tokenId)
-                }
-              }
-            },
-          tokenId = tokenId,
-        ),
+        TokenFeedHistory(tokenId = tokenId, backTokenIds = history.backTokenIds + history.tokenId),
         tokenCarouselConfig,
       )
     }

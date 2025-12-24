@@ -15,12 +15,12 @@ interface TokenFeedComponent {
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      mode: TokenFeedMode,
+      history: TokenFeedHistory,
       tokenCarouselConfig: TokenCarouselConfig,
       navigateBack: () -> Unit,
       navigateBackToIndex: (Int) -> Unit,
       navigateHome: () -> Unit,
-      navigateToTokenFeed: (TokenFeedMode, TokenCarouselConfig) -> Unit,
+      navigateToTokenFeed: (TokenFeedHistory, TokenCarouselConfig) -> Unit,
     ): TokenFeedComponent
   }
 }

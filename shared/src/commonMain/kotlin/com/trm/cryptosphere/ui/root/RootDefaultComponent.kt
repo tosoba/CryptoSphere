@@ -13,7 +13,7 @@ import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
-import com.trm.cryptosphere.ui.token.feed.TokenFeedMode
+import com.trm.cryptosphere.ui.token.feed.TokenFeedHistory
 import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
@@ -50,10 +50,7 @@ class RootDefaultComponent(
           homeComponentFactory(
             componentContext = componentContext,
             onTokenCarouselItemClick = { tokenId, config ->
-              navigateToTokenFeed(
-                mode = TokenFeedMode.HistoryFirst(tokenId),
-                tokenCarouselConfig = config,
-              )
+              navigateToTokenFeed(history = TokenFeedHistory(tokenId), tokenCarouselConfig = config)
             },
           )
         )
@@ -62,7 +59,7 @@ class RootDefaultComponent(
         TokenFeed(
           tokenFeedComponentFactory(
             componentContext = componentContext,
-            mode = config.mode,
+            history = config.history,
             tokenCarouselConfig = config.tokenCarouselConfig,
             navigateBack = ::onBackClicked,
             navigateBackToIndex = ::onBackClicked,
@@ -73,8 +70,11 @@ class RootDefaultComponent(
       }
     }
 
-  private fun navigateToTokenFeed(mode: TokenFeedMode, tokenCarouselConfig: TokenCarouselConfig) {
-    navigation.pushToFront(ChildConfig.TokenFeed(mode, tokenCarouselConfig))
+  private fun navigateToTokenFeed(
+    history: TokenFeedHistory,
+    tokenCarouselConfig: TokenCarouselConfig,
+  ) {
+    navigation.pushToFront(ChildConfig.TokenFeed(history, tokenCarouselConfig))
   }
 
   @Serializable
@@ -82,7 +82,9 @@ class RootDefaultComponent(
     @Serializable data object Home : ChildConfig
 
     @Serializable
-    data class TokenFeed(val mode: TokenFeedMode, val tokenCarouselConfig: TokenCarouselConfig) :
-      ChildConfig
+    data class TokenFeed(
+      val history: TokenFeedHistory,
+      val tokenCarouselConfig: TokenCarouselConfig,
+    ) : ChildConfig
   }
 }

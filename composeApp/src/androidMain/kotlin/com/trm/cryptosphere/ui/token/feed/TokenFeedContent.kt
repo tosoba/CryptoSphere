@@ -191,7 +191,7 @@ fun TokenFeedContent(
 
       TokenCarousel(
         tokens = component.tokenCarouselConfig.items,
-        highlightedTokenId = component.viewState.mode.tokenId,
+        highlightedTokenId = component.viewState.history.tokenId,
         onItemClick = { item -> component.navigateToTokenFeed(item.id) },
         itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
         modifier =
