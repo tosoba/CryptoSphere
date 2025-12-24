@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -65,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atMost
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -296,73 +296,86 @@ private fun TokenFeedPagerItem(
   ConstraintLayout(modifier = modifier) {
     val windowAdaptiveInfo = currentWindowAdaptiveInfo()
     val isCompactHeight = windowAdaptiveInfo.isCompactHeight()
-    val (logoWithSymbol, tokenParametersColumn) = createRefs()
+    val (logo, symbol, tags, parameters) = createRefs()
+    val halfWidthGuideline = createGuidelineFromStart(0.5f)
 
-    Column(
+    AsyncImage(
       modifier =
-        Modifier.constrainAs(logoWithSymbol) {
-          top.linkTo(parent.top)
-          start.linkTo(parent.start)
-          if (!isCompactHeight) end.linkTo(parent.end)
-          if (isCompactHeight) bottom.linkTo(parent.bottom)
-        },
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      AsyncImage(
-        modifier = Modifier.weight(1f, fill = false).heightIn(max = 128.dp).aspectRatio(1f),
-        model = token.logoUrl,
-        contentDescription = null,
-        contentScale = ContentScale.Fit,
-      )
+        Modifier.constrainAs(logo) {
+            top.linkTo(parent.top)
+            start.linkTo(parent.start)
+            end.linkTo(if (isCompactHeight) halfWidthGuideline else parent.end)
 
-      Spacer(modifier = Modifier.height(8.dp))
-
-      Text(
-        text = token.symbol,
-        style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
-      )
-
-      if (token.tagNames.isNotEmpty()) {
-        Spacer(modifier = Modifier.height(8.dp))
-
-        val rowCount =
-          minOf(
-            when {
-              isCompactHeight -> 2
-              windowAdaptiveInfo.isExpandedHeight() -> 5
-              else -> 3
-            },
-            token.tagNames.size,
-          )
-        LazyHorizontalStaggeredGrid(
-          rows = StaggeredGridCells.Fixed(rowCount),
-          modifier =
-            Modifier.fillMaxWidth(if (isCompactHeight) .5f else 1f)
-              .height(32.dp * rowCount + 4.dp * (rowCount - 1)),
-          horizontalItemSpacing = 4.dp,
-          verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-          items(token.tagNames) { name ->
-            FilterChip(
-              onClick = {},
-              label = { Text(name) },
-              selected = name in mainTokenTagNames,
-              interactionSource = NoRippleInteractionSource(),
-            )
+            height = Dimension.fillToConstraints.atMost(128.dp)
           }
+          .aspectRatio(1f),
+      model = token.logoUrl,
+      contentDescription = null,
+      contentScale = ContentScale.Fit,
+    )
+
+    Text(
+      text = token.symbol,
+      style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
+      modifier =
+        Modifier.constrainAs(symbol) {
+          top.linkTo(logo.bottom, margin = 8.dp)
+          start.linkTo(parent.start)
+          end.linkTo(if (isCompactHeight) halfWidthGuideline else parent.end)
+        },
+    )
+
+    if (token.tagNames.isNotEmpty()) {
+      val rowCount =
+        minOf(
+          when {
+            isCompactHeight -> 2
+            windowAdaptiveInfo.isExpandedHeight() -> 5
+            else -> 3
+          },
+          token.tagNames.size,
+        )
+      LazyHorizontalStaggeredGrid(
+        rows = StaggeredGridCells.Fixed(rowCount),
+        modifier =
+          Modifier.constrainAs(tags) {
+              top.linkTo(symbol.bottom, margin = 8.dp)
+              start.linkTo(parent.start)
+              end.linkTo(if (isCompactHeight) halfWidthGuideline else parent.end)
+              if (isCompactHeight) bottom.linkTo(parent.bottom)
+
+              width = Dimension.fillToConstraints
+              height = Dimension.preferredWrapContent
+            }
+            .height(32.dp * rowCount + 4.dp * (rowCount - 1)),
+        horizontalItemSpacing = 4.dp,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+      ) {
+        items(token.tagNames) { name ->
+          FilterChip(
+            onClick = {},
+            label = { Text(name) },
+            selected = name in mainTokenTagNames,
+            interactionSource = NoRippleInteractionSource(),
+          )
         }
       }
     }
 
     BoxWithConstraints(
       modifier =
-        Modifier.constrainAs(tokenParametersColumn) {
+        Modifier.constrainAs(parameters) {
           top.linkTo(
-            anchor = if (isCompactHeight) parent.top else logoWithSymbol.bottom,
+            anchor =
+              when {
+                isCompactHeight -> parent.top
+                token.tagNames.isNotEmpty() -> tags.bottom
+                else -> symbol.bottom
+              },
             margin = if (isCompactHeight) 0.dp else 16.dp,
           )
           start.linkTo(
-            anchor = if (isCompactHeight) logoWithSymbol.end else parent.start,
+            anchor = if (isCompactHeight) halfWidthGuideline else parent.start,
             margin = if (isCompactHeight) 32.dp else 0.dp,
           )
           end.linkTo(parent.end)
@@ -370,8 +383,10 @@ private fun TokenFeedPagerItem(
 
           width = Dimension.fillToConstraints
           height = Dimension.fillToConstraints
-        }
+        },
+      contentAlignment = Alignment.Center,
     ) {
+      val seeMoreButtonHeight = 40.dp
       val parameters = remember {
         buildList {
           add(
@@ -412,7 +427,6 @@ private fun TokenFeedPagerItem(
           )
         }
       }
-      val seeMoreButtonHeight = 40.dp
       TokenParameterCardsColumn(
         parameters =
           parameters.take(
@@ -421,9 +435,7 @@ private fun TokenFeedPagerItem(
               .toInt()
           ),
         onSeeMoreClick = onSeeMoreClick,
-        modifier =
-          if (isCompactHeight) Modifier.fillMaxWidth().align(Alignment.Center)
-          else Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
       )
     }
   }
