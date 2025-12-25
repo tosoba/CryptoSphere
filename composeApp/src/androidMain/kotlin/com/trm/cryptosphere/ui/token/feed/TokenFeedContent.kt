@@ -55,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -68,7 +69,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.atMost
@@ -304,7 +304,7 @@ private fun TokenFeedPagerItem(
     val windowAdaptiveInfo = currentWindowAdaptiveInfo()
     val isCompactHeight = windowAdaptiveInfo.isCompactHeight()
     val (logo, symbol, tags, parameters) = createRefs()
-    val halfWidthGuideline = createGuidelineFromStart(0.5f)
+    val halfWidthGuideline = createGuidelineFromStart(.5f)
 
     AsyncImage(
       modifier =
@@ -315,7 +315,8 @@ private fun TokenFeedPagerItem(
 
             height = Dimension.fillToConstraints.atMost(128.dp)
           }
-          .aspectRatio(1f),
+          .aspectRatio(1f)
+          .clip(RoundedCornerShape(16.dp)),
       model = token.logoUrl,
       contentDescription = null,
       contentScale = ContentScale.Fit,
@@ -420,7 +421,7 @@ private fun TokenFeedPagerItem(
                 token.tagNames.isNotEmpty() -> tags.bottom
                 else -> symbol.bottom
               },
-            margin = if (isCompactHeight) 0.dp else 16.dp,
+            margin = if (isCompactHeight) 0.dp else 8.dp,
           )
           start.linkTo(
             anchor = if (isCompactHeight) halfWidthGuideline else parent.start,
@@ -430,7 +431,8 @@ private fun TokenFeedPagerItem(
           bottom.linkTo(parent.bottom)
 
           width = Dimension.fillToConstraints
-          height = Dimension.fillToConstraints
+          height =
+            if (isCompactHeight) Dimension.fillToConstraints else Dimension.preferredWrapContent
         },
       contentAlignment = Alignment.Center,
     ) {
@@ -475,11 +477,11 @@ private fun TokenFeedPagerItem(
           )
         }
       }
+
       TokenParameterCardsColumn(
         parameters =
           parameters.take(
-            ((maxHeight - seeMoreButtonHeight).value /
-                calculateTokenParametersCardColumnHeight(parameters.size).value)
+            ((maxHeight - seeMoreButtonHeight).value / calculateTokenParametersCardHeight().value)
               .toInt()
           ),
         onSeeMoreClick = onSeeMoreClick,
@@ -517,9 +519,7 @@ private fun TokenParameterCardsColumn(
         modifier = Modifier.fillMaxWidth(),
       )
 
-      if (index != parameters.lastIndex) {
-        Spacer(modifier = Modifier.height(2.dp))
-      }
+      Spacer(modifier = Modifier.height(2.dp))
     }
 
     TextButton(onClick = onSeeMoreClick, modifier = Modifier.fillMaxWidth()) {
@@ -529,17 +529,14 @@ private fun TokenParameterCardsColumn(
 }
 
 @Composable
-private fun calculateTokenParametersCardColumnHeight(parametersCount: Int): Dp {
-  val parameterLabelTextHeight =
-    with(LocalDensity.current) { MaterialTheme.typography.labelSmall.fontSize.value.sp.toDp() }
-  val parameterValueTextHeight =
-    with(LocalDensity.current) { MaterialTheme.typography.headlineSmall.fontSize.value.sp.toDp() }
-  val totalVerticalPadding = 16.dp
-  val totalSpacersHeight = (parametersCount - 1) * 2.dp
-  return parameterLabelTextHeight +
-    parameterValueTextHeight +
-    totalVerticalPadding +
-    totalSpacersHeight
+private fun calculateTokenParametersCardHeight(): Dp {
+  val labelTextHeight =
+    with(LocalDensity.current) { MaterialTheme.typography.labelSmall.lineHeight.toDp() }
+  val valueTextHeight =
+    with(LocalDensity.current) { MaterialTheme.typography.titleLarge.lineHeight.toDp() }
+  val verticalPadding = 16.dp
+  val spacerHeight = 2.dp
+  return labelTextHeight + valueTextHeight + verticalPadding + spacerHeight
 }
 
 private data class TokenParameter(val label: String, val value: String)
@@ -561,7 +558,7 @@ private fun TokenParameterCard(
 
       Text(
         text = parameter.value,
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
