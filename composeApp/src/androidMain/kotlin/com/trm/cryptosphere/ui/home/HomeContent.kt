@@ -7,12 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.shared.MR
@@ -57,10 +58,17 @@ fun HomeContent(
         modifier = Modifier.fillMaxSize(),
         scrollAnimation = PagesScrollAnimation.Default,
       ) { _, page ->
-        LaunchedEffect(Unit) {
-          if (page !is HomeComponent.Page.NewsFeed) {
-            onImageUrlChange(null)
-          }
+        DisposableEffect(Unit) {
+          val callbacks =
+            object : Lifecycle.Callbacks {
+              override fun onResume() {
+                if (page !is HomeComponent.Page.NewsFeed) {
+                  onImageUrlChange(null)
+                }
+              }
+            }
+          component.lifecycle.subscribe(callbacks)
+          onDispose { component.lifecycle.unsubscribe(callbacks) }
         }
 
         when (page) {

@@ -8,7 +8,7 @@ import com.trm.cryptosphere.ui.home.page.history.HistoryComponent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedComponent
 import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 
-interface HomeComponent {
+interface HomeComponent : ComponentContext {
   val pages: Value<ChildPages<*, Page>>
 
   fun selectPage(index: Int)

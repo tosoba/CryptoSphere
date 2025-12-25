@@ -3,7 +3,7 @@ package com.trm.cryptosphere.ui.token.feed
 import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 
-interface TokenFeedComponent {
+interface TokenFeedComponent : ComponentContext {
   val viewState: TokenFeedViewState
   val tokenCarouselConfig: TokenCarouselConfig
   val navigateBack: () -> Unit

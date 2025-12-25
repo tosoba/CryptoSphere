@@ -49,7 +49,7 @@ import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -77,6 +77,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.base.LoadableState
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.openUrl
@@ -188,10 +189,17 @@ fun TokenFeedContent(
             }
           }
 
-          LaunchedEffect(pagerState.currentPage, tokens) {
-            if (pagerState.currentPage < tokens.itemCount) {
-              onImageUrlChange(currentToken()?.logoUrl)
-            }
+          DisposableEffect(pagerState.currentPage, tokens) {
+            val callbacks =
+              object : Lifecycle.Callbacks {
+                override fun onResume() {
+                  if (pagerState.currentPage < tokens.itemCount) {
+                    onImageUrlChange(currentToken()?.logoUrl)
+                  }
+                }
+              }
+            component.lifecycle.subscribe(callbacks)
+            onDispose { component.lifecycle.unsubscribe(callbacks) }
           }
         }
       }

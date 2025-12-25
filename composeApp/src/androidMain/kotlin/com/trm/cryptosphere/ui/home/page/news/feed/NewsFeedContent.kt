@@ -14,7 +14,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
@@ -46,8 +47,15 @@ fun NewsFeedContent(
         }
       }
       is LoadState.NotLoading -> {
-        LaunchedEffect(pagerState.currentPage, newsItems) {
-          onImageUrlChange(newsItems[pagerState.currentPage]?.news?.imgUrl)
+        DisposableEffect(pagerState.currentPage, newsItems) {
+          val callbacks =
+            object : Lifecycle.Callbacks {
+              override fun onResume() {
+                onImageUrlChange(newsItems[pagerState.currentPage]?.news?.imgUrl)
+              }
+            }
+          component.lifecycle.subscribe(callbacks)
+          onDispose { component.lifecycle.unsubscribe(callbacks) }
         }
 
         PullToRefreshBox(
