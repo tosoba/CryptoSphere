@@ -46,7 +46,6 @@ class GetNewsFeedUseCase(
                 NewsFeedItem(
                   news = news,
                   relatedTokens =
-                    // TODO: this can be done in one query
                     tokenRepository.getTokensMatchingSearchTerms(
                       buildList {
                         news.searchKeyWords?.let(::addAll)

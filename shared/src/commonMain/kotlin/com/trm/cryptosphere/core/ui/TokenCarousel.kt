@@ -47,8 +47,6 @@ fun TokenCarousel(
     itemSpacing = 8.dp,
     contentPadding = contentPadding,
   ) { index ->
-    // TODO: if there is a need to put any border/shadow/glow effect on the card just put it
-    // behind the card with the same maskClip and make the card itself smaller
     val token = tokens[index]
 
     Surface(
