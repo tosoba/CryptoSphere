@@ -23,7 +23,7 @@ class RootDefaultComponent(
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
-  override val stack: Value<ChildStack<*, RootComponent.Child>> =
+  override val stack: Value<ChildStack<ChildConfig, RootComponent.Child>> =
     childStack(
       source = navigation,
       serializer = ChildConfig.serializer(),
@@ -78,7 +78,7 @@ class RootDefaultComponent(
   }
 
   @Serializable
-  private sealed interface ChildConfig {
+  sealed interface ChildConfig {
     @Serializable data object Home : ChildConfig
 
     @Serializable

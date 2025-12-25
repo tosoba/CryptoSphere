@@ -22,7 +22,7 @@ class HomeDefaultComponent(
 ) : HomeComponent, ComponentContext by componentContext {
   private val navigation = PagesNavigation<HomePageConfig>()
 
-  override val pages: Value<ChildPages<*, HomeComponent.Page>> =
+  override val pages: Value<ChildPages<HomePageConfig, HomeComponent.Page>> =
     childPages(
       source = navigation,
       serializer = HomePageConfig.serializer(),
