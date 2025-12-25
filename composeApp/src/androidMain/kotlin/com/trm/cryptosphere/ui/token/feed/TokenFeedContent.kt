@@ -1,6 +1,7 @@
 package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
@@ -57,7 +60,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -314,9 +321,50 @@ private fun TokenFeedPagerItem(
       contentScale = ContentScale.Fit,
     )
 
+    val rankId = "rank"
+    val rankStyle = MaterialTheme.typography.titleMedium
     Text(
-      text = token.symbol,
-      style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.SemiBold),
+      text =
+        buildAnnotatedString {
+          appendInlineContent(rankId)
+          withStyle(
+            MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Medium).toSpanStyle()
+          ) {
+            append(' ')
+            append(token.symbol)
+          }
+        },
+      inlineContent =
+        mapOf(
+          rankId to
+            InlineTextContent(
+              Placeholder(
+                width =
+                  (rankStyle.fontSize.value * (token.cmcRank.toString().length + 1) +
+                      with(LocalDensity.current) { 8.dp.toSp() }.value)
+                    .sp,
+                height =
+                  (rankStyle.fontSize.value + with(LocalDensity.current) { 8.dp.toSp() }.value).sp,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline,
+              )
+            ) {
+              Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                  Modifier.fillMaxSize()
+                    .background(
+                      color = MaterialTheme.colorScheme.surfaceVariant,
+                      shape = RoundedCornerShape(4.dp),
+                    ),
+              ) {
+                Text(
+                  text = "#${token.cmcRank}",
+                  style = rankStyle.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                  modifier = Modifier.padding(horizontal = 4.dp),
+                )
+              }
+            }
+        ),
       modifier =
         Modifier.constrainAs(symbol) {
           top.linkTo(logo.bottom, margin = 8.dp)
