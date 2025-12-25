@@ -79,7 +79,6 @@ fun TokenCarousel(
       ) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // TODO: use dominant color of image as card background
         AsyncImage(
           modifier = Modifier.weight(1f).aspectRatio(1f).clip(RoundedCornerShape(4.dp)),
           model = token.logoUrl,
@@ -90,7 +89,7 @@ fun TokenCarousel(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-          text = token.symbol,
+          text = "#${token.cmcRank} ${token.symbol}",
           maxLines = 1,
           textAlign = TextAlign.Center,
           style = labelStyle,
