@@ -12,4 +12,6 @@ interface TokenRepository {
   suspend fun getTokensMatchingSearchTerms(searchTerms: List<String>): List<TokenItem>
 
   fun getTokensBySharedTags(id: Int): Flow<PagingData<TokenItem>>
+
+  suspend fun getTokensByIds(ids: List<Int>): List<TokenItem>
 }

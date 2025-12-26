@@ -7,12 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,43 +20,25 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FlexibleBottomAppBar
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -72,25 +50,19 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.atMost
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.trm.cryptosphere.core.base.LoadableState
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
-import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
-import com.trm.cryptosphere.core.ui.localSharedElement
-import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.core.util.isExpandedHeight
 import com.trm.cryptosphere.core.util.resolve
-import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
@@ -104,196 +76,47 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val context = LocalContext.current
-  val adaptiveInfo = currentWindowAdaptiveInfo()
-  val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
+  val tokens = component.viewModel.tokens.collectAsLazyPagingItems()
 
-  Scaffold(
-    modifier = modifier,
-    bottomBar = {
-      if (navigationSuiteType == NavigationSuiteType.NavigationBar) {
-        FlexibleBottomAppBar(modifier = Modifier.fillMaxWidth()) {
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-          ) {
-            IconButton(onClick = component.navigateBack) {
-              Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-            }
-            FilledTonalIconButton(onClick = component.navigateHome) {
-              Icon(imageVector = Icons.Filled.Home, contentDescription = null)
-            }
-            IconButton(onClick = {}, enabled = false) {
-              Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-            }
-          }
-        }
+  val pagerState = rememberPagerState(pageCount = tokens::itemCount)
+  fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
+
+  Crossfade(targetState = tokens.loadState.refresh is LoadState.Loading, modifier = modifier) {
+    isLoading ->
+    if (isLoading) {
+      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
       }
-    },
-  ) { paddingValues ->
-    ConstraintLayout(
-      modifier =
-        Modifier.fillMaxSize()
-          .padding(
-            PaddingValues(
-              start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
-              end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
-              bottom = paddingValues.calculateBottomPadding(),
-            )
-          )
-    ) {
-      val (pager, tokenCarousel, switchTokenButton, floatingToolbar) = createRefs()
-
-      val historyState by component.viewState.historyState.collectAsStateWithLifecycle()
-      val tokens = component.viewState.tokens.collectAsLazyPagingItems()
-      val isLoading =
-        tokens.loadState.refresh is LoadState.Loading || historyState is LoadableState.Loading
-
-      val pagerState = rememberPagerState(pageCount = tokens::itemCount)
-      fun currentToken(): TokenItem? = tokens[pagerState.currentPage]
-
-      Crossfade(
-        targetState = isLoading,
-        modifier =
-          Modifier.constrainAs(pager) {
-            top.linkTo(parent.top, margin = 16.dp)
-            bottom.linkTo(tokenCarousel.top, margin = 16.dp)
-            start.linkTo(parent.start, margin = 32.dp)
-            end.linkTo(
-              if (navigationSuiteType == NavigationSuiteType.NavigationBar) parent.end
-              else floatingToolbar.start,
-              margin = 32.dp,
-            )
-
-            width = Dimension.fillToConstraints
-            height = Dimension.fillToConstraints
-          },
-      ) { isLoading ->
-        if (isLoading) {
-          Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-          }
-        } else {
-          VerticalFeedPager(
-            pagerState = pagerState,
-            key = tokens.itemKey(TokenItem::id),
+    } else {
+      VerticalFeedPager(
+        pagerState = pagerState,
+        key = tokens.itemKey(TokenItem::id),
+        modifier = Modifier.fillMaxSize(),
+      ) { page ->
+        tokens[page]?.let { token ->
+          val context = LocalContext.current
+          TokenFeedPagerItem(
+            token = token,
+            mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty().toSet(),
+            onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
             modifier = Modifier.fillMaxSize(),
-          ) { page ->
-            tokens[page]?.let { token ->
-              TokenFeedPagerItem(
-                token = token,
-                mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty().toSet(),
-                onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
-                modifier = Modifier.fillMaxSize(),
-              )
-            }
-          }
-
-          DisposableEffect(pagerState.currentPage, tokens) {
-            val callbacks =
-              object : Lifecycle.Callbacks {
-                override fun onResume() {
-                  if (pagerState.currentPage < tokens.itemCount) {
-                    onImageUrlChange(currentToken()?.logoUrl)
-                  }
-                }
-              }
-            component.lifecycle.subscribe(callbacks)
-            onDispose { component.lifecycle.unsubscribe(callbacks) }
-          }
+          )
         }
       }
 
-      TokenCarousel(
-        tokens = component.tokenCarouselConfig.items,
-        highlightedTokenId = component.viewState.history.tokenId,
-        onItemClick = { item -> component.navigateToTokenFeed(item.id) },
-        itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
-        modifier =
-          Modifier.constrainAs(tokenCarousel) {
-              start.linkTo(parent.start)
-              end.linkTo(switchTokenButton.start, margin = 16.dp)
-              top.linkTo(switchTokenButton.top)
-              bottom.linkTo(switchTokenButton.bottom)
-
-              width = Dimension.fillToConstraints
-              height = Dimension.fillToConstraints
+      DisposableEffect(pagerState.currentPage, tokens) {
+        val callbacks =
+          object : Lifecycle.Callbacks {
+            override fun onResume() {
+              if (pagerState.currentPage < tokens.itemCount) {
+                val currentToken = currentToken()
+                component.onCurrentTokenChange(currentToken)
+                onImageUrlChange(currentToken?.logoUrl)
+              }
             }
-            .localSharedElement(
-              key =
-                tokenCarouselSharedTransitionKey(
-                  requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
-                )
-            ),
-        contentPadding = PaddingValues(start = 16.dp),
-      )
-
-      if (adaptiveInfo.isCompactHeight()) {
-        FloatingActionButton(
-          modifier =
-            Modifier.constrainAs(switchTokenButton) {
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-                end.linkTo(parent.end, margin = 16.dp)
-              }
-              .alpha(if (pagerState.currentPage == 0) .38f else 1f),
-          containerColor =
-            if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
-            else MaterialTheme.colorScheme.primaryContainer,
-          elevation =
-            if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            else FloatingActionButtonDefaults.elevation(),
-          interactionSource =
-            if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
-          onClick = {
-            if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
-          },
-        ) {
-          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
-        }
-      } else {
-        MediumFloatingActionButton(
-          modifier =
-            Modifier.constrainAs(switchTokenButton) {
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-                end.linkTo(parent.end, margin = 16.dp)
-              }
-              .alpha(if (pagerState.currentPage == 0) .38f else 1f),
-          containerColor =
-            if (pagerState.currentPage == 0) MaterialTheme.colorScheme.surfaceVariant
-            else MaterialTheme.colorScheme.primaryContainer,
-          elevation =
-            if (pagerState.currentPage == 0) FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            else FloatingActionButtonDefaults.elevation(),
-          interactionSource =
-            if (pagerState.currentPage == 0) NoRippleInteractionSource() else null,
-          onClick = {
-            if (pagerState.currentPage != 0) currentToken()?.id?.let(component::navigateToTokenFeed)
-          },
-        ) {
-          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
-        }
-      }
-
-      if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
-        VerticalFloatingToolbar(
-          expanded = true,
-          modifier =
-            Modifier.constrainAs(floatingToolbar) {
-              top.linkTo(parent.top, margin = 16.dp)
-              bottom.linkTo(switchTokenButton.top, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
-            },
-        ) {
-          IconButton(onClick = component.navigateBack) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
           }
-          FilledTonalIconButton(onClick = component.navigateHome) {
-            Icon(imageVector = Icons.Filled.Home, contentDescription = null)
-          }
-          IconButton(onClick = {}, enabled = false) {
-            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-          }
-        }
+        component.lifecycle.subscribe(callbacks)
+        onDispose { component.lifecycle.unsubscribe(callbacks) }
       }
     }
   }

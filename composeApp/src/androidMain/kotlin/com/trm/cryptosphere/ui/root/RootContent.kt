@@ -32,7 +32,7 @@ import com.trm.cryptosphere.core.ui.DynamicTheme
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.ui.home.HomeContent
-import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
+import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable
@@ -83,8 +83,8 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
                   onImageUrlChange = { themeImageUrl = it },
                 )
               }
-              is RootComponent.Child.TokenFeed -> {
-                TokenFeedContent(
+              is RootComponent.Child.TokenNavigation -> {
+                TokenNavigationContent(
                   component = instance.component,
                   modifier = Modifier.fillMaxSize(),
                   onImageUrlChange = { themeImageUrl = it },

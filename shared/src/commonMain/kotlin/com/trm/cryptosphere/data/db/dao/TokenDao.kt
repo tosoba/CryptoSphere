@@ -12,6 +12,7 @@ import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.entity.TokenTagEntity
 import com.trm.cryptosphere.data.db.entity.junction.TokenWithTagNamesJunction
 import com.trm.cryptosphere.data.db.mapper.toEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TokenDao {
@@ -41,6 +42,9 @@ interface TokenDao {
     """
   )
   suspend fun selectTokensByNameOrSymbol(searchTerms: List<String>): List<TokenEntity>
+
+  @Query("SELECT * FROM token WHERE id IN (:ids)")
+  suspend fun selectByIdsIn(ids: List<Int>): List<TokenEntity>
 
   @Query("DELETE FROM token") suspend fun deleteAllTokens()
 

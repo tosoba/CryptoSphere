@@ -11,15 +11,14 @@ import com.arkivanov.decompose.value.Value
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
-import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
-import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
-import com.trm.cryptosphere.ui.token.feed.TokenFeedHistory
+import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenNavigation
+import com.trm.cryptosphere.ui.token.navigation.TokenNavigationComponent
 import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
   private val homeComponentFactory: HomeComponent.Factory,
-  private val tokenFeedComponentFactory: TokenFeedComponent.Factory,
+  private val tokenNavigationComponentFactory: TokenNavigationComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -49,32 +48,24 @@ class RootDefaultComponent(
         Home(
           homeComponentFactory(
             componentContext = componentContext,
-            onTokenCarouselItemClick = { tokenId, config ->
-              navigateToTokenFeed(history = TokenFeedHistory(tokenId), tokenCarouselConfig = config)
-            },
+            onTokenCarouselItemClick = ::navigateToTokenFeed,
           )
         )
       }
-      is ChildConfig.TokenFeed -> {
-        TokenFeed(
-          tokenFeedComponentFactory(
+      is ChildConfig.TokenNavigation -> {
+        TokenNavigation(
+          tokenNavigationComponentFactory(
             componentContext = componentContext,
-            history = config.history,
+            tokenId = config.tokenId,
             tokenCarouselConfig = config.tokenCarouselConfig,
-            navigateBack = ::onBackClicked,
-            navigateBackToIndex = ::onBackClicked,
             navigateHome = { onBackClicked(0) },
-            navigateToTokenFeed = ::navigateToTokenFeed,
           )
         )
       }
     }
 
-  private fun navigateToTokenFeed(
-    history: TokenFeedHistory,
-    tokenCarouselConfig: TokenCarouselConfig,
-  ) {
-    navigation.pushToFront(ChildConfig.TokenFeed(history, tokenCarouselConfig))
+  private fun navigateToTokenFeed(tokenId: Int, tokenCarouselConfig: TokenCarouselConfig) {
+    navigation.pushToFront(ChildConfig.TokenNavigation(tokenId, tokenCarouselConfig))
   }
 
   @Serializable
@@ -82,9 +73,7 @@ class RootDefaultComponent(
     @Serializable data object Home : ChildConfig
 
     @Serializable
-    data class TokenFeed(
-      val history: TokenFeedHistory,
-      val tokenCarouselConfig: TokenCarouselConfig,
-    ) : ChildConfig
+    data class TokenNavigation(val tokenId: Int, val tokenCarouselConfig: TokenCarouselConfig) :
+      ChildConfig
   }
 }

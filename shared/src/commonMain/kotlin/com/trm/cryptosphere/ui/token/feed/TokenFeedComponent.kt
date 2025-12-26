@@ -1,26 +1,17 @@
 package com.trm.cryptosphere.ui.token.feed
 
 import com.arkivanov.decompose.ComponentContext
-import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.domain.model.TokenItem
 
 interface TokenFeedComponent : ComponentContext {
-  val viewState: TokenFeedViewState
-  val tokenCarouselConfig: TokenCarouselConfig
-  val navigateBack: () -> Unit
-  val navigateBackToIndex: (Int) -> Unit
-  val navigateHome: () -> Unit
-
-  fun navigateToTokenFeed(tokenId: Int)
+  val viewModel: TokenFeedViewModel
+  val onCurrentTokenChange: (TokenItem?) -> Unit
 
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
-      history: TokenFeedHistory,
-      tokenCarouselConfig: TokenCarouselConfig,
-      navigateBack: () -> Unit,
-      navigateBackToIndex: (Int) -> Unit,
-      navigateHome: () -> Unit,
-      navigateToTokenFeed: (TokenFeedHistory, TokenCarouselConfig) -> Unit,
+      tokenId: Int,
+      onCurrentTokenChange: (TokenItem?) -> Unit,
     ): TokenFeedComponent
   }
 }

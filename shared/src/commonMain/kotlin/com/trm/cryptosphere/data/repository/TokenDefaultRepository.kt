@@ -49,6 +49,9 @@ class TokenDefaultRepository(
       .flow
       .map { it.map(TokenWithTagNamesJunction::toTokenItem) }
 
+  override suspend fun getTokensByIds(ids: List<Int>): List<TokenItem> =
+    dao.selectByIdsIn(ids).map(TokenEntity::toTokenItem)
+
   companion object {
     private const val TOKEN_DB_PAGE_SIZE = 100
     private const val TOKEN_DB_PREFETCH_DISTANCE = 5

@@ -30,6 +30,8 @@ import com.trm.cryptosphere.ui.root.RootComponent
 import com.trm.cryptosphere.ui.root.RootDefaultComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.feed.TokenFeedDefaultComponent
+import com.trm.cryptosphere.ui.token.navigation.TokenNavigationComponent
+import com.trm.cryptosphere.ui.token.navigation.TokenNavigationDefaultComponent
 import io.ktor.client.plugins.cache.storage.CacheStorage
 
 class DependencyContainer(
@@ -89,32 +91,34 @@ class DependencyContainer(
       )
     },
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
-    TokenFeedComponent.Factory {
-      componentContext,
-      history,
-      tokenCarouselConfig,
-      navigateBack,
-      navigateBackToIndex,
-      navigateHome,
-      navigateToTokenFeed ->
+    TokenFeedComponent.Factory { componentContext, tokenId, onCurrentTokenChange ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
-        history = history,
+        tokenId = tokenId,
+        tokenRepository = tokenRepository.value,
+        dispatchers = appCoroutineDispatchers,
+        onCurrentTokenChange = onCurrentTokenChange,
+      )
+    },
+  val tokenNavigationComponentFactory: TokenNavigationComponent.Factory =
+    TokenNavigationComponent.Factory { componentContext, tokenId, tokenCarouselConfig, navigateHome
+      ->
+      TokenNavigationDefaultComponent(
+        componentContext = componentContext,
+        tokenId = tokenId,
         tokenCarouselConfig = tokenCarouselConfig,
-        navigateBack = navigateBack,
-        navigateBackToIndex = navigateBackToIndex,
-        navigateHome = navigateHome,
-        navigateToTokenFeed = navigateToTokenFeed,
+        tokenFeedComponentFactory = tokenFeedComponentFactory,
         tokenRepository = tokenRepository.value,
         tokenHistoryRepository = tokenHistoryRepository.value,
         dispatchers = appCoroutineDispatchers,
+        navigateHome = navigateHome,
       )
     },
   val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
     RootDefaultComponent(
       componentContext = componentContext,
       homeComponentFactory = homeComponentFactory,
-      tokenFeedComponentFactory = tokenFeedComponentFactory,
+      tokenNavigationComponentFactory = tokenNavigationComponentFactory,
     )
   },
 )
