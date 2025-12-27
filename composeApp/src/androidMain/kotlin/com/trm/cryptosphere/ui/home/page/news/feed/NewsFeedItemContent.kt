@@ -191,7 +191,7 @@ fun NewsFeedItemContent(
         TokenCarousel(
           tokens = relatedTokens,
           onItemClick = { token ->
-            onRelatedTokenItemClick(token.id, TokenCarouselConfig(news.id, relatedTokens))
+            onRelatedTokenItemClick(token.id, TokenCarouselConfig(news.id))
           },
           itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
           modifier =
