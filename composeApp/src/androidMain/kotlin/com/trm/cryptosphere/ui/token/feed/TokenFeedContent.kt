@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -155,6 +157,12 @@ private fun TokenFeedPagerItem(
 
     val rankId = "rank"
     val rankStyle = MaterialTheme.typography.titleMedium
+    val textMeasurer = rememberTextMeasurer()
+    val textSize =
+      remember(token.cmcRank, rankStyle) {
+        textMeasurer.measure("#${token.cmcRank}", rankStyle).size
+      }
+
     Text(
       text =
         buildAnnotatedString {
@@ -171,10 +179,7 @@ private fun TokenFeedPagerItem(
           rankId to
             InlineTextContent(
               Placeholder(
-                width =
-                  (rankStyle.fontSize.value * (token.cmcRank.toString().length + 1) +
-                      with(LocalDensity.current) { 8.dp.toSp() }.value)
-                    .sp,
+                width = with(LocalDensity.current) { (textSize.width.toDp() + 8.dp).toSp() },
                 height =
                   (rankStyle.fontSize.value + with(LocalDensity.current) { 8.dp.toSp() }.value).sp,
                 placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline,
@@ -252,7 +257,7 @@ private fun TokenFeedPagerItem(
                 token.tagNames.isNotEmpty() -> tags.bottom
                 else -> symbol.bottom
               },
-            margin = if (isCompactHeight) 0.dp else 8.dp,
+            margin = if (isCompactHeight) 0.dp else 16.dp,
           )
           start.linkTo(
             anchor = if (isCompactHeight) halfWidthGuideline else parent.start,
@@ -264,49 +269,45 @@ private fun TokenFeedPagerItem(
           width = Dimension.fillToConstraints
           height =
             if (isCompactHeight) Dimension.fillToConstraints else Dimension.preferredWrapContent
+          verticalBias = if (isCompactHeight) 0.5f else 0f
         },
-      contentAlignment = Alignment.Center,
+      contentAlignment = if (isCompactHeight) Alignment.Center else Alignment.TopCenter,
     ) {
       val seeMoreButtonHeight = 40.dp
       val parameters = remember {
-        buildList {
-          add(
-            TokenParameter(
-              label = MR.strings.price.resolve(context),
-              value = token.quote.price.fullDecimalFormat(),
-            )
-          )
-          add(
-            TokenParameter(
-              label = MR.strings.market_cap.resolve(context),
-              value = token.quote.marketCap.shortDecimalFormat(),
-            )
-          )
-          add(
-            TokenParameter(
-              label = MR.strings.volume_24h.resolve(context),
-              value = token.quote.volume24h.shortDecimalFormat(),
-            )
-          )
-          add(
-            TokenParameter(
-              label = MR.strings.circulating_supply.resolve(context),
-              value = token.circulatingSupply.shortDecimalFormat(),
-            )
-          )
-          add(
-            TokenParameter(
-              label = MR.strings.total_supply.resolve(context),
-              value = token.totalSupply.shortDecimalFormat(),
-            )
-          )
-          add(
-            TokenParameter(
-              label = MR.strings.max_supply.resolve(context),
-              value = token.maxSupply?.shortDecimalFormat() ?: "--",
-            )
-          )
+        val valueChangeFormat: (Number?) -> String = {
+          it?.toDouble()?.fullDecimalFormat()?.let { formatted -> "$formatted%" }.orEmpty()
         }
+        listOfNotNull(
+          TokenParameter(
+            label = MR.strings.price.resolve(context),
+            value = token.quote.price,
+            valueFormat = { it.toDouble().fullDecimalFormat() },
+            valueChange = token.quote.percentChange24h,
+            valueChangeFormat = valueChangeFormat,
+          ),
+          TokenParameter(
+            label = MR.strings.volume_24h.resolve(context),
+            value = token.quote.volume24h,
+            valueChange = token.quote.volumeChange24h,
+            valueChangeFormat = valueChangeFormat,
+          ),
+          TokenParameter(
+            label = MR.strings.market_cap.resolve(context),
+            value = token.quote.marketCap,
+          ),
+          TokenParameter(
+            label = MR.strings.circulating_supply.resolve(context),
+            value = token.circulatingSupply,
+          ),
+          TokenParameter(
+            label = MR.strings.total_supply.resolve(context),
+            value = token.totalSupply,
+          ),
+          token.maxSupply?.let {
+            TokenParameter(label = MR.strings.max_supply.resolve(context), value = it)
+          },
+        )
       }
 
       TokenParameterCardsColumn(
@@ -370,7 +371,13 @@ private fun calculateTokenParametersCardHeight(): Dp {
   return labelTextHeight + valueTextHeight + verticalPadding + spacerHeight
 }
 
-private data class TokenParameter(val label: String, val value: String)
+private data class TokenParameter(
+  val label: String,
+  val value: Number,
+  val valueFormat: (Number) -> String = { it.toDouble().shortDecimalFormat() },
+  val valueChange: Number? = null,
+  val valueChangeFormat: ((Number?) -> String)? = null,
+)
 
 @Composable
 private fun TokenParameterCard(
@@ -387,13 +394,75 @@ private fun TokenParameterCard(
         modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
       )
 
-      Text(
-        text = parameter.value,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Medium,
-        maxLines = 1,
-        modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-      )
+      val valueStyle = MaterialTheme.typography.titleLarge
+      val valueChangeStyle = MaterialTheme.typography.labelSmall
+      val valueChange = parameter.valueChange
+      val valueChangeFormat = parameter.valueChangeFormat
+
+      if (valueChange != null && valueChangeFormat != null) {
+        val valueChangeText = valueChangeFormat(valueChange)
+        val valueChangeId = "valueChange"
+
+        val textMeasurer = rememberTextMeasurer()
+        val textSize =
+          remember(valueChangeText, valueChangeStyle) {
+            textMeasurer.measure(valueChangeText, valueChangeStyle).size
+          }
+
+        Text(
+          text =
+            buildAnnotatedString {
+              append(parameter.valueFormat(parameter.value))
+              append(' ')
+              appendInlineContent(valueChangeId)
+            },
+          inlineContent =
+            mapOf(
+              valueChangeId to
+                InlineTextContent(
+                  Placeholder(
+                    width = with(LocalDensity.current) { (textSize.width.toDp() + 8.dp).toSp() },
+                    height =
+                      (valueChangeStyle.fontSize.value +
+                          with(LocalDensity.current) { 8.dp.toSp() }.value)
+                        .sp,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+                  )
+                ) {
+                  val valueChangePositive = valueChange.toDouble() >= 0
+                  Box(
+                    contentAlignment = Alignment.Center,
+                    modifier =
+                      Modifier.fillMaxSize()
+                        .background(
+                          color = if (valueChangePositive) Color.Green else Color.Red,
+                          shape = RoundedCornerShape(4.dp),
+                        ),
+                  ) {
+                    Text(
+                      text = valueChangeText,
+                      style =
+                        if (valueChangePositive) valueChangeStyle
+                        else valueChangeStyle.copy(color = Color.White),
+                      modifier = Modifier.padding(horizontal = 4.dp),
+                    )
+                  }
+                }
+            ),
+          style = valueStyle,
+          fontWeight = FontWeight.Medium,
+          maxLines = 1,
+          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+        )
+      } else {
+        Text(
+          text = parameter.valueFormat(parameter.value),
+          style = valueStyle,
+          fontWeight = FontWeight.Medium,
+          maxLines = 1,
+          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
+        )
+      }
     }
   }
 }
