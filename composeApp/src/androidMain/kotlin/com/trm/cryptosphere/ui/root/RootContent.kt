@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -37,7 +37,7 @@ import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable
 fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
-  var themeImageUrl: String? by remember { mutableStateOf(null) }
+  var themeImageUrl: String? by rememberSaveable { mutableStateOf(null) }
 
   DynamicTheme(imageUrl = themeImageUrl, colorExtractor = colorExtractor) {
     SharedTransitionLayout {
