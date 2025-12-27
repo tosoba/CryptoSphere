@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReadMore
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -30,11 +29,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil3.compose.AsyncImage
+import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -63,10 +64,9 @@ fun NewsFeedItemContent(
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (
-          backgroundGradient, tokenCarousel, title, source, linkButton, shareButton, starButton) =
+        val (backgroundGradient, tokenCarousel, title, source, linkButton, shareButton) =
           createRefs()
-        val secondaryButtonsStartBarrier = createStartBarrier(shareButton, starButton)
+        val secondaryButtonsStartBarrier = createStartBarrier(shareButton)
 
         Box(
           modifier =
@@ -83,7 +83,7 @@ fun NewsFeedItemContent(
         OutlinedIconButton(
           modifier =
             Modifier.constrainAs(shareButton) {
-              bottom.linkTo(starButton.top, margin = 16.dp)
+              bottom.linkTo(linkButton.top, margin = 16.dp)
               end.linkTo(linkButton.end)
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
@@ -93,20 +93,7 @@ fun NewsFeedItemContent(
           Icon(Icons.Outlined.Share, contentDescription = null)
         }
 
-        OutlinedIconButton(
-          modifier =
-            Modifier.constrainAs(starButton) {
-              bottom.linkTo(linkButton.top, margin = 16.dp)
-              end.linkTo(linkButton.end)
-            },
-          colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
-          border = BorderStroke(1.dp, Color.White),
-          onClick = {},
-        ) {
-          // TODO: change icon or animate the whole button depending on starred state
-          Icon(Icons.Outlined.StarOutline, contentDescription = null)
-        }
-
+        val context = LocalContext.current
         if (adaptiveInfo.isCompactHeight()) {
           FloatingActionButton(
             modifier =
@@ -114,7 +101,7 @@ fun NewsFeedItemContent(
                 bottom.linkTo(parent.bottom, margin = 24.dp)
                 end.linkTo(parent.end, margin = 16.dp)
               },
-            onClick = {},
+            onClick = { context.openUrl(news.link) },
           ) {
             Icon(
               imageVector = Icons.AutoMirrored.Filled.ReadMore,
@@ -129,7 +116,7 @@ fun NewsFeedItemContent(
                 bottom.linkTo(parent.bottom, margin = 24.dp)
                 end.linkTo(parent.end, margin = 16.dp)
               },
-            onClick = {},
+            onClick = { context.openUrl(news.link) },
           ) {
             Icon(
               imageVector = Icons.AutoMirrored.Filled.ReadMore,
