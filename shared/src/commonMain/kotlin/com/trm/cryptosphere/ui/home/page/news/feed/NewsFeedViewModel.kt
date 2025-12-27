@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class NewsFeedViewState(
+class NewsFeedViewModel(
   getNewsFeedUseCase: GetNewsFeedUseCase,
   dispatchers: AppCoroutineDispatchers,
 ) : InstanceKeeper.Instance {

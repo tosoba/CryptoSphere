@@ -12,8 +12,8 @@ struct NewsFeedView: View {
     init(component: NewsFeedComponent) {
         self.component = component
 
-        _newsFeedItems = .init(component.viewState.newsFeedItemsSnapshotList)
-        _loadStates = .init(component.viewState.newsItemsLoadStates)
+        _newsFeedItems = .init(component.viewModel.newsFeedItemsSnapshotList)
+        _loadStates = .init(component.viewModel.newsItemsLoadStates)
     }
 
     var body: some View {
@@ -55,7 +55,7 @@ struct NewsFeedView: View {
                 VStack(alignment: .center, spacing: 8) {
                     Text(String(\.error_occurred))
                     Button(
-                        action: { component.viewState.retry() },
+                        action: { component.viewModel.retry() },
                         label: { Text(String(\.retry)) }
                     )
                 }

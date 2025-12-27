@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 
 interface NewsFeedComponent : ComponentContext {
-  val viewState: NewsFeedViewState
+  val viewModel: NewsFeedViewModel
   val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit
 
   fun interface Factory {

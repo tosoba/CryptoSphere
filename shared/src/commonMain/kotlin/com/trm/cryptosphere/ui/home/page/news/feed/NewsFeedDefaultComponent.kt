@@ -12,7 +12,7 @@ class NewsFeedDefaultComponent(
   private val getNewsFeedUseCase: GetNewsFeedUseCase,
   private val dispatchers: AppCoroutineDispatchers,
 ) : NewsFeedComponent, ComponentContext by componentContext {
-  override val viewState: NewsFeedViewState = retainedInstance {
-    NewsFeedViewState(getNewsFeedUseCase, dispatchers)
+  override val viewModel: NewsFeedViewModel = retainedInstance {
+    NewsFeedViewModel(getNewsFeedUseCase, dispatchers)
   }
 }
