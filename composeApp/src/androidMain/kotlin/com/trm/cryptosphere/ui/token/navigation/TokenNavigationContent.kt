@@ -26,7 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -137,8 +139,12 @@ fun TokenNavigationContent(
       val tokens by component.viewModel.tokens.collectAsStateWithLifecycle(emptyList())
       val currentTokenId by component.viewModel.currentTokenId.collectAsStateWithLifecycle(null)
 
+      val carouselState = rememberCarouselState(itemCount = tokens::size)
+      LaunchedEffect(tokens.size) { carouselState.scrollToItem(tokens.lastIndex) }
+
       TokenCarousel(
         tokens = tokens,
+        state = carouselState,
         highlightedTokenId = currentTokenId,
         onItemClick = component::popToToken,
         itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
