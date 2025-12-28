@@ -1,6 +1,23 @@
 package com.trm.cryptosphere.ui.home.page.history
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.instancekeeper.retainedInstance
+import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
+import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
+import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 
-class HistoryDefaultComponent(componentContext: ComponentContext) :
-  HistoryComponent, ComponentContext by componentContext
+class HistoryDefaultComponent(
+  componentContext: ComponentContext,
+  private val newsHistoryRepository: NewsHistoryRepository,
+  private val tokenHistoryRepository: TokenHistoryRepository,
+  private val dispatchers: AppCoroutineDispatchers,
+) : HistoryComponent, ComponentContext by componentContext {
+
+  override val viewModel: HistoryViewModel = retainedInstance {
+    HistoryViewModel(
+      newsHistoryRepository = newsHistoryRepository,
+      tokenHistoryRepository = tokenHistoryRepository,
+      dispatchers = dispatchers,
+    )
+  }
+}

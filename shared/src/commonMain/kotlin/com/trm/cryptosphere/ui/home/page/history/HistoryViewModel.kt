@@ -1,0 +1,78 @@
+package com.trm.cryptosphere.ui.home.page.history
+
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
+import androidx.paging.map
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
+import com.trm.cryptosphere.domain.model.NewsHistoryListItem
+import com.trm.cryptosphere.domain.model.TokenHistoryListItem
+import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
+import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class HistoryViewModel(
+  newsHistoryRepository: NewsHistoryRepository,
+  tokenHistoryRepository: TokenHistoryRepository,
+  dispatchers: AppCoroutineDispatchers,
+) : InstanceKeeper.Instance {
+  private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
+
+  val newsHistory: Flow<PagingData<NewsHistoryListItem>> =
+    newsHistoryRepository
+      .getHistory()
+      .map { pagingData ->
+        pagingData
+          .map { NewsHistoryListItem.Item(it) }
+          .insertSeparators { before: NewsHistoryListItem.Item?, after: NewsHistoryListItem.Item? ->
+            if (after == null) return@insertSeparators null
+
+            val afterDate = after.news.visitedAt.date.toString()
+            if (before == null) {
+              return@insertSeparators NewsHistoryListItem.Separator(afterDate)
+            }
+
+            val beforeDate = before.news.visitedAt.date.toString()
+            if (beforeDate != afterDate) {
+              NewsHistoryListItem.Separator(afterDate)
+            } else {
+              null
+            }
+          }
+      }
+      .cachedIn(scope)
+
+  val tokenHistory: Flow<PagingData<TokenHistoryListItem>> =
+    tokenHistoryRepository
+      .getHistory()
+      .map { pagingData ->
+        pagingData
+          .map { TokenHistoryListItem.Item(it) }
+          .insertSeparators { before: TokenHistoryListItem.Item?, after: TokenHistoryListItem.Item?
+            ->
+            if (after == null) return@insertSeparators null
+
+            val afterDate = after.token.visitedAt.date.toString()
+            if (before == null) {
+              return@insertSeparators TokenHistoryListItem.Separator(afterDate)
+            }
+
+            val beforeDate = before.token.visitedAt.date.toString()
+            if (beforeDate != afterDate) {
+              TokenHistoryListItem.Separator(afterDate)
+            } else {
+              null
+            }
+          }
+      }
+      .cachedIn(scope)
+
+  override fun onDestroy() {
+    scope.cancel()
+  }
+}

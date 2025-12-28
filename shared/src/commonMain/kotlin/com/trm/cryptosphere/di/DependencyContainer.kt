@@ -84,8 +84,15 @@ class DependencyContainer(
     },
   private val createPricesComponent: (ComponentContext) -> PricesComponent =
     ::PricesDefaultComponent,
-  private val createHistoryComponent: (ComponentContext) -> HistoryComponent =
-    ::HistoryDefaultComponent,
+  private val historyComponentFactory: HistoryComponent.Factory =
+    HistoryComponent.Factory { componentContext ->
+      HistoryDefaultComponent(
+        componentContext = componentContext,
+        newsHistoryRepository = newsHistoryRepository.value,
+        tokenHistoryRepository = tokenHistoryRepository.value,
+        dispatchers = appCoroutineDispatchers,
+      )
+    },
   val homeComponentFactory: HomeComponent.Factory =
     HomeComponent.Factory { componentContext, onTokenCarouselItemClick ->
       HomeDefaultComponent(
@@ -93,7 +100,7 @@ class DependencyContainer(
         onTokenCarouselItemClick = onTokenCarouselItemClick,
         newsFeedComponentFactory = newsFeedComponentFactory,
         createPricesComponent = createPricesComponent,
-        createHistoryComponent = createHistoryComponent,
+        historyComponentFactory = historyComponentFactory,
       )
     },
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
