@@ -73,7 +73,7 @@ fun NewsFeedContent(
                 item = it,
                 isCurrent = page == pagerState.currentPage,
                 onRelatedTokenItemClick = component.onTokenCarouselItemClick,
-                onLinkClick = component::onLinkClick,
+                onLinkClick = { component.onLinkClick(it) },
               )
             }
           }

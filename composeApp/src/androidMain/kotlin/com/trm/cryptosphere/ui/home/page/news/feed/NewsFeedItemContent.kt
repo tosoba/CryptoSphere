@@ -42,6 +42,7 @@ import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.domain.model.NewsFeedItem
+import com.trm.cryptosphere.domain.model.NewsItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +51,7 @@ fun NewsFeedItemContent(
   isCurrent: Boolean,
   modifier: Modifier = Modifier,
   onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
-  onLinkClick: (String) -> Unit,
+  onLinkClick: (NewsItem) -> Unit,
 ) {
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val (news, relatedTokens) = item
@@ -103,7 +104,7 @@ fun NewsFeedItemContent(
                 end.linkTo(parent.end, margin = 16.dp)
               },
             onClick = {
-              onLinkClick(news.link)
+              onLinkClick(news)
               context.openUrl(news.link)
             },
           ) {
@@ -121,7 +122,7 @@ fun NewsFeedItemContent(
                 end.linkTo(parent.end, margin = 16.dp)
               },
             onClick = {
-              onLinkClick(news.link)
+              onLinkClick(news)
               context.openUrl(news.link)
             },
           ) {

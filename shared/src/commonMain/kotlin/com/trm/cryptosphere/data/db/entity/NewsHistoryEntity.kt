@@ -9,5 +9,6 @@ import kotlinx.datetime.LocalDateTime
 data class NewsHistoryEntity(
   @PrimaryKey(autoGenerate = true) val id: Long = 0L,
   @ColumnInfo(name = "url") val url: String,
+  @ColumnInfo(name = "img_url") val imgUrl: String?,
   @ColumnInfo(name = "visited_at") val visitedAt: LocalDateTime,
 )

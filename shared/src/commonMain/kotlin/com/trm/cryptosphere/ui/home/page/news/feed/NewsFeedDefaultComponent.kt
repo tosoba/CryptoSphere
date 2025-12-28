@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.retainedInstance
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.usecase.GetNewsFeedUseCase
 
@@ -18,7 +19,7 @@ class NewsFeedDefaultComponent(
     NewsFeedViewModel(getNewsFeedUseCase, newsHistoryRepository, dispatchers)
   }
 
-  override fun onLinkClick(url: String) {
-    viewModel.onLinkClick(url)
+  override fun onLinkClick(news: NewsItem) {
+    viewModel.onLinkClick(news)
   }
 }

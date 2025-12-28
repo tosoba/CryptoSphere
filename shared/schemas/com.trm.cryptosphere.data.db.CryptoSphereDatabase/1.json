@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "70996c0952c32dc25f75e3f749875566",
+    "identityHash": "e2fff0ab4bb5a3edaf0a2197b8969e66",
     "entities": [
       {
         "tableName": "token",
@@ -376,7 +376,7 @@
       },
       {
         "tableName": "news_history",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `visited_at` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `img_url` TEXT, `visited_at` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -389,6 +389,11 @@
             "columnName": "url",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "imgUrl",
+            "columnName": "img_url",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "visitedAt",
@@ -407,7 +412,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70996c0952c32dc25f75e3f749875566')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e2fff0ab4bb5a3edaf0a2197b8969e66')"
     ]
   }
 }
