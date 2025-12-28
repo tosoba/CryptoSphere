@@ -51,6 +51,7 @@ kotlin {
       implementation(libs.androidx.room.ktx)
       api(libs.androidx.work.runtime.ktx)
       implementation(libs.androidx.core.ktx)
+      implementation(libs.androidx.browser)
 
       api(libs.moko.resources.compose)
 
