@@ -9,9 +9,11 @@ import com.trm.cryptosphere.data.api.coinstats.CoinStatsApi
 import com.trm.cryptosphere.data.db.CryptoSphereDatabase
 import com.trm.cryptosphere.data.db.buildCryptoSphereDatabase
 import com.trm.cryptosphere.data.repository.NewsDefaultRepository
+import com.trm.cryptosphere.data.repository.NewsHistoryDefaultRepository
 import com.trm.cryptosphere.data.repository.TokenDefaultRepository
 import com.trm.cryptosphere.data.repository.TokenHistoryDefaultRepository
 import com.trm.cryptosphere.domain.manager.BackgroundJobsManager
+import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.repository.NewsRepository
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
@@ -54,6 +56,9 @@ class DependencyContainer(
   private val tokenHistoryRepository: Lazy<TokenHistoryRepository> = lazy {
     TokenHistoryDefaultRepository(database.value.tokenHistoryDao())
   },
+  private val newsHistoryRepository: Lazy<NewsHistoryRepository> = lazy {
+    NewsHistoryDefaultRepository(database.value.newsHistoryDao())
+  },
   val enqueuePeriodicTokensSyncUseCase: Lazy<EnqueuePeriodicTokensSyncUseCase> = lazy {
     EnqueuePeriodicTokensSyncUseCase(tokenRepository.value, backgroundJobsManager)
   },
@@ -73,6 +78,7 @@ class DependencyContainer(
         componentContext = componentContext,
         onTokenCarouselItemClick = onTokenCarouselItemClick,
         getNewsFeedUseCase = getNewsFeedUseCase.value,
+        newsHistoryRepository = newsHistoryRepository.value,
         dispatchers = appCoroutineDispatchers,
       )
     },

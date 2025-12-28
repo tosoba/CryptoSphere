@@ -7,6 +7,8 @@ interface NewsFeedComponent : ComponentContext {
   val viewModel: NewsFeedViewModel
   val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit
 
+  fun onLinkClick(url: String)
+
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,

@@ -50,6 +50,7 @@ fun NewsFeedItemContent(
   isCurrent: Boolean,
   modifier: Modifier = Modifier,
   onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
+  onLinkClick: (String) -> Unit,
 ) {
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val (news, relatedTokens) = item
@@ -101,7 +102,10 @@ fun NewsFeedItemContent(
                 bottom.linkTo(parent.bottom, margin = 24.dp)
                 end.linkTo(parent.end, margin = 16.dp)
               },
-            onClick = { context.openUrl(news.link) },
+            onClick = {
+              onLinkClick(news.link)
+              context.openUrl(news.link)
+            },
           ) {
             Icon(
               imageVector = Icons.AutoMirrored.Filled.ReadMore,
@@ -116,7 +120,10 @@ fun NewsFeedItemContent(
                 bottom.linkTo(parent.bottom, margin = 24.dp)
                 end.linkTo(parent.end, margin = 16.dp)
               },
-            onClick = { context.openUrl(news.link) },
+            onClick = {
+              onLinkClick(news.link)
+              context.openUrl(news.link)
+            },
           ) {
             Icon(
               imageVector = Icons.AutoMirrored.Filled.ReadMore,

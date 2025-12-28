@@ -42,6 +42,7 @@ private fun NewsFeedItemContentPreview(
         ),
       isCurrent = true,
       onRelatedTokenItemClick = { _, _ -> },
+      onLinkClick = {},
     )
   }
 }

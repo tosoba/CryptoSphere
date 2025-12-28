@@ -4,15 +4,21 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.retainedInstance
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.usecase.GetNewsFeedUseCase
 
 class NewsFeedDefaultComponent(
   componentContext: ComponentContext,
   override val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit,
   private val getNewsFeedUseCase: GetNewsFeedUseCase,
+  private val newsHistoryRepository: NewsHistoryRepository,
   private val dispatchers: AppCoroutineDispatchers,
 ) : NewsFeedComponent, ComponentContext by componentContext {
   override val viewModel: NewsFeedViewModel = retainedInstance {
-    NewsFeedViewModel(getNewsFeedUseCase, dispatchers)
+    NewsFeedViewModel(getNewsFeedUseCase, newsHistoryRepository, dispatchers)
+  }
+
+  override fun onLinkClick(url: String) {
+    viewModel.onLinkClick(url)
   }
 }

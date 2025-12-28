@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.domain.model.NewsFeedItem
+import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.usecase.GetNewsFeedUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class NewsFeedViewModel(
   getNewsFeedUseCase: GetNewsFeedUseCase,
+  private val newsHistoryRepository: NewsHistoryRepository,
   dispatchers: AppCoroutineDispatchers,
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
@@ -45,6 +47,10 @@ class NewsFeedViewModel(
 
   init {
     scope.launch { newsFeedItems.collectLatest(pagingDataPresenter::collectFrom) }
+  }
+
+  fun onLinkClick(url: String) {
+    scope.launch { newsHistoryRepository.addNewsToHistory(url) }
   }
 
   override fun onDestroy() {
