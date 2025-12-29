@@ -6,8 +6,6 @@ import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
-import com.trm.cryptosphere.domain.model.NewsHistoryListItem
-import com.trm.cryptosphere.domain.model.TokenHistoryListItem
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import kotlinx.coroutines.CoroutineScope

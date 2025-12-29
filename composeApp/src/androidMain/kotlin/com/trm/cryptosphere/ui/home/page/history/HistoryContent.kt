@@ -34,9 +34,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
-import com.trm.cryptosphere.domain.model.NewsHistoryListItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
-import com.trm.cryptosphere.domain.model.TokenHistoryListItem
 import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
 

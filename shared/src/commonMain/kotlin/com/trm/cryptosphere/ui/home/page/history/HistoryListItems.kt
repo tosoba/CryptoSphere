@@ -1,16 +1,15 @@
-package com.trm.cryptosphere.domain.model
+package com.trm.cryptosphere.ui.home.page.history
 
-sealed interface HistoryListItem {
-  data class Separator(val date: String) : HistoryListItem
-}
+import com.trm.cryptosphere.domain.model.NewsHistoryItem
+import com.trm.cryptosphere.domain.model.TokenHistoryItem
 
-sealed interface NewsHistoryListItem : HistoryListItem {
+sealed interface NewsHistoryListItem {
   data class Item(val news: NewsHistoryItem) : NewsHistoryListItem
 
   data class DateHeader(val date: String) : NewsHistoryListItem
 }
 
-sealed interface TokenHistoryListItem : HistoryListItem {
+sealed interface TokenHistoryListItem {
   data class Item(val token: TokenHistoryItem) : TokenHistoryListItem
 
   data class DateHeader(val date: String) : TokenHistoryListItem
