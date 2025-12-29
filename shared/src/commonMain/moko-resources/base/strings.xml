@@ -15,4 +15,6 @@
     <string name="retry">Retry</string>
     <string name="error_occurred">Error occurred.</string>
     <string name="see_more">See more</string>
+    <string name="news">News</string>
+    <string name="tokens">Tokens</string>
 </resources>
