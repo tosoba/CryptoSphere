@@ -29,12 +29,11 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
     )
   }
 
-  override fun getHistory(): Flow<PagingData<NewsHistoryItem>> {
-    return Pager(
-        config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-        pagingSourceFactory = { dao.getAllPagingSource() },
+  override fun getHistory(): Flow<PagingData<NewsHistoryItem>> =
+    Pager(
+        config = PagingConfig(pageSize = 20),
+        pagingSourceFactory = dao::getAllPagingSource,
       )
       .flow
-      .map { pagingData -> pagingData.map { it.toDomain() } }
-  }
+      .map { pagingData -> pagingData.map(NewsHistoryEntity::toDomain) }
 }

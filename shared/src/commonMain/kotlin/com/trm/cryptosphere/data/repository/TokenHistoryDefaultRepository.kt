@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.trm.cryptosphere.data.db.dao.TokenHistoryDao
 import com.trm.cryptosphere.data.db.entity.TokenHistoryEntity
+import com.trm.cryptosphere.data.db.entity.junction.TokenHistoryWithTokenJunction
 import com.trm.cryptosphere.data.db.mapper.toDomain
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
@@ -27,12 +28,8 @@ class TokenHistoryDefaultRepository(private val dao: TokenHistoryDao) : TokenHis
     )
   }
 
-  override fun getHistory(): Flow<PagingData<TokenHistoryItem>> {
-    return Pager(
-        config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-        pagingSourceFactory = { dao.getAllPagingSource() },
-      )
+  override fun getHistory(): Flow<PagingData<TokenHistoryItem>> =
+    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = dao::getAllPagingSource)
       .flow
-      .map { pagingData -> pagingData.map { it.toDomain() } }
-  }
+      .map { pagingData -> pagingData.map(TokenHistoryWithTokenJunction::toDomain) }
 }
