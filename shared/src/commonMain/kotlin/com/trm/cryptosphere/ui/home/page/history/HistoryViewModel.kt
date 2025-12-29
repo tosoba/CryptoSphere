@@ -30,12 +30,12 @@ class HistoryViewModel(
           .insertSeparators { before: NewsHistoryListItem.Item?, after: NewsHistoryListItem.Item? ->
             if (after == null) return@insertSeparators null
 
-            val afterDate = after.news.visitedAt.date.toString()
+            val afterDate = after.news.visitedAt.date
             if (before == null) {
               return@insertSeparators NewsHistoryListItem.DateHeader(afterDate)
             }
 
-            val beforeDate = before.news.visitedAt.date.toString()
+            val beforeDate = before.news.visitedAt.date
             if (beforeDate != afterDate) {
               NewsHistoryListItem.DateHeader(afterDate)
             } else {
@@ -55,12 +55,12 @@ class HistoryViewModel(
             ->
             if (after == null) return@insertSeparators null
 
-            val afterDate = after.token.visitedAt.date.toString()
+            val afterDate = after.token.visitedAt.date
             if (before == null) {
               return@insertSeparators TokenHistoryListItem.DateHeader(afterDate)
             }
 
-            val beforeDate = before.token.visitedAt.date.toString()
+            val beforeDate = before.token.visitedAt.date
             if (beforeDate != afterDate) {
               TokenHistoryListItem.DateHeader(afterDate)
             } else {

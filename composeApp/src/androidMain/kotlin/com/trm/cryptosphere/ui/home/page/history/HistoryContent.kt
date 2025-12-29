@@ -37,6 +37,8 @@ import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
 import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Composable
 fun HistoryContent(component: HistoryComponent, modifier: Modifier = Modifier) {
@@ -72,7 +74,7 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>) {
         items.itemKey {
           when (it) {
             is NewsHistoryListItem.Item -> it.news.id
-            is NewsHistoryListItem.DateHeader -> it.date
+            is NewsHistoryListItem.DateHeader -> it.date.toEpochDays()
           }
         },
     ) { index ->
@@ -94,7 +96,7 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
         items.itemKey {
           when (it) {
             is TokenHistoryListItem.Item -> it.token.id
-            is TokenHistoryListItem.DateHeader -> it.date
+            is TokenHistoryListItem.DateHeader -> it.date.toEpochDays()
           }
         },
     ) { index ->
@@ -108,9 +110,9 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
 }
 
 @Composable
-private fun DateHeader(date: String) {
+private fun DateHeader(date: LocalDate) {
   Text(
-    text = date,
+    text = LocalDate.Formats.ISO.format(date),
     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
   )
@@ -137,7 +139,10 @@ private fun NewsHistoryItem(item: NewsHistoryItem) {
         Text(text = item.url, style = MaterialTheme.typography.bodyLarge, maxLines = 1)
       }
 
-      Text(text = item.visitedAt.toString(), style = MaterialTheme.typography.bodySmall)
+      Text(
+        text = LocalTime.Formats.ISO.format(item.visitedAt.time),
+        style = MaterialTheme.typography.bodySmall,
+      )
     }
   }
 }
@@ -171,6 +176,9 @@ private fun TokenHistoryItem(item: TokenHistoryItem) {
       )
     }
 
-    Text(text = item.visitedAt.toString(), style = MaterialTheme.typography.bodySmall)
+    Text(
+      text = LocalTime.Formats.ISO.format(item.visitedAt.time),
+      style = MaterialTheme.typography.bodySmall,
+    )
   }
 }
