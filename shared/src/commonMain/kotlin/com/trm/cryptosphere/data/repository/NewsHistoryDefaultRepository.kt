@@ -22,6 +22,8 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
   override suspend fun addNewsToHistory(news: NewsItem) {
     dao.insert(
       NewsHistoryEntity(
+        title = news.title,
+        source = news.source,
         url = news.link,
         imgUrl = news.imgUrl,
         visitedAt = Clock.System.now().toLocalDateTime(TimeZone.UTC),
@@ -30,10 +32,8 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
   }
 
   override fun getHistory(): Flow<PagingData<NewsHistoryItem>> =
-    Pager(
-        config = PagingConfig(pageSize = 20),
-        pagingSourceFactory = dao::getAllPagingSource,
-      )
-      .flow
-      .map { pagingData -> pagingData.map(NewsHistoryEntity::toDomain) }
+    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = dao::selectAll).flow.map {
+      pagingData ->
+      pagingData.map(NewsHistoryEntity::toDomain)
+    }
 }

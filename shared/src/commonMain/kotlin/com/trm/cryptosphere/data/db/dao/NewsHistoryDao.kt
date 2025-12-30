@@ -17,5 +17,5 @@ interface NewsHistoryDao {
   @Query("DELETE FROM news_history") suspend fun deleteAll()
 
   @Query("SELECT * FROM news_history ORDER BY visited_at DESC")
-  fun getAllPagingSource(): PagingSource<Int, NewsHistoryEntity>
+  fun selectAll(): PagingSource<Int, NewsHistoryEntity>
 }

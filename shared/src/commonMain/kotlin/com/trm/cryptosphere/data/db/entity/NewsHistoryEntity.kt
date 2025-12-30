@@ -8,6 +8,8 @@ import kotlinx.datetime.LocalDateTime
 @Entity(tableName = "news_history")
 data class NewsHistoryEntity(
   @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+  @ColumnInfo(name = "title") val title: String,
+  @ColumnInfo(name = "source") val source: String,
   @ColumnInfo(name = "url") val url: String,
   @ColumnInfo(name = "img_url") val imgUrl: String?,
   @ColumnInfo(name = "visited_at") val visitedAt: LocalDateTime,

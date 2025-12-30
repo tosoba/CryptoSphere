@@ -4,10 +4,4 @@ import com.trm.cryptosphere.data.db.entity.junction.TokenHistoryWithTokenJunctio
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
 
 fun TokenHistoryWithTokenJunction.toDomain() =
-  TokenHistoryItem(
-    id = history.id,
-    tokenId = history.tokenId,
-    tokenName = token.name,
-    tokenSymbol = token.symbol,
-    visitedAt = history.visitedAt,
-  )
+  TokenHistoryItem(id = history.id, token = token.toTokenItem(), visitedAt = history.visitedAt)

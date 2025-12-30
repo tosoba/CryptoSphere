@@ -24,5 +24,5 @@ interface TokenHistoryDao {
         ORDER BY visited_at DESC
     """
   )
-  fun getAllPagingSource(): PagingSource<Int, TokenHistoryWithTokenJunction>
+  fun selectAll(): PagingSource<Int, TokenHistoryWithTokenJunction>
 }
