@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.Text
@@ -28,6 +27,7 @@ fun HomeContent(
   onImageUrlChange: (String?) -> Unit,
 ) {
   val pages by component.pages.subscribeAsState()
+
   NavigationSuiteScaffold(
     modifier = modifier,
     layoutType = currentWindowAdaptiveInfo().toNavigationSuiteType(),
@@ -42,49 +42,47 @@ fun HomeContent(
       }
     },
   ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-      ChildPages(
-        pages = pages,
-        onPageSelected = {},
-        pager = { modifier, state, key, pageContent ->
-          HorizontalPager(
-            modifier = modifier,
-            state = state,
-            key = key,
-            userScrollEnabled = false,
-            pageContent = pageContent,
-          )
-        },
-        modifier = Modifier.fillMaxSize(),
-        scrollAnimation = PagesScrollAnimation.Default,
-      ) { _, page ->
-        DisposableEffect(Unit) {
-          val callbacks =
-            object : Lifecycle.Callbacks {
-              override fun onResume() {
-                if (page !is HomeComponent.Page.NewsFeed) {
-                  onImageUrlChange(null)
-                }
+    ChildPages(
+      pages = pages,
+      onPageSelected = {},
+      pager = { modifier, state, key, pageContent ->
+        HorizontalPager(
+          modifier = modifier,
+          state = state,
+          key = key,
+          userScrollEnabled = false,
+          pageContent = pageContent,
+        )
+      },
+      modifier = Modifier.fillMaxSize(),
+      scrollAnimation = PagesScrollAnimation.Default,
+    ) { _, page ->
+      DisposableEffect(Unit) {
+        val callbacks =
+          object : Lifecycle.Callbacks {
+            override fun onResume() {
+              if (page !is HomeComponent.Page.NewsFeed) {
+                onImageUrlChange(null)
               }
             }
-          component.lifecycle.subscribe(callbacks)
-          onDispose { component.lifecycle.unsubscribe(callbacks) }
-        }
+          }
+        component.lifecycle.subscribe(callbacks)
+        onDispose { component.lifecycle.unsubscribe(callbacks) }
+      }
 
-        when (page) {
-          is HomeComponent.Page.NewsFeed -> {
-            NewsFeedContent(
-              component = page.component,
-              modifier = Modifier.fillMaxSize(),
-              onImageUrlChange = onImageUrlChange,
-            )
-          }
-          is HomeComponent.Page.Prices -> {
-            PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
-          }
-          is HomeComponent.Page.History -> {
-            HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
-          }
+      when (page) {
+        is HomeComponent.Page.NewsFeed -> {
+          NewsFeedContent(
+            component = page.component,
+            modifier = Modifier.fillMaxSize(),
+            onImageUrlChange = onImageUrlChange,
+          )
+        }
+        is HomeComponent.Page.Prices -> {
+          PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
+        }
+        is HomeComponent.Page.History -> {
+          HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
         }
       }
     }
