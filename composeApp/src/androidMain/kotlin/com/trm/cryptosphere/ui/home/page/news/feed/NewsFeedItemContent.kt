@@ -7,8 +7,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReadMore
 import androidx.compose.material.icons.outlined.Share
@@ -30,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -66,13 +69,33 @@ fun NewsFeedItemContent(
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
       ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (backgroundGradient, tokenCarousel, title, source, linkButton, shareButton) =
+        val (
+          topBackgroundGradient,
+          bottomBackgroundGradient,
+          tokenCarousel,
+          title,
+          source,
+          linkButton,
+          shareButton) =
           createRefs()
+        val topStatusBarHeight =
+          with(LocalDensity.current) { WindowInsets.statusBars.getTop(LocalDensity.current).toDp() }
         val secondaryButtonsStartBarrier = createStartBarrier(shareButton)
 
         Box(
           modifier =
-            Modifier.constrainAs(backgroundGradient) {
+            Modifier.constrainAs(topBackgroundGradient) {
+                top.linkTo(parent.top)
+
+                width = Dimension.matchParent
+                height = Dimension.value(topStatusBarHeight)
+              }
+              .background(Brush.verticalGradient(colors = listOf(Color.Black, Color.Transparent)))
+        )
+
+        Box(
+          modifier =
+            Modifier.constrainAs(bottomBackgroundGradient) {
                 bottom.linkTo(parent.bottom)
                 top.linkTo(title.top, margin = (-128).dp)
 

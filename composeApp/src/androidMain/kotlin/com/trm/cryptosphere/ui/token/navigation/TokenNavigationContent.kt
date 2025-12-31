@@ -1,10 +1,9 @@
 package com.trm.cryptosphere.ui.token.navigation
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -43,6 +41,8 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
@@ -63,6 +63,10 @@ fun TokenNavigationContent(
 ) {
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
+
+  StatusBarContentAppearanceEffect(
+    if (isSystemInDarkTheme()) StatusBarContentAppearance.LIGHT else StatusBarContentAppearance.DARK
+  )
 
   Scaffold(
     modifier = modifier,
@@ -87,17 +91,7 @@ fun TokenNavigationContent(
       }
     },
   ) { paddingValues ->
-    ConstraintLayout(
-      modifier =
-        Modifier.fillMaxSize()
-          .padding(
-            PaddingValues(
-              start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
-              end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
-              bottom = paddingValues.calculateBottomPadding(),
-            )
-          )
-    ) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
       val (stack, tokenCarousel, switchTokenButton, floatingToolbar) = createRefs()
 
       ChildStack(

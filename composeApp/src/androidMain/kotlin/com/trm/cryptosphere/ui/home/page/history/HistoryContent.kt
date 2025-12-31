@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -47,27 +48,29 @@ fun HistoryContent(component: HistoryComponent, modifier: Modifier = Modifier) {
   val pagerState = rememberPagerState(pageCount = tabs::size)
   val scope = rememberCoroutineScope()
 
-  Column(modifier = modifier.fillMaxSize()) {
-    SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
-      tabs.forEachIndexed { index, title ->
-        Tab(
-          selected = pagerState.currentPage == index,
-          onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-          text = { Text(text = title) },
-        )
+  Scaffold(modifier = modifier) {
+    Column(modifier = Modifier.fillMaxSize().padding(it)) {
+      SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
+        tabs.forEachIndexed { index, title ->
+          Tab(
+            selected = pagerState.currentPage == index,
+            onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+            text = { Text(text = title) },
+          )
+        }
       }
-    }
 
-    HorizontalPager(
-      state = pagerState,
-      modifier =
-        Modifier.fillMaxWidth()
-          .weight(1f)
-          .background(color = MaterialTheme.colorScheme.surfaceContainer),
-    ) { index ->
-      val viewModel = component.viewModel
-      if (index == 0) NewsHistoryList(viewModel.newsHistory.collectAsLazyPagingItems())
-      else TokenHistoryList(viewModel.tokenHistory.collectAsLazyPagingItems())
+      HorizontalPager(
+        state = pagerState,
+        modifier =
+          Modifier.fillMaxWidth()
+            .weight(1f)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer),
+      ) { index ->
+        val viewModel = component.viewModel
+        if (index == 0) NewsHistoryList(viewModel.newsHistory.collectAsLazyPagingItems())
+        else TokenHistoryList(viewModel.tokenHistory.collectAsLazyPagingItems())
+      }
     }
   }
 }
