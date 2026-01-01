@@ -1,5 +1,8 @@
 package com.trm.cryptosphere.ui.home.page.history
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
@@ -15,24 +18,51 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarState
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberSearchBarState
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
@@ -42,13 +72,23 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryContent(component: HistoryComponent, modifier: Modifier = Modifier) {
-  val tabs = listOf(MR.strings.news.resolve(), MR.strings.tokens.resolve())
-  val pagerState = rememberPagerState(pageCount = tabs::size)
+fun HistoryContent(component: HistoryComponent) {
   val scope = rememberCoroutineScope()
 
-  Scaffold(modifier = modifier) {
+  val tabs = listOf(MR.strings.news.resolve(), MR.strings.tokens.resolve())
+  val pagerState = rememberPagerState(pageCount = tabs::size)
+
+  val searchBarState = rememberSearchBarState()
+  fun collapseSearchBar() {
+    scope.launch { searchBarState.animateToCollapsed() }
+  }
+
+  Scaffold(
+    modifier = Modifier.clearFocusOnTap(::collapseSearchBar),
+    topBar = { TopSearchBar(searchBarState) },
+  ) {
     Column(modifier = Modifier.fillMaxSize().padding(it)) {
       SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
         tabs.forEachIndexed { index, title ->
@@ -62,6 +102,7 @@ fun HistoryContent(component: HistoryComponent, modifier: Modifier = Modifier) {
 
       HorizontalPager(
         state = pagerState,
+        userScrollEnabled = false,
         modifier =
           Modifier.fillMaxWidth()
             .weight(1f)
@@ -73,6 +114,90 @@ fun HistoryContent(component: HistoryComponent, modifier: Modifier = Modifier) {
       }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopSearchBar(searchBarState: SearchBarState) {
+  val scope = rememberCoroutineScope()
+  val textFieldState = rememberTextFieldState()
+
+  AppBarWithSearch(
+    state = searchBarState,
+    inputField = {
+      SearchBarDefaults.InputField(
+        searchBarState = searchBarState,
+        textFieldState = textFieldState,
+        onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
+        placeholder = {
+          AnimatedVisibility(
+            visible =
+              textFieldState.text.isEmpty() &&
+                searchBarState.currentValue == SearchBarValue.Collapsed,
+            enter = fadeIn(),
+            exit = fadeOut(),
+          ) {
+            val searchIconId = "search_icon"
+            Text(
+              modifier = Modifier.fillMaxWidth(),
+              text =
+                buildAnnotatedString {
+                  appendInlineContent(searchIconId)
+                  append(" ")
+                  append(MR.strings.search_history.resolve())
+                },
+              inlineContent =
+                mapOf(
+                  searchIconId to
+                    InlineTextContent(
+                      Placeholder(
+                        width = LocalTextStyle.current.lineHeight,
+                        height = LocalTextStyle.current.lineHeight,
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
+                      )
+                    ) {
+                      Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                      )
+                    }
+                ),
+            )
+          }
+        },
+        trailingIcon = {
+          AnimatedVisibility(
+            visible = textFieldState.text.isNotEmpty(),
+            enter = fadeIn(),
+            exit = fadeOut(),
+          ) {
+            IconButton(onClick = { textFieldState.setTextAndPlaceCursorAtEnd("") }) {
+              Icon(
+                imageVector = Icons.Default.Clear,
+                contentDescription = MR.strings.clear.resolve(),
+              )
+            }
+          }
+        },
+      )
+    },
+    actions = {
+      TooltipBox(
+        positionProvider =
+          TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+        tooltip = { PlainTooltip { Text(MR.strings.delete_history.resolve()) } },
+        state = rememberTooltipState(),
+      ) {
+        FilledTonalIconButton(onClick = {}) {
+          Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = MR.strings.delete_history.resolve(),
+          )
+        }
+      }
+    },
+  )
 }
 
 @Composable

@@ -93,7 +93,7 @@ fun HomeContent(
           PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
         }
         is HomeComponent.Page.History -> {
-          HistoryContent(component = page.component, modifier = Modifier.fillMaxSize())
+          HistoryContent(component = page.component)
         }
       }
     }
