@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +28,13 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -64,6 +69,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -250,6 +256,19 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>) {
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
   ) {
+    if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
+      item {
+        EmptyHistory(
+          text = MR.strings.no_news_history.resolve(),
+          modifier = Modifier.fillParentMaxSize(),
+        )
+      }
+    }
+
+    if (items.loadState.refresh is LoadState.Loading) {
+      item { HistoryLoadingIndicator() }
+    }
+
     items(
       count = items.itemCount,
       key =
@@ -287,6 +306,19 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
   ) {
+    if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
+      item {
+        EmptyHistory(
+          text = MR.strings.no_tokens_history.resolve(),
+          modifier = Modifier.fillParentMaxSize(),
+        )
+      }
+    }
+
+    if (items.loadState.refresh is LoadState.Loading) {
+      item { HistoryLoadingIndicator() }
+    }
+
     items(
       count = items.itemCount,
       key =
@@ -315,6 +347,13 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
         null -> {}
       }
     }
+  }
+}
+
+@Composable
+private fun LazyItemScope.HistoryLoadingIndicator() {
+  Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+    CircularProgressIndicator()
   }
 }
 
@@ -424,6 +463,31 @@ private fun TokenHistoryItem(
         style = MaterialTheme.typography.bodySmall,
       )
     }
+  }
+}
+
+@Composable
+private fun EmptyHistory(text: String, modifier: Modifier = Modifier) {
+  Column(
+    modifier = modifier,
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Icon(
+      imageVector = Icons.Default.History,
+      contentDescription = null,
+      modifier = Modifier.size(64.dp),
+      tint = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+
+    Spacer(modifier = Modifier.size(16.dp))
+
+    Text(
+      text = text,
+      style = MaterialTheme.typography.titleLarge,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      modifier = Modifier.padding(horizontal = 16.dp),
+    )
   }
 }
 
