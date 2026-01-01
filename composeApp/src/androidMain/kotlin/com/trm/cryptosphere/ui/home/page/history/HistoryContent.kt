@@ -216,9 +216,21 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>) {
           }
         },
     ) { index ->
-      when (val item = items[index]) {
-        is NewsHistoryListItem.Item -> NewsHistoryItem(item.news)
-        is NewsHistoryListItem.DateHeader -> DateHeader(item.date)
+      val previousItem = if (index > 0) items[index - 1] else null
+      val currentItem = items[index]
+      val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
+
+      when (currentItem) {
+        is NewsHistoryListItem.Item -> {
+          NewsHistoryItem(
+            item = currentItem.news,
+            isTopRounded = previousItem is NewsHistoryListItem.DateHeader,
+            isBottomRounded = nextItem is NewsHistoryListItem.DateHeader || nextItem == null,
+          )
+        }
+        is NewsHistoryListItem.DateHeader -> {
+          DateHeader(currentItem.date)
+        }
         null -> {}
       }
     }
@@ -241,9 +253,21 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
           }
         },
     ) { index ->
-      when (val item = items[index]) {
-        is TokenHistoryListItem.Item -> TokenHistoryItem(item.token)
-        is TokenHistoryListItem.DateHeader -> DateHeader(item.date)
+      val previousItem = if (index > 0) items[index - 1] else null
+      val currentItem = items[index]
+      val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
+
+      when (currentItem) {
+        is TokenHistoryListItem.Item -> {
+          TokenHistoryItem(
+            item = currentItem.token,
+            isTopRounded = previousItem is TokenHistoryListItem.DateHeader,
+            isBottomRounded = nextItem is TokenHistoryListItem.DateHeader || nextItem == null,
+          )
+        }
+        is TokenHistoryListItem.DateHeader -> {
+          DateHeader(currentItem.date)
+        }
         null -> {}
       }
     }
@@ -255,15 +279,19 @@ private fun DateHeader(date: LocalDate) {
   Text(
     text = LocalDate.Formats.ISO.format(date),
     style = MaterialTheme.typography.labelLarge,
-    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
   )
 }
 
 @Composable
-private fun NewsHistoryItem(item: NewsHistoryItem) {
+private fun NewsHistoryItem(
+  item: NewsHistoryItem,
+  isTopRounded: Boolean,
+  isBottomRounded: Boolean,
+) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-    shape = RoundedCornerShape(16.dp),
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+    shape = itemShape(isTopRounded = isTopRounded, isBottomRounded = isBottomRounded),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -306,10 +334,14 @@ private fun NewsHistoryItem(item: NewsHistoryItem) {
 }
 
 @Composable
-private fun TokenHistoryItem(item: TokenHistoryItem) {
+private fun TokenHistoryItem(
+  item: TokenHistoryItem,
+  isTopRounded: Boolean,
+  isBottomRounded: Boolean,
+) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-    shape = RoundedCornerShape(16.dp),
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+    shape = itemShape(isTopRounded = isTopRounded, isBottomRounded = isBottomRounded),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -350,3 +382,19 @@ private fun TokenHistoryItem(item: TokenHistoryItem) {
     }
   }
 }
+
+private fun itemShape(isTopRounded: Boolean, isBottomRounded: Boolean): RoundedCornerShape =
+  when {
+    isTopRounded && isBottomRounded -> {
+      RoundedCornerShape(16.dp)
+    }
+    isTopRounded -> {
+      RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
+    }
+    isBottomRounded -> {
+      RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+    }
+    else -> {
+      RoundedCornerShape(0.dp)
+    }
+  }
