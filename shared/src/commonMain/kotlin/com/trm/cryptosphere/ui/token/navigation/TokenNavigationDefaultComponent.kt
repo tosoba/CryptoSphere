@@ -57,7 +57,7 @@ class TokenNavigationDefaultComponent(
   }
 
   override fun onBackClicked() {
-    navigation.pop()
+    if (stack.value.items.size > 1) navigation.pop() else navigateHome()
   }
 
   private fun createChild(
