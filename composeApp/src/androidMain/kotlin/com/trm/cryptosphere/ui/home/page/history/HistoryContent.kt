@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -43,13 +44,18 @@ import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -77,25 +83,61 @@ import kotlinx.datetime.LocalTime
 fun HistoryContent(component: HistoryComponent) {
   val scope = rememberCoroutineScope()
 
-  val tabs = listOf(MR.strings.news.resolve(), MR.strings.tokens.resolve())
-  val pagerState = rememberPagerState(pageCount = tabs::size)
+  val pagerState = rememberPagerState(pageCount = HistoryPage.entries::size)
+  var deleteAllDialogVisible by rememberSaveable { mutableStateOf(false) }
 
   val searchBarState = rememberSearchBarState()
   fun collapseSearchBar() {
     scope.launch { searchBarState.animateToCollapsed() }
   }
 
+  if (deleteAllDialogVisible) {
+    AlertDialog(
+      onDismissRequest = { deleteAllDialogVisible = false },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            deleteAllDialogVisible = false
+            component.onDeleteHistoryClick(page = HistoryPage.fromIndex(pagerState.currentPage))
+          }
+        ) {
+          Text(MR.strings.confirm.resolve())
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { deleteAllDialogVisible = false }) {
+          Text(MR.strings.cancel.resolve())
+        }
+      },
+      title = { Text(MR.strings.delete_history.resolve()) },
+      text = { Text(MR.strings.delete_history_message.resolve()) },
+    )
+  }
+
+  val newsHistory = component.viewModel.newsHistory.collectAsLazyPagingItems()
+  val tokenHistory = component.viewModel.tokenHistory.collectAsLazyPagingItems()
+
   Scaffold(
     modifier = Modifier.clearFocusOnTap(::collapseSearchBar),
-    topBar = { TopSearchBar(searchBarState) },
+    topBar = {
+      TopSearchBar(
+        searchBarState = searchBarState,
+        deleteEnabled =
+          when (HistoryPage.fromIndex(pagerState.currentPage)) {
+            HistoryPage.NEWS -> newsHistory
+            HistoryPage.TOKENS -> tokenHistory
+          }.itemCount > 0,
+        onDeleteClick = { deleteAllDialogVisible = true },
+      )
+    },
   ) {
     Column(modifier = Modifier.fillMaxSize().padding(it)) {
       SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
-        tabs.forEachIndexed { index, title ->
+        HistoryPage.entries.forEach { page ->
           Tab(
-            selected = pagerState.currentPage == index,
-            onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-            text = { Text(text = title) },
+            selected = pagerState.currentPage == page.index,
+            onClick = { scope.launch { pagerState.animateScrollToPage(page.index) } },
+            text = { Text(text = page.labelRes.resolve()) },
           )
         }
       }
@@ -108,9 +150,7 @@ fun HistoryContent(component: HistoryComponent) {
             .weight(1f)
             .background(color = MaterialTheme.colorScheme.surfaceContainer),
       ) { index ->
-        val viewModel = component.viewModel
-        if (index == 0) NewsHistoryList(viewModel.newsHistory.collectAsLazyPagingItems())
-        else TokenHistoryList(viewModel.tokenHistory.collectAsLazyPagingItems())
+        if (index == 0) NewsHistoryList(newsHistory) else TokenHistoryList(tokenHistory)
       }
     }
   }
@@ -118,7 +158,11 @@ fun HistoryContent(component: HistoryComponent) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TopSearchBar(searchBarState: SearchBarState) {
+private fun TopSearchBar(
+  searchBarState: SearchBarState,
+  deleteEnabled: Boolean,
+  onDeleteClick: () -> Unit,
+) {
   val scope = rememberCoroutineScope()
   val textFieldState = rememberTextFieldState()
 
@@ -189,7 +233,7 @@ private fun TopSearchBar(searchBarState: SearchBarState) {
         tooltip = { PlainTooltip { Text(MR.strings.delete_history.resolve()) } },
         state = rememberTooltipState(),
       ) {
-        FilledTonalIconButton(onClick = {}) {
+        FilledTonalIconButton(onClick = onDeleteClick, enabled = deleteEnabled) {
           Icon(
             imageVector = Icons.Default.Delete,
             contentDescription = MR.strings.delete_history.resolve(),

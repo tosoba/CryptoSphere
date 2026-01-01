@@ -33,4 +33,8 @@ class TokenHistoryDefaultRepository(private val dao: TokenHistoryDao) : TokenHis
       pagingData ->
       pagingData.map(TokenHistoryWithTokenJunction::toDomain)
     }
+
+  override suspend fun deleteAllHistory() {
+    dao.deleteAll()
+  }
 }

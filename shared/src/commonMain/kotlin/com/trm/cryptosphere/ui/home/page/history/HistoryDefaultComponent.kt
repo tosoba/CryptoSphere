@@ -20,4 +20,11 @@ class HistoryDefaultComponent(
       dispatchers = dispatchers,
     )
   }
+
+  override fun onDeleteHistoryClick(page: HistoryPage) {
+    when (page) {
+      HistoryPage.NEWS -> viewModel.deleteAllNewsHistory()
+      HistoryPage.TOKENS -> viewModel.deleteAllTokenHistory()
+    }
+  }
 }

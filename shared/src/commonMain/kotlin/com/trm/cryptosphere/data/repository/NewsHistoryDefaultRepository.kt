@@ -36,4 +36,8 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
       pagingData ->
       pagingData.map(NewsHistoryEntity::toDomain)
     }
+
+  override suspend fun deleteAll() {
+    dao.deleteAll()
+  }
 }

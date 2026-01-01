@@ -13,10 +13,11 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class HistoryViewModel(
-  newsHistoryRepository: NewsHistoryRepository,
-  tokenHistoryRepository: TokenHistoryRepository,
+  private val newsHistoryRepository: NewsHistoryRepository,
+  private val tokenHistoryRepository: TokenHistoryRepository,
   dispatchers: AppCoroutineDispatchers,
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
@@ -69,6 +70,14 @@ class HistoryViewModel(
           }
       }
       .cachedIn(scope)
+
+  fun deleteAllNewsHistory() {
+    scope.launch { newsHistoryRepository.deleteAll() }
+  }
+
+  fun deleteAllTokenHistory() {
+    scope.launch { tokenHistoryRepository.deleteAllHistory() }
+  }
 
   override fun onDestroy() {
     scope.cancel()

@@ -9,4 +9,6 @@ interface NewsHistoryRepository {
   suspend fun addNewsToHistory(news: NewsItem)
 
   fun getHistory(): Flow<PagingData<NewsHistoryItem>>
+
+  suspend fun deleteAll()
 }

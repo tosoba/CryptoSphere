@@ -8,4 +8,6 @@ interface TokenHistoryRepository {
   suspend fun addTokenToHistory(tokenId: Int)
 
   fun getHistory(): Flow<PagingData<TokenHistoryItem>>
+
+  suspend fun deleteAllHistory()
 }
