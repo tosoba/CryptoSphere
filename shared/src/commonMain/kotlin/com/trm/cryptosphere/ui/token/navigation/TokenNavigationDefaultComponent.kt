@@ -48,7 +48,7 @@ class TokenNavigationDefaultComponent(
     )
   }
 
-  private var currentTokenId: Int = tokenId
+  private var currentFeedTokenId: Int = tokenId
 
   init {
     stack.subscribe(lifecycle) {
@@ -68,16 +68,16 @@ class TokenNavigationDefaultComponent(
       tokenFeedComponentFactory(
         componentContext = componentContext,
         tokenId = config.tokenId,
-        onCurrentTokenChange = { it?.let { currentTokenId = it.id } },
+        onCurrentFeedTokenChange = { it?.let { currentFeedTokenId = it.id } },
       )
     )
 
   override fun navigateToTokenFeed() {
     val (currentFeedConfig) = stack.value.items.last()
-    if (currentFeedConfig.tokenId == currentTokenId) return
+    if (currentFeedConfig.tokenId == currentFeedTokenId) return
 
-    viewModel.addTokenToHistory(currentTokenId)
-    navigation.pushToFront(TokenFeedConfig(currentTokenId))
+    viewModel.addTokenToHistory(currentFeedTokenId)
+    navigation.pushToFront(TokenFeedConfig(currentFeedTokenId))
   }
 
   override fun popToToken(token: TokenItem) {

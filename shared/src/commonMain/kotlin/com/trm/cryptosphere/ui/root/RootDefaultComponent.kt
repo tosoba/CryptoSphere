@@ -8,7 +8,10 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.retainedInstance
+import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenNavigation
@@ -19,8 +22,14 @@ class RootDefaultComponent(
   componentContext: ComponentContext,
   private val homeComponentFactory: HomeComponent.Factory,
   private val tokenNavigationComponentFactory: TokenNavigationComponent.Factory,
+  private val tokenHistoryRepository: TokenHistoryRepository,
+  private val dispatchers: AppCoroutineDispatchers,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
+
+  private val viewModel: RootViewModel = retainedInstance {
+    RootViewModel(tokenHistoryRepository, dispatchers)
+  }
 
   override val stack: Value<ChildStack<ChildConfig, RootComponent.Child>> =
     childStack(
@@ -65,6 +74,7 @@ class RootDefaultComponent(
     }
 
   private fun navigateToTokenFeed(tokenId: Int, tokenCarouselConfig: TokenCarouselConfig) {
+    viewModel.onTokenSelected(tokenId)
     navigation.pushToFront(ChildConfig.TokenNavigation(tokenId, tokenCarouselConfig))
   }
 

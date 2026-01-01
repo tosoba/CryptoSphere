@@ -5,13 +5,13 @@ import com.trm.cryptosphere.domain.model.TokenItem
 
 interface TokenFeedComponent : ComponentContext {
   val viewModel: TokenFeedViewModel
-  val onCurrentTokenChange: (TokenItem?) -> Unit
+  val onCurrentFeedTokenChange: (TokenItem?) -> Unit
 
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
       tokenId: Int,
-      onCurrentTokenChange: (TokenItem?) -> Unit,
+      onCurrentFeedTokenChange: (TokenItem?) -> Unit,
     ): TokenFeedComponent
   }
 }
