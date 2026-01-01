@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.token.navigation
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -41,8 +40,6 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
@@ -63,10 +60,6 @@ fun TokenNavigationContent(
 ) {
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
-
-  StatusBarContentAppearanceEffect(
-    if (isSystemInDarkTheme()) StatusBarContentAppearance.LIGHT else StatusBarContentAppearance.DARK
-  )
 
   Scaffold(
     modifier = modifier,

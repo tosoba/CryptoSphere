@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.ui.home
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.Text
@@ -14,8 +13,6 @@ import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.shared.MR
@@ -49,11 +46,6 @@ fun HomeContent(
       pages = pages,
       onPageSelected = {},
       pager = { modifier, state, key, pageContent ->
-        StatusBarContentAppearanceEffect(
-          if (isSystemInDarkTheme() || state.currentPage == 0) StatusBarContentAppearance.LIGHT
-          else StatusBarContentAppearance.DARK
-        )
-
         HorizontalPager(
           modifier = modifier,
           state = state,

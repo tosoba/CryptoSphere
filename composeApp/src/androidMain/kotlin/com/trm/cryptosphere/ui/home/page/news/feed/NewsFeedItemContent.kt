@@ -90,7 +90,12 @@ fun NewsFeedItemContent(
                 width = Dimension.matchParent
                 height = Dimension.value(topStatusBarHeight)
               }
-              .background(Brush.verticalGradient(colors = listOf(Color.Black, Color.Transparent)))
+              .background(
+                Brush.verticalGradient(
+                  0f to MaterialTheme.colorScheme.surfaceContainer,
+                  1f to Color.Transparent,
+                )
+              )
         )
 
         Box(
