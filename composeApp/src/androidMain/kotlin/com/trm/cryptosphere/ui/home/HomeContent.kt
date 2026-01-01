@@ -49,6 +49,11 @@ fun HomeContent(
       pages = pages,
       onPageSelected = {},
       pager = { modifier, state, key, pageContent ->
+        StatusBarContentAppearanceEffect(
+          if (isSystemInDarkTheme() || state.currentPage == 0) StatusBarContentAppearance.LIGHT
+          else StatusBarContentAppearance.DARK
+        )
+
         HorizontalPager(
           modifier = modifier,
           state = state,
@@ -72,15 +77,6 @@ fun HomeContent(
         component.lifecycle.subscribe(callbacks)
         onDispose { component.lifecycle.unsubscribe(callbacks) }
       }
-
-      StatusBarContentAppearanceEffect(
-        if (isSystemInDarkTheme() || page is HomeComponent.Page.NewsFeed) {
-          StatusBarContentAppearance.LIGHT
-        } else {
-          StatusBarContentAppearance.DARK
-        }
-      )
-
       when (page) {
         is HomeComponent.Page.NewsFeed -> {
           NewsFeedContent(
