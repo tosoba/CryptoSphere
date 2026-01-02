@@ -27,4 +27,8 @@ class HistoryDefaultComponent(
       HistoryPage.TOKENS -> viewModel.deleteAllTokenHistory()
     }
   }
+
+  override fun onQueryChange(query: String) {
+    viewModel.onQueryChange(query)
+  }
 }

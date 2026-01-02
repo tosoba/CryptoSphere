@@ -28,11 +28,10 @@ class TokenHistoryDefaultRepository(private val dao: TokenHistoryDao) : TokenHis
     )
   }
 
-  override fun getHistory(): Flow<PagingData<TokenHistoryItem>> =
-    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = dao::selectAll).flow.map {
-      pagingData ->
-      pagingData.map(TokenHistoryWithTokenJunction::toDomain)
-    }
+  override fun getHistory(query: String): Flow<PagingData<TokenHistoryItem>> =
+    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = { dao.selectAll(query) })
+      .flow
+      .map { pagingData -> pagingData.map(TokenHistoryWithTokenJunction::toDomain) }
 
   override suspend fun deleteAllHistory() {
     dao.deleteAll()

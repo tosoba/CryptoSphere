@@ -21,8 +21,9 @@ interface TokenHistoryDao {
     """
         SELECT * FROM token_history 
         INNER JOIN token ON token_history.token_id = token.id
+        WHERE LOWER(token.name) LIKE '%' || LOWER(:query) || '%' OR LOWER(token.symbol) LIKE '%' || LOWER(:query) || '%' OR LOWER(token.slug) LIKE '%' || LOWER(:query) || '%'
         ORDER BY visited_at DESC
     """
   )
-  fun selectAll(): PagingSource<Int, TokenHistoryWithTokenJunction>
+  fun selectAll(query: String): PagingSource<Int, TokenHistoryWithTokenJunction>
 }

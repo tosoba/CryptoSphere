@@ -31,11 +31,10 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
     )
   }
 
-  override fun getHistory(): Flow<PagingData<NewsHistoryItem>> =
-    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = dao::selectAll).flow.map {
-      pagingData ->
-      pagingData.map(NewsHistoryEntity::toDomain)
-    }
+  override fun getHistory(query: String): Flow<PagingData<NewsHistoryItem>> =
+    Pager(config = PagingConfig(pageSize = 20), pagingSourceFactory = { dao.selectAll(query) })
+      .flow
+      .map { pagingData -> pagingData.map(NewsHistoryEntity::toDomain) }
 
   override suspend fun deleteAll() {
     dao.deleteAll()

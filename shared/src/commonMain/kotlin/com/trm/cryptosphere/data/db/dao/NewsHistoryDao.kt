@@ -16,6 +16,12 @@ interface NewsHistoryDao {
 
   @Query("DELETE FROM news_history") suspend fun deleteAll()
 
-  @Query("SELECT * FROM news_history ORDER BY visited_at DESC")
-  fun selectAll(): PagingSource<Int, NewsHistoryEntity>
+  @Query(
+    """
+    SELECT * FROM news_history 
+    WHERE LOWER(title) LIKE '%' || LOWER(:query) || '%' OR LOWER(source) LIKE '%' || LOWER(:query) || '%'
+    ORDER BY visited_at DESC
+    """
+  )
+  fun selectAll(query: String): PagingSource<Int, NewsHistoryEntity>
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface TokenHistoryRepository {
   suspend fun addTokenToHistory(tokenId: Int)
 
-  fun getHistory(): Flow<PagingData<TokenHistoryItem>>
+  fun getHistory(query: String): Flow<PagingData<TokenHistoryItem>>
 
   suspend fun deleteAllHistory()
 }

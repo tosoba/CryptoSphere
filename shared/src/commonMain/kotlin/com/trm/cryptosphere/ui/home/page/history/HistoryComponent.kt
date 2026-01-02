@@ -7,6 +7,8 @@ interface HistoryComponent : ComponentContext {
 
   fun onDeleteHistoryClick(page: HistoryPage)
 
+  fun onQueryChange(query: String)
+
   fun interface Factory {
     operator fun invoke(componentContext: ComponentContext): HistoryComponent
   }

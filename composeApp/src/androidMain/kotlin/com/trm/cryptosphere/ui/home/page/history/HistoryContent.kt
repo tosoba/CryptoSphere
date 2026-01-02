@@ -56,6 +56,7 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -134,6 +135,7 @@ fun HistoryContent(component: HistoryComponent) {
             HistoryPage.TOKENS -> tokenHistory
           }.itemCount > 0,
         onDeleteClick = { deleteAllDialogVisible = true },
+        onQueryChange = component::onQueryChange,
       )
     },
   ) {
@@ -168,9 +170,12 @@ private fun TopSearchBar(
   searchBarState: SearchBarState,
   deleteEnabled: Boolean,
   onDeleteClick: () -> Unit,
+  onQueryChange: (String) -> Unit,
 ) {
   val scope = rememberCoroutineScope()
   val textFieldState = rememberTextFieldState()
+
+  LaunchedEffect(textFieldState.text) { onQueryChange(textFieldState.text.toString()) }
 
   AppBarWithSearch(
     state = searchBarState,
@@ -260,7 +265,7 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>) {
       item {
         EmptyHistory(
           text = MR.strings.no_news_history.resolve(),
-          modifier = Modifier.fillParentMaxSize(),
+          modifier = Modifier.fillParentMaxSize().animateItem(),
         )
       }
     }
@@ -352,28 +357,28 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
 
 @Composable
 private fun LazyItemScope.HistoryLoadingIndicator() {
-  Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+  Box(modifier = Modifier.fillParentMaxSize().animateItem(), contentAlignment = Alignment.Center) {
     CircularProgressIndicator()
   }
 }
 
 @Composable
-private fun DateHeader(date: LocalDate) {
+private fun LazyItemScope.DateHeader(date: LocalDate) {
   Text(
     text = LocalDate.Formats.ISO.format(date),
     style = MaterialTheme.typography.labelLarge,
-    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).animateItem(),
   )
 }
 
 @Composable
-private fun NewsHistoryItem(
+private fun LazyItemScope.NewsHistoryItem(
   item: NewsHistoryItem,
   isTopRounded: Boolean,
   isBottomRounded: Boolean,
 ) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp).animateItem(),
     shape = itemShape(isTopRounded = isTopRounded, isBottomRounded = isBottomRounded),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
   ) {
@@ -417,13 +422,13 @@ private fun NewsHistoryItem(
 }
 
 @Composable
-private fun TokenHistoryItem(
+private fun LazyItemScope.TokenHistoryItem(
   item: TokenHistoryItem,
   isTopRounded: Boolean,
   isBottomRounded: Boolean,
 ) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp).animateItem(),
     shape = itemShape(isTopRounded = isTopRounded, isBottomRounded = isBottomRounded),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
   ) {

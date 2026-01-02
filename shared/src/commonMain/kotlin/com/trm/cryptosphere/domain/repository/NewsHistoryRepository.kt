@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface NewsHistoryRepository {
   suspend fun addNewsToHistory(news: NewsItem)
 
-  fun getHistory(): Flow<PagingData<NewsHistoryItem>>
+  fun getHistory(query: String): Flow<PagingData<NewsHistoryItem>>
 
   suspend fun deleteAll()
 }

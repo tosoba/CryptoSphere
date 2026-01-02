@@ -9,12 +9,18 @@ import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class HistoryViewModel(
   private val newsHistoryRepository: NewsHistoryRepository,
   private val tokenHistoryRepository: TokenHistoryRepository,
@@ -22,9 +28,16 @@ class HistoryViewModel(
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
 
+  private val query = MutableStateFlow("")
+
+  fun onQueryChange(newQuery: String) {
+    query.value = newQuery.trim()
+  }
+
   val newsHistory: Flow<PagingData<NewsHistoryListItem>> =
-    newsHistoryRepository
-      .getHistory()
+    query
+      .debounce(250)
+      .flatMapLatest(newsHistoryRepository::getHistory)
       .map { pagingData ->
         pagingData
           .map { NewsHistoryListItem.Item(it) }
@@ -47,8 +60,9 @@ class HistoryViewModel(
       .cachedIn(scope)
 
   val tokenHistory: Flow<PagingData<TokenHistoryListItem>> =
-    tokenHistoryRepository
-      .getHistory()
+    query
+      .debounce(250)
+      .flatMapLatest(tokenHistoryRepository::getHistory)
       .map { pagingData ->
         pagingData
           .map { TokenHistoryListItem.Item(it) }
