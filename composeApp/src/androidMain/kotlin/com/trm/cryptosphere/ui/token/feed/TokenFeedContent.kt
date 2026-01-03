@@ -61,6 +61,7 @@ import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
+import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.core.util.isExpandedHeight
 import com.trm.cryptosphere.core.util.resolve
@@ -150,7 +151,7 @@ private fun TokenFeedPagerItem(
           }
           .aspectRatio(1f)
           .clip(RoundedCornerShape(16.dp)),
-      model = token.logoUrl,
+      model = rememberCrossfadeImageRequest(token.logoUrl),
       contentDescription = null,
       contentScale = ContentScale.Fit,
     )

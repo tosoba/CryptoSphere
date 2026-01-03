@@ -76,6 +76,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
+import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
@@ -384,7 +385,7 @@ private fun LazyItemScope.NewsHistoryItem(
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
       AsyncImage(
-        model = item.imgUrl,
+        model = rememberCrossfadeImageRequest(item.imgUrl),
         contentDescription = null,
         modifier = Modifier.size(48.dp).clip(RoundedCornerShape(8.dp)),
         contentScale = ContentScale.Crop,
@@ -434,7 +435,7 @@ private fun LazyItemScope.TokenHistoryItem(
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
       AsyncImage(
-        model = item.token.logoUrl,
+        model = rememberCrossfadeImageRequest(item.token.logoUrl),
         contentDescription = null,
         modifier = Modifier.size(48.dp).clip(RoundedCornerShape(8.dp)),
         contentScale = ContentScale.Fit,

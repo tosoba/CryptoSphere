@@ -41,6 +41,7 @@ import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
@@ -61,7 +62,7 @@ fun NewsFeedItemContent(
 
   Box(modifier = modifier) {
     AsyncImage(
-      model = news.imgUrl, // TODO: loading/error placeholders
+      model = rememberCrossfadeImageRequest(news.imgUrl), // TODO: loading/error placeholders
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier = Modifier.fillMaxSize(),

@@ -2,6 +2,7 @@ package com.trm.cryptosphere.ui.home.page.news.feed
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -73,7 +75,8 @@ fun NewsFeedContent(
                 item = it,
                 isCurrent = page == pagerState.currentPage,
                 onRelatedTokenItemClick = component.onTokenCarouselItemClick,
-                onLinkClick = { component.onLinkClick(it) },
+                onLinkClick = component::onLinkClick,
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer),
               )
             }
           }

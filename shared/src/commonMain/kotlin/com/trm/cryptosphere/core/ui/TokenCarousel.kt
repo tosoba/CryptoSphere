@@ -81,7 +81,7 @@ fun TokenCarousel(
 
         AsyncImage(
           modifier = Modifier.weight(1f).aspectRatio(1f).clip(RoundedCornerShape(4.dp)),
-          model = token.logoUrl,
+          model = rememberCrossfadeImageRequest(token.logoUrl),
           contentDescription = null,
           contentScale = ContentScale.Fit,
         )
