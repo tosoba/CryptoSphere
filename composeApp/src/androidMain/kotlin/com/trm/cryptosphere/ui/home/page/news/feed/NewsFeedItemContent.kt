@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReadMore
+import androidx.compose.material.icons.outlined.ImageNotSupported
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -25,6 +27,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -37,12 +40,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
-import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.ui.localSharedElement
+import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.domain.model.NewsFeedItem
@@ -61,11 +64,26 @@ fun NewsFeedItemContent(
   val (news, relatedTokens) = item
 
   Box(modifier = modifier) {
-    AsyncImage(
-      model = rememberCrossfadeImageRequest(news.imgUrl), // TODO: loading/error placeholders
+    SubcomposeAsyncImage(
+      model = rememberCrossfadeImageRequest(news.imgUrl),
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier = Modifier.fillMaxSize(),
+      loading = {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+          CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
+        }
+      },
+      error = {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+          Icon(
+            imageVector = Icons.Outlined.ImageNotSupported,
+            contentDescription = null,
+            modifier = Modifier.size(128.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+        }
+      },
     )
 
     AnimatedVisibility(visible = isCurrent, enter = fadeIn(), exit = fadeOut()) {
