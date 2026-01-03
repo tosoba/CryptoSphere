@@ -359,7 +359,7 @@ private fun TokenHistoryList(items: LazyPagingItems<TokenHistoryListItem>) {
 @Composable
 private fun LazyItemScope.HistoryLoadingIndicator() {
   Box(modifier = Modifier.fillParentMaxSize().animateItem(), contentAlignment = Alignment.Center) {
-    CircularProgressIndicator()
+    CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
   }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -45,7 +47,7 @@ fun NewsFeedContent(
     when (loadState) {
       LoadState.Loading -> {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
-          CircularProgressIndicator()
+          CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
         }
       }
       is LoadState.NotLoading -> {
