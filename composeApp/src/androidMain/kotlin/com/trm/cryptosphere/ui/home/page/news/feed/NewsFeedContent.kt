@@ -4,14 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,11 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
@@ -46,9 +43,7 @@ fun NewsFeedContent(
   Crossfade(newsItems.loadState.refresh) { loadState ->
     when (loadState) {
       LoadState.Loading -> {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
-          CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
-        }
+        LargeCircularProgressIndicator(modifier = modifier)
       }
       is LoadState.NotLoading -> {
         DisposableEffect(pagerState.currentPage, newsItems) {

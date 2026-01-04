@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
@@ -60,6 +58,7 @@ import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shortDecimalFormat
+import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
@@ -88,9 +87,7 @@ fun TokenFeedContent(
   Crossfade(targetState = tokens.loadState.refresh is LoadState.Loading, modifier = modifier) {
     isLoading ->
     if (isLoading) {
-      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
-      }
+      LargeCircularProgressIndicator(modifier = Modifier.fillMaxSize())
     } else {
       VerticalFeedPager(
         pagerState = pagerState,

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReadMore
 import androidx.compose.material.icons.outlined.ImageNotSupported
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -42,6 +41,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil3.compose.SubcomposeAsyncImage
 import com.trm.cryptosphere.core.base.openUrl
+import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -69,11 +69,7 @@ fun NewsFeedItemContent(
       contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier = Modifier.fillMaxSize(),
-      loading = {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-          CircularProgressIndicator(modifier = Modifier.size(64.dp), strokeWidth = 8.dp)
-        }
-      },
+      loading = { LargeCircularProgressIndicator(modifier = Modifier.fillMaxSize()) },
       error = {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
           Icon(
