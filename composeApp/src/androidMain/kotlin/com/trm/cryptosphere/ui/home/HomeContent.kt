@@ -71,14 +71,10 @@ fun HomeContent(
       }
       when (page) {
         is HomeComponent.Page.NewsFeed -> {
-          NewsFeedContent(
-            component = page.component,
-            modifier = Modifier.fillMaxSize(),
-            onImageUrlChange = onImageUrlChange,
-          )
+          NewsFeedContent(component = page.component, onImageUrlChange = onImageUrlChange)
         }
         is HomeComponent.Page.Prices -> {
-          PricesContent(component = page.component, modifier = Modifier.fillMaxSize())
+          PricesContent(component = page.component)
         }
         is HomeComponent.Page.History -> {
           HistoryContent(component = page.component)

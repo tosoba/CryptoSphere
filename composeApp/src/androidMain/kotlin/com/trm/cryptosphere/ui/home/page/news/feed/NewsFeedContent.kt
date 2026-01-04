@@ -31,11 +31,7 @@ import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
 
 @Composable
-fun NewsFeedContent(
-  component: NewsFeedComponent,
-  modifier: Modifier = Modifier,
-  onImageUrlChange: (String?) -> Unit,
-) {
+fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) -> Unit) {
   val newsItems = component.viewModel.newsFeedItems.collectAsLazyPagingItems()
   val pagerState = rememberPagerState { newsItems.itemCount }
   var isRefreshing by remember { mutableStateOf(false) }
@@ -43,7 +39,7 @@ fun NewsFeedContent(
   Crossfade(newsItems.loadState.refresh) { loadState ->
     when (loadState) {
       LoadState.Loading -> {
-        LargeCircularProgressIndicator(modifier = modifier)
+        LargeCircularProgressIndicator(modifier = Modifier.fillMaxSize())
       }
       is LoadState.NotLoading -> {
         DisposableEffect(pagerState.currentPage, newsItems) {
@@ -60,7 +56,7 @@ fun NewsFeedContent(
         PullToRefreshBox(
           isRefreshing = isRefreshing,
           onRefresh = newsItems::refresh,
-          modifier = modifier,
+          modifier = Modifier.fillMaxSize(),
         ) {
           VerticalFeedPager(
             pagerState = pagerState,
@@ -88,7 +84,7 @@ fun NewsFeedContent(
       }
       is LoadState.Error -> {
         Column(
-          modifier = modifier,
+          modifier = Modifier.fillMaxSize(),
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.Center,
         ) {
