@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -40,11 +41,13 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.trm.cryptosphere.core.base.shareUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
+import com.trm.cryptosphere.domain.model.shareUrl
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @OptIn(
@@ -70,15 +73,7 @@ fun TokenNavigationContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
           ) {
-            IconButton(onClick = component::onBackClicked) {
-              Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-            }
-            FilledTonalIconButton(onClick = component.navigateHome) {
-              Icon(imageVector = Icons.Filled.Home, contentDescription = null)
-            }
-            IconButton(onClick = {}, enabled = false) {
-              Icon(imageVector = Icons.Filled.Share, contentDescription = null)
-            }
+            NavigationBarButtons(component)
           }
         }
       }
@@ -187,17 +182,23 @@ fun TokenNavigationContent(
               end.linkTo(parent.end, margin = 16.dp)
             },
         ) {
-          IconButton(onClick = component::onBackClicked) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-          }
-          FilledTonalIconButton(onClick = component.navigateHome) {
-            Icon(imageVector = Icons.Filled.Home, contentDescription = null)
-          }
-          IconButton(onClick = {}, enabled = false) {
-            Icon(imageVector = Icons.Filled.Share, contentDescription = null)
-          }
+          NavigationBarButtons(component)
         }
       }
     }
+  }
+}
+
+@Composable
+private fun NavigationBarButtons(component: TokenNavigationComponent) {
+  val context = LocalContext.current
+  IconButton(onClick = component::onBackClicked) {
+    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+  }
+  FilledTonalIconButton(onClick = component.navigateHome) {
+    Icon(imageVector = Icons.Filled.Home, contentDescription = null)
+  }
+  IconButton(onClick = { component.currentFeedToken?.shareUrl?.let(context::shareUrl) }) {
+    Icon(imageVector = Icons.Filled.Share, contentDescription = null)
   }
 }

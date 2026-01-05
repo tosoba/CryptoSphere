@@ -41,6 +41,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil3.compose.SubcomposeAsyncImage
 import com.trm.cryptosphere.core.base.openUrl
+import com.trm.cryptosphere.core.base.shareUrl
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
@@ -60,6 +61,7 @@ fun NewsFeedItemContent(
   onRelatedTokenItemClick: (Int, TokenCarouselConfig) -> Unit,
   onLinkClick: (NewsItem) -> Unit,
 ) {
+  val context = LocalContext.current
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val (news, relatedTokens) = item
 
@@ -133,12 +135,11 @@ fun NewsFeedItemContent(
             },
           colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = Color.White),
           border = BorderStroke(1.dp, Color.White),
-          onClick = {},
+          onClick = { context.shareUrl(item.news.link) },
         ) {
-          Icon(Icons.Outlined.Share, contentDescription = null)
+          Icon(imageVector = Icons.Outlined.Share, contentDescription = null)
         }
 
-        val context = LocalContext.current
         if (adaptiveInfo.isCompactHeight()) {
           FloatingActionButton(
             modifier =

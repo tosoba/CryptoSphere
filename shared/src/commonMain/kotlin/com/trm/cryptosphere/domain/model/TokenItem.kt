@@ -25,3 +25,6 @@ data class TokenItem(
 
 val TokenItem.logoUrl: String
   get() = "https://s2.coinmarketcap.com/static/img/coins/128x128/$id.png"
+
+val TokenItem.shareUrl: String
+  get() = "https://coinmarketcap.com/currencies/$slug"

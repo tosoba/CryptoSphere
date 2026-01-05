@@ -10,6 +10,7 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 
 interface TokenNavigationComponent : BackHandlerOwner {
   val tokenCarouselConfig: TokenCarouselConfig
+  val currentFeedToken: TokenItem?
   val navigateHome: () -> Unit
   val stack: Value<ChildStack<*, TokenFeedChild>>
   val viewModel: TokenNavigationViewModel
