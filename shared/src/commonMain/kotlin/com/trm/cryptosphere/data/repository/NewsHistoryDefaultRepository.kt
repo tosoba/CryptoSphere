@@ -39,4 +39,8 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
   override suspend fun deleteAll() {
     dao.deleteAll()
   }
+
+  override suspend fun deleteNewsHistory(id: Long) {
+    dao.deleteById(id)
+  }
 }

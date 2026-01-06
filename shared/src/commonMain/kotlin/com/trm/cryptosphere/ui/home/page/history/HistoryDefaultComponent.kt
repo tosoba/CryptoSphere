@@ -28,6 +28,14 @@ class HistoryDefaultComponent(
     }
   }
 
+  override fun onDeleteNewsHistory(id: Long) {
+    viewModel.deleteNewsHistory(id)
+  }
+
+  override fun onDeleteTokenHistory(id: Long) {
+    viewModel.deleteTokenHistory(id)
+  }
+
   override fun onQueryChange(query: String) {
     viewModel.onQueryChange(query)
   }

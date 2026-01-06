@@ -15,6 +15,8 @@ interface TokenHistoryDao {
 
   @Delete suspend fun delete(entity: TokenHistoryEntity)
 
+  @Query("DELETE FROM token_history WHERE id = :id") suspend fun deleteById(id: Long)
+
   @Query("DELETE FROM token_history") suspend fun deleteAll()
 
   @Query(

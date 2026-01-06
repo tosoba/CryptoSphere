@@ -14,6 +14,8 @@ interface NewsHistoryDao {
 
   @Delete suspend fun delete(entity: NewsHistoryEntity)
 
+  @Query("DELETE FROM news_history WHERE id = :id") suspend fun deleteById(id: Long)
+
   @Query("DELETE FROM news_history") suspend fun deleteAll()
 
   @Query(

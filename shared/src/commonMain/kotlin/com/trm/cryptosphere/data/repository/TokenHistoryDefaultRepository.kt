@@ -36,4 +36,8 @@ class TokenHistoryDefaultRepository(private val dao: TokenHistoryDao) : TokenHis
   override suspend fun deleteAllHistory() {
     dao.deleteAll()
   }
+
+  override suspend fun deleteTokenHistory(id: Long) {
+    dao.deleteById(id)
+  }
 }

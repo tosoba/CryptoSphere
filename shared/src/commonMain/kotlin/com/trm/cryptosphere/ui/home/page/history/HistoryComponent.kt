@@ -7,6 +7,10 @@ interface HistoryComponent : ComponentContext {
 
   fun onDeleteHistoryClick(page: HistoryPage)
 
+  fun onDeleteNewsHistory(id: Long)
+
+  fun onDeleteTokenHistory(id: Long)
+
   fun onQueryChange(query: String)
 
   fun interface Factory {

@@ -93,6 +93,14 @@ class HistoryViewModel(
     scope.launch { tokenHistoryRepository.deleteAllHistory() }
   }
 
+  fun deleteNewsHistory(id: Long) {
+    scope.launch { newsHistoryRepository.deleteNewsHistory(id) }
+  }
+
+  fun deleteTokenHistory(id: Long) {
+    scope.launch { tokenHistoryRepository.deleteTokenHistory(id) }
+  }
+
   override fun onDestroy() {
     scope.cancel()
   }

@@ -11,4 +11,6 @@ interface NewsHistoryRepository {
   fun getHistory(query: String): Flow<PagingData<NewsHistoryItem>>
 
   suspend fun deleteAll()
+
+  suspend fun deleteNewsHistory(id: Long)
 }

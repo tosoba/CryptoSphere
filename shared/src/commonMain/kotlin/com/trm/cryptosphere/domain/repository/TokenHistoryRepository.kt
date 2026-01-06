@@ -10,4 +10,6 @@ interface TokenHistoryRepository {
   fun getHistory(query: String): Flow<PagingData<TokenHistoryItem>>
 
   suspend fun deleteAllHistory()
+
+  suspend fun deleteTokenHistory(id: Long)
 }
