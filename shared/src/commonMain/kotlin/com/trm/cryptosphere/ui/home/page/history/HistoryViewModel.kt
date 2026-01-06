@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class HistoryViewModel(
@@ -36,22 +37,11 @@ class HistoryViewModel(
       .flatMapLatest(newsHistoryRepository::getHistory)
       .map { pagingData ->
         pagingData
-          .map { NewsHistoryListItem.Item(it) }
-          .insertSeparators { before: NewsHistoryListItem.Item?, after: NewsHistoryListItem.Item? ->
-            if (after == null) return@insertSeparators null
-
-            val afterDate = after.news.visitedAt.date
-            if (before == null) {
-              return@insertSeparators NewsHistoryListItem.DateHeader(afterDate)
-            }
-
-            val beforeDate = before.news.visitedAt.date
-            if (beforeDate != afterDate) {
-              NewsHistoryListItem.DateHeader(afterDate)
-            } else {
-              null
-            }
-          }
+          .map(NewsHistoryListItem::Item)
+          .insertDateSeparators(
+            date = { it.news.visitedAt.date },
+            separatorItem = NewsHistoryListItem::DateHeader,
+          )
       }
       .cachedIn(scope)
 
@@ -61,25 +51,32 @@ class HistoryViewModel(
       .flatMapLatest(tokenHistoryRepository::getHistory)
       .map { pagingData ->
         pagingData
-          .map { TokenHistoryListItem.Item(it) }
-          .insertSeparators { before: TokenHistoryListItem.Item?, after: TokenHistoryListItem.Item?
-            ->
-            if (after == null) return@insertSeparators null
-
-            val afterDate = after.token.visitedAt.date
-            if (before == null) {
-              return@insertSeparators TokenHistoryListItem.DateHeader(afterDate)
-            }
-
-            val beforeDate = before.token.visitedAt.date
-            if (beforeDate != afterDate) {
-              TokenHistoryListItem.DateHeader(afterDate)
-            } else {
-              null
-            }
-          }
+          .map (TokenHistoryListItem::Item)
+          .insertDateSeparators(
+            date = { it.token.visitedAt.date },
+            separatorItem = TokenHistoryListItem::DateHeader,
+          )
       }
       .cachedIn(scope)
+
+  private fun <R : Any, T : R, S : R> PagingData<T>.insertDateSeparators(
+    date: (T) -> LocalDate,
+    separatorItem: (LocalDate) -> S,
+  ): PagingData<R> = insertSeparators { before: T?, after: T? ->
+    if (after == null) return@insertSeparators null
+
+    val afterDate = date(after)
+    if (before == null) {
+      return@insertSeparators separatorItem(afterDate)
+    }
+
+    val beforeDate = date(before)
+    if (beforeDate != afterDate) {
+      separatorItem(afterDate)
+    } else {
+      null
+    }
+  }
 
   fun onQueryChange(newQuery: String) {
     query.value = newQuery.trim()
