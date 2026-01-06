@@ -62,6 +62,7 @@ import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.fullDecimalFormat
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
+import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
@@ -122,6 +123,7 @@ fun PricesContent(component: PricesComponent) {
                 isTopRounded = index == 0,
                 isBottomRounded = index == tokens.itemCount - 1,
               ),
+            onClick = { component.onTokenClick(token.id, TokenCarouselConfig(null)) },
           )
         }
       }
@@ -202,11 +204,12 @@ private fun TopSearchBar(searchBarState: SearchBarState, onQueryChange: (String)
 }
 
 @Composable
-private fun TokenPriceItem(token: TokenItem, shape: Shape) {
+private fun TokenPriceItem(token: TokenItem, shape: Shape, onClick: () -> Unit) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    onClick = onClick,
   ) {
     Row(
       modifier = Modifier.fillMaxWidth().padding(16.dp),

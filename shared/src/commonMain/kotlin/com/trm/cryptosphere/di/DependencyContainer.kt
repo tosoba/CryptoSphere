@@ -83,9 +83,10 @@ class DependencyContainer(
       )
     },
   private val pricesComponentFactory: PricesComponent.Factory =
-    PricesComponent.Factory { componentContext ->
+    PricesComponent.Factory { componentContext, onTokenClick ->
       PricesDefaultComponent(
         componentContext = componentContext,
+        onTokenClick = onTokenClick,
         tokenRepository = tokenRepository.value,
         dispatchers = appCoroutineDispatchers,
       )
@@ -100,10 +101,10 @@ class DependencyContainer(
       )
     },
   val homeComponentFactory: HomeComponent.Factory =
-    HomeComponent.Factory { componentContext, onTokenCarouselItemClick ->
+    HomeComponent.Factory { componentContext, onTokenClick ->
       HomeDefaultComponent(
         componentContext = componentContext,
-        onTokenCarouselItemClick = onTokenCarouselItemClick,
+        onTokenClick = onTokenClick,
         newsFeedComponentFactory = newsFeedComponentFactory,
         pricesComponentFactory = pricesComponentFactory,
         historyComponentFactory = historyComponentFactory,

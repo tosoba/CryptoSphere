@@ -15,7 +15,7 @@ import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 
 class HomeDefaultComponent(
   componentContext: ComponentContext,
-  private val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit,
+  private val onTokenClick: (Int, TokenCarouselConfig) -> Unit,
   private val newsFeedComponentFactory: NewsFeedComponent.Factory,
   private val pricesComponentFactory: PricesComponent.Factory,
   private val historyComponentFactory: HistoryComponent.Factory,
@@ -47,12 +47,14 @@ class HomeDefaultComponent(
         HomeComponent.Page.NewsFeed(
           newsFeedComponentFactory(
             componentContext = componentContext,
-            onTokenCarouselItemClick = onTokenCarouselItemClick,
+            onTokenCarouselItemClick = onTokenClick,
           )
         )
       }
       HomePageConfig.PRICES -> {
-        HomeComponent.Page.Prices(pricesComponentFactory(componentContext))
+        HomeComponent.Page.Prices(
+          pricesComponentFactory(componentContext = componentContext, onTokenClick = onTokenClick)
+        )
       }
       HomePageConfig.HISTORY -> {
         HomeComponent.Page.History(historyComponentFactory(componentContext))

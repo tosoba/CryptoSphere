@@ -139,12 +139,11 @@ fun TokenNavigationContent(
               width = Dimension.fillToConstraints
               height = Dimension.fillToConstraints
             }
-            .localSharedElement(
-              key =
-                tokenCarouselSharedTransitionKey(
-                  requireNotNull(component.tokenCarouselConfig.parentSharedElementId)
-                )
-            ),
+            .run {
+              component.tokenCarouselConfig.parentSharedElementId?.let {
+                localSharedElement(key = tokenCarouselSharedTransitionKey(it))
+              } ?: this
+            },
         contentPadding = PaddingValues(start = 16.dp),
       )
 

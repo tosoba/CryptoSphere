@@ -57,7 +57,7 @@ class RootDefaultComponent(
         Home(
           homeComponentFactory(
             componentContext = componentContext,
-            onTokenCarouselItemClick = ::navigateToTokenFeed,
+            onTokenClick = ::navigateToTokenFeed,
           )
         )
       }
