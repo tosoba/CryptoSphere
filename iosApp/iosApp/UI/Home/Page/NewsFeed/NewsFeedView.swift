@@ -83,10 +83,7 @@ private struct NewsFeedItemView: View {
                 TokenCarouselViewController(
                     tokens: item.relatedTokens,
                     onItemClick: { token in
-                        onTokenCarouselItemClick(
-                            token.id,
-                            TokenCarouselConfig(items: item.relatedTokens)
-                        )
+                        onTokenCarouselItemClick(token.id, TokenCarouselConfig())
                     },
                     measuredHeight: $tokenCarouselMeasuredHeight
                 )

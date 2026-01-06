@@ -15,8 +15,10 @@ struct RootView: View {
             onBack: component.onBackClicked
         ) { child in
             switch onEnum(of: child) {
-            case let .home(homeChild): HomeView(homeChild.component)
-            case let .tokenFeed(tokenFeedChild): TokenFeedView(component: tokenFeedChild.component)
+            case let .home(homeChild):
+                HomeView(homeChild.component)
+            case let .tokenNavigation(tokenNavigationChild):
+                TokenNavigationView(component: tokenNavigationChild.component)
             }
         }
     }
