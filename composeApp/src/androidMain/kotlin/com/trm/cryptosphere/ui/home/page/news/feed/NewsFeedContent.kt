@@ -68,7 +68,7 @@ fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) ->
                 item = it,
                 isCurrent = page == pagerState.currentPage,
                 onRelatedTokenItemClick = component.onTokenCarouselItemClick,
-                onLinkClick = component::onLinkClick,
+                onLinkClick = component.viewModel::onLinkClick,
                 modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer),
               )
             }
