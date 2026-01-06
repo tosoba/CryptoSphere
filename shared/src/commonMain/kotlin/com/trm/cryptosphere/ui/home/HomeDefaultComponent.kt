@@ -17,7 +17,7 @@ class HomeDefaultComponent(
   componentContext: ComponentContext,
   private val onTokenCarouselItemClick: (Int, TokenCarouselConfig) -> Unit,
   private val newsFeedComponentFactory: NewsFeedComponent.Factory,
-  private val createPricesComponent: (ComponentContext) -> PricesComponent,
+  private val pricesComponentFactory: PricesComponent.Factory,
   private val historyComponentFactory: HistoryComponent.Factory,
 ) : HomeComponent, ComponentContext by componentContext {
   private val navigation = PagesNavigation<HomePageConfig>()
@@ -52,7 +52,7 @@ class HomeDefaultComponent(
         )
       }
       HomePageConfig.PRICES -> {
-        HomeComponent.Page.Prices(createPricesComponent(componentContext))
+        HomeComponent.Page.Prices(pricesComponentFactory(componentContext))
       }
       HomePageConfig.HISTORY -> {
         HomeComponent.Page.History(historyComponentFactory(componentContext))

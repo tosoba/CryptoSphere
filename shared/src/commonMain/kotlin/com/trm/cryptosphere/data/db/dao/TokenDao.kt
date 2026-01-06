@@ -12,7 +12,6 @@ import com.trm.cryptosphere.data.db.entity.TokenEntity
 import com.trm.cryptosphere.data.db.entity.TokenTagEntity
 import com.trm.cryptosphere.data.db.entity.junction.TokenWithTagNamesJunction
 import com.trm.cryptosphere.data.db.mapper.toEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TokenDao {
@@ -100,4 +99,13 @@ interface TokenDao {
     """
   )
   fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenWithTagNamesJunction>
+
+  @Query(
+    """
+    SELECT * FROM token 
+    WHERE (:searchTerm IS NULL OR LOWER(name) LIKE '%' || :searchTerm || '%' OR LOWER(symbol) LIKE '%' || :searchTerm || '%')
+    ORDER BY cmc_rank ASC
+    """
+  )
+  fun selectPagedTokens(searchTerm: String?): PagingSource<Int, TokenEntity>
 }
