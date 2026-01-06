@@ -20,23 +20,4 @@ class HistoryDefaultComponent(
       dispatchers = dispatchers,
     )
   }
-
-  override fun onDeleteHistoryClick(page: HistoryPage) {
-    when (page) {
-      HistoryPage.NEWS -> viewModel.deleteAllNewsHistory()
-      HistoryPage.TOKENS -> viewModel.deleteAllTokenHistory()
-    }
-  }
-
-  override fun onDeleteNewsHistory(id: Long) {
-    viewModel.deleteNewsHistory(id)
-  }
-
-  override fun onDeleteTokenHistory(id: Long) {
-    viewModel.deleteTokenHistory(id)
-  }
-
-  override fun onQueryChange(query: String) {
-    viewModel.onQueryChange(query)
-  }
 }

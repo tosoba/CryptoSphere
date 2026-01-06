@@ -94,6 +94,8 @@ import kotlinx.datetime.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryContent(component: HistoryComponent) {
+  val viewModel = component.viewModel
+
   val scope = rememberCoroutineScope()
 
   val pagerState = rememberPagerState(pageCount = HistoryPage.entries::size)
@@ -111,7 +113,7 @@ fun HistoryContent(component: HistoryComponent) {
         TextButton(
           onClick = {
             deleteAllDialogVisible = false
-            component.onDeleteHistoryClick(page = HistoryPage.fromIndex(pagerState.currentPage))
+            viewModel.onDeleteHistoryClick(page = HistoryPage.fromIndex(pagerState.currentPage))
           }
         ) {
           Text(MR.strings.confirm.resolve())
@@ -127,8 +129,8 @@ fun HistoryContent(component: HistoryComponent) {
     )
   }
 
-  val newsHistory = component.viewModel.newsHistory.collectAsLazyPagingItems()
-  val tokenHistory = component.viewModel.tokenHistory.collectAsLazyPagingItems()
+  val newsHistory = viewModel.newsHistory.collectAsLazyPagingItems()
+  val tokenHistory = viewModel.tokenHistory.collectAsLazyPagingItems()
 
   Scaffold(
     modifier = Modifier.clearFocusOnTap(::collapseSearchBar),
@@ -141,7 +143,7 @@ fun HistoryContent(component: HistoryComponent) {
             HistoryPage.TOKENS -> tokenHistory
           }.itemCount > 0,
         onDeleteClick = { deleteAllDialogVisible = true },
-        onQueryChange = component::onQueryChange,
+        onQueryChange = viewModel::onQueryChange,
       )
     },
   ) {
@@ -165,9 +167,9 @@ fun HistoryContent(component: HistoryComponent) {
             .background(color = MaterialTheme.colorScheme.surfaceContainer),
       ) { index ->
         if (index == 0) {
-          NewsHistoryList(items = newsHistory, onDelete = component::onDeleteNewsHistory)
+          NewsHistoryList(items = newsHistory, onDelete = viewModel::onDeleteNewsHistoryClick)
         } else {
-          TokenHistoryList(items = tokenHistory, onDelete = component::onDeleteTokenHistory)
+          TokenHistoryList(items = tokenHistory, onDelete = viewModel::onDeleteTokenHistoryClick)
         }
       }
     }

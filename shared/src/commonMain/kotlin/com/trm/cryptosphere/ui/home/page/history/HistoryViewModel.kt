@@ -30,10 +30,6 @@ class HistoryViewModel(
 
   private val query = MutableStateFlow("")
 
-  fun onQueryChange(newQuery: String) {
-    query.value = newQuery.trim()
-  }
-
   val newsHistory: Flow<PagingData<NewsHistoryListItem>> =
     query
       .debounce(250)
@@ -85,19 +81,30 @@ class HistoryViewModel(
       }
       .cachedIn(scope)
 
-  fun deleteAllNewsHistory() {
+  fun onQueryChange(newQuery: String) {
+    query.value = newQuery.trim()
+  }
+
+  fun onDeleteHistoryClick(page: HistoryPage) {
+    when (page) {
+      HistoryPage.NEWS -> deleteAllNewsHistory()
+      HistoryPage.TOKENS -> deleteAllTokenHistory()
+    }
+  }
+
+  private fun deleteAllNewsHistory() {
     scope.launch { newsHistoryRepository.deleteAll() }
   }
 
-  fun deleteAllTokenHistory() {
+  private fun deleteAllTokenHistory() {
     scope.launch { tokenHistoryRepository.deleteAllHistory() }
   }
 
-  fun deleteNewsHistory(id: Long) {
+  fun onDeleteNewsHistoryClick(id: Long) {
     scope.launch { newsHistoryRepository.deleteNewsHistory(id) }
   }
 
-  fun deleteTokenHistory(id: Long) {
+  fun onDeleteTokenHistoryClick(id: Long) {
     scope.launch { tokenHistoryRepository.deleteTokenHistory(id) }
   }
 
