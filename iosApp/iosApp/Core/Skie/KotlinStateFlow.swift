@@ -3,26 +3,20 @@ import SwiftUI
 
 @propertyWrapper
 final class KotlinStateFlow<T>: ObservableObject {
-    private let stateFlow: SkieSwiftStateFlow<T>
     @Published var wrappedValue: T
-    private var publisher: Task<Void, Never>?
+    private var task: Task<Void, Never>?
 
     init(_ stateFlow: SkieSwiftStateFlow<T>) {
-        self.stateFlow = stateFlow
         wrappedValue = stateFlow.value
-        publisher = Task { @MainActor [weak self] in
-            if let stateFlow = self?.stateFlow {
-                for await item in stateFlow {
-                    self?.wrappedValue = item
-                }
+        task = Task { @MainActor [weak self] in
+            for await item in stateFlow {
+                self?.wrappedValue = item
             }
         }
     }
 
     deinit {
-        if let publisher {
-            publisher.cancel()
-        }
+        task?.cancel()
     }
 }
 
