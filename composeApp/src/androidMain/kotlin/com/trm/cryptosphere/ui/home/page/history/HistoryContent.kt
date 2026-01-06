@@ -80,6 +80,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
+import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.resolve
@@ -304,7 +305,7 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>, onDelet
         is NewsHistoryListItem.Item -> {
           val dismissState = rememberSwipeToDismissBoxState()
           val shape =
-            itemShape(
+            cardListItemRoundedCornerShape(
               isTopRounded = previousItem is NewsHistoryListItem.DateHeader,
               isBottomRounded = nextItem is NewsHistoryListItem.DateHeader || nextItem == null,
             )
@@ -365,7 +366,7 @@ private fun TokenHistoryList(
         is TokenHistoryListItem.Item -> {
           val dismissState = rememberSwipeToDismissBoxState()
           val shape =
-            itemShape(
+            cardListItemRoundedCornerShape(
               isTopRounded = previousItem is TokenHistoryListItem.DateHeader,
               isBottomRounded = nextItem is TokenHistoryListItem.DateHeader || nextItem == null,
             )
@@ -542,11 +543,3 @@ private fun EmptyHistory(text: String, modifier: Modifier = Modifier) {
     )
   }
 }
-
-private fun itemShape(isTopRounded: Boolean, isBottomRounded: Boolean): RoundedCornerShape =
-  RoundedCornerShape(
-    topStart = if (isTopRounded) 16.dp else 0.dp,
-    topEnd = if (isTopRounded) 16.dp else 0.dp,
-    bottomStart = if (isBottomRounded) 16.dp else 0.dp,
-    bottomEnd = if (isBottomRounded) 16.dp else 0.dp,
-  )
