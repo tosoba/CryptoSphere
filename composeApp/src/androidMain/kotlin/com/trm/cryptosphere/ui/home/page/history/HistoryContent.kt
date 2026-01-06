@@ -542,17 +542,9 @@ private fun EmptyHistory(text: String, modifier: Modifier = Modifier) {
 }
 
 private fun itemShape(isTopRounded: Boolean, isBottomRounded: Boolean): RoundedCornerShape =
-  when {
-    isTopRounded && isBottomRounded -> {
-      RoundedCornerShape(16.dp)
-    }
-    isTopRounded -> {
-      RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
-    }
-    isBottomRounded -> {
-      RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-    }
-    else -> {
-      RoundedCornerShape(0.dp)
-    }
-  }
+  RoundedCornerShape(
+    topStart = if (isTopRounded) 16.dp else 0.dp,
+    topEnd = if (isTopRounded) 16.dp else 0.dp,
+    bottomStart = if (isBottomRounded) 16.dp else 0.dp,
+    bottomEnd = if (isBottomRounded) 16.dp else 0.dp,
+  )
