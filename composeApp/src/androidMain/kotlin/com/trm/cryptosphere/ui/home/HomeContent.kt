@@ -21,15 +21,11 @@ import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 
 @Composable
-fun HomeContent(
-  component: HomeComponent,
-  modifier: Modifier = Modifier,
-  onImageUrlChange: (String?) -> Unit,
-) {
+fun HomeContent(component: HomeComponent, onImageUrlChange: (String?) -> Unit) {
   val pages by component.pages.subscribeAsState()
 
   NavigationSuiteScaffold(
-    modifier = modifier,
+    modifier = Modifier.fillMaxSize(),
     layoutType = currentWindowAdaptiveInfo().toNavigationSuiteType(),
     navigationSuiteItems = {
       HomePageConfig.entries.forEachIndexed { index, config ->

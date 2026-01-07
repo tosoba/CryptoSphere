@@ -58,14 +58,13 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 @Composable
 fun TokenNavigationContent(
   component: TokenNavigationComponent,
-  modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
 
   Scaffold(
-    modifier = modifier,
+    modifier = Modifier.fillMaxSize(),
     bottomBar = {
       if (navigationSuiteType == NavigationSuiteType.NavigationBar) {
         FlexibleBottomAppBar(modifier = Modifier.fillMaxWidth()) {

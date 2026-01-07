@@ -2,7 +2,6 @@ package com.trm.cryptosphere.ui.root
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,8 +22,6 @@ import com.trm.cryptosphere.core.ui.ColorExtractor
 import com.trm.cryptosphere.core.ui.DynamicTheme
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
-import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
@@ -59,16 +56,11 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
         ) {
           when (val instance = child.instance) {
             is RootComponent.Child.Home -> {
-              HomeContent(
-                component = instance.component,
-                modifier = Modifier.fillMaxSize(),
-                onImageUrlChange = { themeImageUrl = it },
-              )
+              HomeContent(component = instance.component, onImageUrlChange = { themeImageUrl = it })
             }
             is RootComponent.Child.TokenNavigation -> {
               TokenNavigationContent(
                 component = instance.component,
-                modifier = Modifier.fillMaxSize(),
                 onImageUrlChange = { themeImageUrl = it },
               )
             }
