@@ -30,18 +30,25 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(newsFeedItems, id: \.news.id) { item in
+                            ForEach(Array(newsFeedItems.enumerated()), id: \.element.news.id) { index, item in
                                 NewsFeedItemView(
                                     item: item,
                                     safeArea: geometry.safeAreaInsets,
                                     tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight,
                                     onTokenCarouselItemClick: { id, config in
-                                        component.onTokenCarouselItemClick(
-                                            KotlinInt(value: id),
-                                            config
-                                        )
+                                        component.onTokenCarouselItemClick(KotlinInt(value: id), config)
                                     }
                                 )
+                                .onAppear {
+                                    switch onEnum(of: loadStates?.append) {
+                                    case .notLoading:
+                                        if newsFeedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
+                                            component.viewModel.newsPagingState.loadMore()
+                                        }
+                                    default:
+                                        break
+                                    }
+                                }
                             }
                         }
                         .scrollTargetLayout()

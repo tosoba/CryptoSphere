@@ -20,14 +20,7 @@ class GetNewsFeedUseCase(
   private val newsRepository: NewsRepository,
   private val tokenRepository: TokenRepository,
 ) {
-  operator fun invoke(
-    config: PagingConfig =
-      PagingConfig(
-        pageSize = CoinStatsApi.MAX_LIMIT,
-        prefetchDistance = 10,
-        initialLoadSize = CoinStatsApi.MAX_LIMIT,
-      )
-  ): Flow<PagingData<NewsFeedItem>> =
+  operator fun invoke(config: PagingConfig): Flow<PagingData<NewsFeedItem>> =
     Pager(config = config, pagingSourceFactory = ::NewsPagingSource).flow
 
   private inner class NewsPagingSource : PagingSource<Int, NewsFeedItem>() {
