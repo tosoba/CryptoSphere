@@ -96,12 +96,12 @@ import kotlinx.datetime.LocalTime
 @Composable
 fun HistoryContent(component: HistoryComponent) {
   val viewModel = component.viewModel
+  val newsHistory = viewModel.newsHistoryPagingState.flow.collectAsLazyPagingItems()
+  val tokenHistory = viewModel.tokenHistoryPagingState.flow.collectAsLazyPagingItems()
 
   val scope = rememberCoroutineScope()
-
   val pagerState = rememberPagerState(pageCount = HistoryPage.entries::size)
   var deleteAllDialogVisible by rememberSaveable { mutableStateOf(false) }
-
   val searchBarState = rememberSearchBarState()
   fun collapseSearchBar() {
     scope.launch { searchBarState.animateToCollapsed() }
@@ -129,9 +129,6 @@ fun HistoryContent(component: HistoryComponent) {
       text = { Text(MR.strings.delete_history_message.resolve()) },
     )
   }
-
-  val newsHistory = viewModel.newsHistory.collectAsLazyPagingItems()
-  val tokenHistory = viewModel.tokenHistory.collectAsLazyPagingItems()
 
   Scaffold(
     modifier = Modifier.clearFocusOnTap(::collapseSearchBar),

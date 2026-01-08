@@ -79,7 +79,7 @@ fun TokenFeedContent(
   modifier: Modifier = Modifier,
   onImageUrlChange: (String?) -> Unit,
 ) {
-  val tokens = component.viewModel.tokens.collectAsLazyPagingItems()
+  val tokens = component.viewModel.tokensPagingState.flow.collectAsLazyPagingItems()
 
   val pagerState = rememberPagerState(pageCount = tokens::itemCount)
   fun currentToken(): TokenItem? = tokens[pagerState.currentPage]

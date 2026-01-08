@@ -33,7 +33,8 @@ import com.trm.cryptosphere.shared.MR
 @Composable
 fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) -> Unit) {
   val newsItems = component.viewModel.newsPagingState.flow.collectAsLazyPagingItems()
-  val pagerState = rememberPagerState { newsItems.itemCount }
+
+  val pagerState = rememberPagerState(pageCount = newsItems::itemCount)
   var isRefreshing by remember { mutableStateOf(false) }
 
   Crossfade(newsItems.loadState.refresh) { loadState ->

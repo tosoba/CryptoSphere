@@ -70,17 +70,17 @@ import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
-import kotlin.math.sign
 import kotlinx.coroutines.launch
+import kotlin.math.sign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PricesContent(component: PricesComponent) {
   val viewModel = component.viewModel
-  val tokens = viewModel.tokens.collectAsLazyPagingItems()
+  val tokens = viewModel.tokensPagingState.flow.collectAsLazyPagingItems()
+
   val scope = rememberCoroutineScope()
   val searchBarState = rememberSearchBarState()
-
   fun collapseSearchBar() {
     scope.launch { searchBarState.animateToCollapsed() }
   }

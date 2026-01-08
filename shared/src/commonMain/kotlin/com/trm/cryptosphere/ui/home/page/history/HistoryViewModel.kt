@@ -1,11 +1,11 @@
 package com.trm.cryptosphere.ui.home.page.history
 
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
+import com.trm.cryptosphere.core.base.PagingItemsState
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
@@ -31,11 +30,9 @@ class HistoryViewModel(
 
   private val query = MutableStateFlow("")
 
-  val newsHistory: Flow<PagingData<NewsHistoryListItem>> =
-    query
-      .debounce(250)
-      .flatMapLatest(newsHistoryRepository::getHistory)
-      .map { pagingData ->
+  val newsHistoryPagingState: PagingItemsState<NewsHistoryListItem> =
+    PagingItemsState(scope) {
+      query.debounce(250).flatMapLatest(newsHistoryRepository::getHistory).map { pagingData ->
         pagingData
           .map(NewsHistoryListItem::Item)
           .insertDateSeparators(
@@ -43,21 +40,19 @@ class HistoryViewModel(
             separatorItem = NewsHistoryListItem::DateHeader,
           )
       }
-      .cachedIn(scope)
+    }
 
-  val tokenHistory: Flow<PagingData<TokenHistoryListItem>> =
-    query
-      .debounce(250)
-      .flatMapLatest(tokenHistoryRepository::getHistory)
-      .map { pagingData ->
+  val tokenHistoryPagingState: PagingItemsState<TokenHistoryListItem> =
+    PagingItemsState(scope) {
+      query.debounce(250).flatMapLatest(tokenHistoryRepository::getHistory).map { pagingData ->
         pagingData
-          .map (TokenHistoryListItem::Item)
+          .map(TokenHistoryListItem::Item)
           .insertDateSeparators(
             date = { it.token.visitedAt.date },
             separatorItem = TokenHistoryListItem::DateHeader,
           )
       }
-      .cachedIn(scope)
+    }
 
   private fun <R : Any, T : R, S : R> PagingData<T>.insertDateSeparators(
     date: (T) -> LocalDate,
