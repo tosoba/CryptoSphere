@@ -57,6 +57,15 @@ struct NewsFeedView: View {
                         let progressViewVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
                         IndeterminateLinearProgressView(isVisible: progressViewVisible)
                     }
+                    .overlay(alignment: .top) {
+                        let appendErrorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
+                        ErrorOccurredCard(
+                            isVisible: appendErrorVisible,
+                            onRetryClick: { component.viewModel.newsPagingState.retry() }
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                    }
                 }
             case .error:
                 VStack(alignment: .center, spacing: 8) {
