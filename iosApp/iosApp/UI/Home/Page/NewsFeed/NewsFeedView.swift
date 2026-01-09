@@ -40,13 +40,9 @@ struct NewsFeedView: View {
                                     }
                                 )
                                 .onAppear {
-                                    switch onEnum(of: loadStates?.append) {
-                                    case .notLoading:
-                                        if newsFeedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
-                                            component.viewModel.newsPagingState.loadMore()
-                                        }
-                                    default:
-                                        break
+                                    guard case .notLoading = onEnum(of: loadStates?.append) else { return }
+                                    if newsFeedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
+                                        component.viewModel.newsPagingState.loadMore()
                                     }
                                 }
                             }
