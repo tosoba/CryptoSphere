@@ -5,8 +5,11 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
@@ -21,10 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.trm.cryptosphere.core.ui.ErrorOccurredCard
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.VerticalFeedPager
 import com.trm.cryptosphere.core.util.resolve
@@ -75,6 +81,21 @@ fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) ->
             }
           }
 
+          ErrorOccurredCard(
+            visible = newsItems.loadState.append is LoadState.Error,
+            onRetryClick = newsItems::retry,
+            modifier =
+              Modifier.align(Alignment.TopEnd)
+                .padding(
+                  top =
+                    with(LocalDensity.current) {
+                      WindowInsets.statusBars.getTop(LocalDensity.current).toDp()
+                    } + 16.dp,
+                  start = 16.dp,
+                  end = 16.dp,
+                ),
+          )
+
           AnimatedVisibility(
             visible = newsItems.loadState.append is LoadState.Loading,
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -89,7 +110,7 @@ fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) ->
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.Center,
         ) {
-          Text(loadState.error.message ?: MR.strings.error_occurred.resolve())
+          Text(text = MR.strings.error_occurred.resolve())
           Button(onClick = newsItems::retry) { Text(MR.strings.retry.resolve()) }
         }
       }
