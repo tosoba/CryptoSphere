@@ -30,9 +30,9 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(Array(newsFeedItems.enumerated()), id: \.element.news.id) { index, item in
+                            ForEach(newsFeedItems.indices, id: \.self) { index in
                                 NewsFeedItemView(
-                                    item: item,
+                                    item: newsFeedItems[index],
                                     safeArea: geometry.safeAreaInsets,
                                     tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight,
                                     onTokenCarouselItemClick: { id, config in
@@ -57,6 +57,10 @@ struct NewsFeedView: View {
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)
                     .transition(.opacity)
+                    .overlay(alignment: .bottom) {
+                        let progressViewVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
+                        IndeterminateLinearProgressView(isVisible: progressViewVisible)
+                    }
                 }
             case .error:
                 VStack(alignment: .center, spacing: 8) {
