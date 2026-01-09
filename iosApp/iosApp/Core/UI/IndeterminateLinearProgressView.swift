@@ -2,7 +2,7 @@ import SwiftUI
 
 struct IndeterminateLinearProgressView: View {
     let isVisible: Bool
-    
+
     @State private var width: CGFloat = 0
     @State private var offset: CGFloat = 0
 
