@@ -14,7 +14,9 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
+import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenNavigation
+import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationComponent
 import kotlinx.serialization.Serializable
 
@@ -22,6 +24,7 @@ class RootDefaultComponent(
   componentContext: ComponentContext,
   private val homeComponentFactory: HomeComponent.Factory,
   private val tokenNavigationComponentFactory: TokenNavigationComponent.Factory,
+  private val tokenFeedComponentFactory: TokenFeedComponent.Factory,
   private val tokenHistoryRepository: TokenHistoryRepository,
   private val dispatchers: AppCoroutineDispatchers,
 ) : RootComponent, ComponentContext by componentContext {
@@ -71,6 +74,15 @@ class RootDefaultComponent(
           )
         )
       }
+      is ChildConfig.TokenFeed -> {
+        TokenFeed(
+          tokenFeedComponentFactory(
+            componentContext = componentContext,
+            tokenId = config.tokenId,
+            onCurrentFeedTokenChange = {},
+          )
+        )
+      }
     }
 
   private fun navigateToTokenFeed(tokenId: Int, tokenCarouselConfig: TokenCarouselConfig) {
@@ -85,5 +97,7 @@ class RootDefaultComponent(
     @Serializable
     data class TokenNavigation(val tokenId: Int, val tokenCarouselConfig: TokenCarouselConfig) :
       ChildConfig
+
+    @Serializable data class TokenFeed(val tokenId: Int) : ChildConfig
   }
 }

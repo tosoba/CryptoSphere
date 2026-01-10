@@ -139,6 +139,7 @@ class DependencyContainer(
       componentContext = componentContext,
       homeComponentFactory = homeComponentFactory,
       tokenNavigationComponentFactory = tokenNavigationComponentFactory,
+      tokenFeedComponentFactory = tokenFeedComponentFactory,
       tokenHistoryRepository = tokenHistoryRepository.value,
       dispatchers = appCoroutineDispatchers,
     )

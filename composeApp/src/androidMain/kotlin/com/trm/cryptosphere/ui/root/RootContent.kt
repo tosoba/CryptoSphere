@@ -64,6 +64,9 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
                 onImageUrlChange = { themeImageUrl = it },
               )
             }
+            is RootComponent.Child.TokenFeed -> {
+              // used only on iOS
+            }
           }
         }
       }
