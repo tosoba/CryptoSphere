@@ -4,7 +4,7 @@ import SwiftUI
 struct NewsFeedView: View {
     private let component: NewsFeedComponent
 
-    @StateObject @KotlinStateFlow private var newsFeedItems: [NewsFeedItem]
+    @StateObject @KotlinStateFlow private var feedItems: [NewsFeedItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
     @State private var scrolledItemId: String?
@@ -12,8 +12,8 @@ struct NewsFeedView: View {
 
     init(component: NewsFeedComponent) {
         self.component = component
-        
-        _newsFeedItems = .init(component.viewModel.newsPagingState.itemsSnapshotList)
+
+        _feedItems = .init(component.viewModel.newsPagingState.itemsSnapshotList)
         _loadStates = .init(component.viewModel.newsPagingState.loadStates)
     }
 
@@ -46,7 +46,7 @@ struct NewsFeedView: View {
         GeometryReader { geometry in
             ScrollView(.vertical) {
                 LazyVStack(spacing: 0) {
-                    ForEach(Array(newsFeedItems.enumerated()), id: \.element.news.id) { index, item in
+                    ForEach(Array(feedItems.enumerated()), id: \.element.news.id) { index, item in
                         itemView(item, at: index, alignedTo: geometry.safeAreaInsets)
                     }
                 }
@@ -93,12 +93,12 @@ struct NewsFeedView: View {
         }
         .onAppear {
             guard case .notLoading = onEnum(of: loadStates?.append) else { return }
-            if newsFeedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
+            if feedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
                 component.viewModel.newsPagingState.loadMore()
             }
         }
     }
-    
+
     @ViewBuilder
     private var errorView: some View {
         VStack(alignment: .center, spacing: 8) {
