@@ -3,23 +3,16 @@ import SwiftUI
 import UIKit
 
 struct StackView<T: AnyObject, Content: View>: View {
-    @StateValue
-    private var stackValue: ChildStack<AnyObject, T>
-
-    private let getTitle: (T) -> String
+    @StateValue private var stackValue: ChildStack<AnyObject, T>
     private let onBack: (_ toIndex: Int32) -> Void
-
-    @ViewBuilder
-    private let content: (T) -> Content
+    @ViewBuilder private let content: (T) -> Content
 
     init(
         stackValue: StateValue<ChildStack<AnyObject, T>>,
-        getTitle: @escaping (T) -> String,
         onBack: @escaping (_: Int32) -> Void,
         @ViewBuilder content: @escaping (T) -> Content
     ) {
         _stackValue = stackValue
-        self.getTitle = getTitle
         self.onBack = onBack
         self.content = content
     }

@@ -7,7 +7,7 @@ import com.trm.cryptosphere.ui.root.RootDefaultComponent.ChildConfig
 
 actual fun StackNavigation<ChildConfig>.navigateToTokenFeed(
   tokenId: Int,
-  tokenCarouselConfig: TokenCarouselConfig,
+  tokenCarouselConfig: TokenCarouselConfig?,
 ) {
-  pushToFront(ChildConfig.TokenNavigation(tokenId, tokenCarouselConfig))
+  pushToFront(ChildConfig.TokenNavigation(tokenId, requireNotNull(tokenCarouselConfig)))
 }
