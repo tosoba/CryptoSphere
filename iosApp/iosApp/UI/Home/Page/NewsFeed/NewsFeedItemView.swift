@@ -3,7 +3,7 @@ import SwiftUI
 
 struct NewsFeedItemView: View {
     let item: NewsFeedItem
-    let safeArea: EdgeInsets
+    let insets: EdgeInsets
     @Binding var tokenCarouselMeasuredHeight: CGFloat
     let onTokenCarouselItemClick: (Int32, TokenCarouselConfig) -> Void
 
@@ -18,7 +18,7 @@ struct NewsFeedItemView: View {
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:
-                NewsFeedItemPlaceholderImageView()
+                placeholderImageView
             @unknown default:
                 EmptyView()
             }
@@ -26,42 +26,48 @@ struct NewsFeedItemView: View {
         .containerRelativeFrame([.vertical, .horizontal])
         .background(.black)
         .overlay {
-            VStack {
-                Spacer().frame(height: safeArea.top)
+            contentView
+        }
+    }
 
-                Spacer()
+    @ViewBuilder
+    private var contentView: some View {
+        VStack {
+            Spacer().frame(height: insets.top)
 
-                HStack(alignment: .bottom) {
-                    Spacer().frame(width: safeArea.leading)
-                    newsInformationBody
-                    Spacer().frame(width: 16)
-                    newsActionsBody
-                    Spacer().frame(width: safeArea.trailing)
-                }
-                .background {
-                    Rectangle()
-                        .fill(.thinMaterial)
-                        .mask {
-                            LinearGradient(
-                                colors: [
-                                    .black.opacity(0),
-                                    .black.opacity(0.75),
-                                    .black,
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        }
-                }
+            Spacer()
+
+            HStack(alignment: .bottom) {
+                Spacer().frame(width: insets.leading)
+                informationView
+                Spacer().frame(width: 16)
+                actionsView
+                Spacer().frame(width: insets.trailing)
+            }
+            .background {
+                Rectangle()
+                    .fill(.thinMaterial)
+                    .mask {
+                        LinearGradient(
+                            colors: [
+                                .black.opacity(0),
+                                .black.opacity(0.75),
+                                .black,
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    }
             }
         }
     }
 
-    private var newsInformationBody: some View {
+    @ViewBuilder
+    private var informationView: some View {
         VStack(alignment: .leading) {
-            NewsFeedItemTextView(text: item.news.title, font: .title)
+            textView(text: item.news.title, font: .title)
 
-            NewsFeedItemTextView(text: item.news.source, font: .subheadline)
+            textView(text: item.news.source, font: .subheadline)
                 .padding(.top, 8)
 
             if !item.relatedTokens.isEmpty {
@@ -76,13 +82,14 @@ struct NewsFeedItemView: View {
                 .padding(.top, 8)
             }
 
-            Spacer().frame(height: safeArea.bottom)
+            Spacer().frame(height: insets.bottom)
         }
         .padding(.vertical)
         .padding(.leading, 8)
     }
 
-    private var newsActionsBody: some View {
+    @ViewBuilder
+    private var actionsView: some View {
         VStack(alignment: .trailing) {
             Button(action: { PlatformContext.shared.shareUrl(url: item.news.link) }) {
                 Image(systemName: "paperplane")
@@ -102,19 +109,27 @@ struct NewsFeedItemView: View {
             .clipShape(.circle)
             .padding(.top, 24)
 
-            Spacer().frame(height: safeArea.bottom)
+            Spacer().frame(height: insets.bottom)
         }
         .foregroundColor(.white)
         .padding(.vertical)
         .padding(.trailing, 8)
     }
-}
 
-private struct NewsFeedItemTextView: View {
-    let text: String
-    let font: Font
+    @ViewBuilder
+    private var placeholderImageView: some View {
+        let screenSize = UIScreen.main.bounds.size
+        let size = min(screenSize.width, screenSize.height) / 2
 
-    var body: some View {
+        Image(systemName: "bitcoinsign")
+            .resizable()
+            .scaledToFill()
+            .frame(width: size, height: size)
+            .foregroundStyle(.white)
+    }
+
+    @ViewBuilder
+    private func textView(text: String, font: Font) -> some View {
         Text(text)
             .font(font)
             .fontWeight(.medium)
@@ -124,18 +139,6 @@ private struct NewsFeedItemTextView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
             .feedShadow()
-            .foregroundStyle(.white)
-    }
-}
-
-private struct NewsFeedItemPlaceholderImageView: View {
-    var body: some View {
-        let screenSize = UIScreen.main.bounds.size
-        let size = min(screenSize.width, screenSize.height) / 2
-        Image(systemName: "bitcoinsign")
-            .resizable()
-            .scaledToFill()
-            .frame(width: size, height: size)
             .foregroundStyle(.white)
     }
 }
