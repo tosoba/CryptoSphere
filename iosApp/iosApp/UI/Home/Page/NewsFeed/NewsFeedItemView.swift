@@ -33,7 +33,7 @@ struct NewsFeedItemView: View {
     }
 
     private var newsActionsBody: some View {
-        VStack(alignment: .center) {
+        VStack(alignment: .trailing) {
             Button(action: {}) {
                 Image(systemName: "paperplane")
                     .font(.title2)
@@ -47,6 +47,7 @@ struct NewsFeedItemView: View {
                     .font(.largeTitle)
             }
             .buttonStyle(.borderedProminent)
+            .controlSize(.large)
             .feedShadow()
             .clipShape(.circle)
             .padding(.top, 24)
