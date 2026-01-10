@@ -7,6 +7,7 @@ struct NewsFeedView: View {
     @StateObject @KotlinStateFlow private var newsFeedItems: [NewsFeedItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
+    @State private var scrolledItemId: String?
     @State private var tokenCarouselMeasuredHeight: CGFloat = 90
 
     init(component: NewsFeedComponent) {
@@ -30,9 +31,9 @@ struct NewsFeedView: View {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 0) {
-                            ForEach(newsFeedItems.indices, id: \.self) { index in
+                            ForEach(Array(newsFeedItems.enumerated()), id: \.element.news.id) { index, item in
                                 NewsFeedItemView(
-                                    item: newsFeedItems[index],
+                                    item: item,
                                     safeArea: geometry.safeAreaInsets,
                                     tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight,
                                     onTokenCarouselItemClick: { id, config in
@@ -49,6 +50,8 @@ struct NewsFeedView: View {
                         }
                         .scrollTargetLayout()
                     }
+                    .scrollPosition(id: $scrolledItemId)
+                    .animation(.easeInOut, value: geometry.size)
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)

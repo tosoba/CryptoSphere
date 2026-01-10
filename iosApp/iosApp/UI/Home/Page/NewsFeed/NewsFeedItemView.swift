@@ -7,6 +7,56 @@ struct NewsFeedItemView: View {
     @Binding var tokenCarouselMeasuredHeight: CGFloat
     let onTokenCarouselItemClick: (Int32, TokenCarouselConfig) -> Void
 
+    var body: some View {
+        AsyncImage(
+            url: URL(string: item.news.imgUrl ?? ""),
+            transaction: Transaction(animation: .default)
+        ) { phase in
+            switch phase {
+            case .empty:
+                ProgressView().scaleEffect(1.5).tint(.white)
+            case let .success(image):
+                image.resizable().scaledToFill()
+            case .failure:
+                NewsFeedItemPlaceholderImageView()
+            @unknown default:
+                EmptyView()
+            }
+        }
+        .containerRelativeFrame([.vertical, .horizontal])
+        .background(.black)
+        .overlay {
+            VStack {
+                Spacer().frame(height: safeArea.top)
+
+                Spacer()
+
+                HStack(alignment: .bottom) {
+                    Spacer().frame(width: safeArea.leading)
+                    newsInformationBody
+                    Spacer().frame(width: 16)
+                    newsActionsBody
+                    Spacer().frame(width: safeArea.trailing)
+                }
+                .background {
+                    Rectangle()
+                        .fill(.thinMaterial)
+                        .mask {
+                            LinearGradient(
+                                colors: [
+                                    .black.opacity(0),
+                                    .black.opacity(0.75),
+                                    .black,
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        }
+                }
+            }
+        }
+    }
+    
     private var newsInformationBody: some View {
         VStack(alignment: .leading) {
             NewsFeedItemTextView(text: item.news.title, font: .title)
@@ -57,56 +107,6 @@ struct NewsFeedItemView: View {
         .foregroundColor(.white)
         .padding(.vertical)
         .padding(.trailing, 8)
-    }
-
-    var body: some View {
-        AsyncImage(
-            url: URL(string: item.news.imgUrl ?? ""),
-            transaction: Transaction(animation: .default)
-        ) { phase in
-            switch phase {
-            case .empty:
-                ProgressView().scaleEffect(1.5).tint(.white)
-            case let .success(image):
-                image.resizable().scaledToFill()
-            case .failure:
-                NewsFeedItemPlaceholderImageView()
-            @unknown default:
-                EmptyView()
-            }
-        }
-        .containerRelativeFrame([.vertical, .horizontal])
-        .background(.black)
-        .overlay {
-            VStack {
-                Spacer().frame(height: safeArea.top)
-
-                Spacer()
-
-                HStack(alignment: .bottom) {
-                    Spacer().frame(width: safeArea.leading)
-                    newsInformationBody
-                    Spacer().frame(width: 16)
-                    newsActionsBody
-                    Spacer().frame(width: safeArea.trailing)
-                }
-                .background {
-                    Rectangle()
-                        .fill(.thinMaterial)
-                        .mask {
-                            LinearGradient(
-                                colors: [
-                                    .black.opacity(0),
-                                    .black.opacity(0.75),
-                                    .black,
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        }
-                }
-            }
-        }
     }
 }
 
