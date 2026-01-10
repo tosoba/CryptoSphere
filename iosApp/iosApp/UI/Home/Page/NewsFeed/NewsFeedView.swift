@@ -40,6 +40,12 @@ struct NewsFeedView: View {
                                         component.onTokenCarouselItemClick(KotlinInt(value: id), config)
                                     }
                                 )
+                                .scrollTransition(.animated, axis: .vertical) { content, phase in
+                                    content
+                                        .blur(radius: abs(phase.value) * 15)
+                                        .opacity(1.0 - abs(phase.value))
+                                        .scaleEffect(1.0 - (abs(phase.value) * 0.05))
+                                }
                                 .onAppear {
                                     guard case .notLoading = onEnum(of: loadStates?.append) else { return }
                                     if newsFeedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
@@ -52,6 +58,7 @@ struct NewsFeedView: View {
                     }
                     .scrollPosition(id: $scrolledItemId)
                     .animation(.easeInOut, value: geometry.size)
+                    .background(.black)
                     .ignoresSafeArea(.container, edges: .all)
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.paging)

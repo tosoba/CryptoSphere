@@ -56,7 +56,7 @@ struct NewsFeedItemView: View {
             }
         }
     }
-    
+
     private var newsInformationBody: some View {
         VStack(alignment: .leading) {
             NewsFeedItemTextView(text: item.news.title, font: .title)
