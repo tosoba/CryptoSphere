@@ -34,7 +34,7 @@ struct NewsFeedItemView: View {
 
     private var newsActionsBody: some View {
         VStack(alignment: .trailing) {
-            Button(action: {}) {
+            Button(action: { PlatformContext.shared.shareUrl(url: item.news.link) }) {
                 Image(systemName: "paperplane")
                     .font(.title2)
             }
@@ -42,7 +42,7 @@ struct NewsFeedItemView: View {
             .feedShadow()
             .clipShape(.circle)
 
-            Button(action: {}) {
+            Button(action: { PlatformContext.shared.openUrl(url: item.news.link) }) {
                 Image(systemName: "safari")
                     .font(.largeTitle)
             }
