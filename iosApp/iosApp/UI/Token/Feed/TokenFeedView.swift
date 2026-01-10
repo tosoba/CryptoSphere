@@ -4,7 +4,7 @@ import SwiftUI
 struct TokenFeedView: View {
     private let component: TokenFeedComponent
 
-    init(component: TokenFeedComponent) {
+    init(_ component: TokenFeedComponent) {
         self.component = component
     }
 

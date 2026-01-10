@@ -11,14 +11,16 @@ struct RootView: View {
     var body: some View {
         StackView(
             stackValue: StateValue(component.stack),
-            getTitle: { _ in String(\.app_name) },
+            getTitle: { _ in "" },
             onBack: component.onBackClicked
         ) { child in
             switch onEnum(of: child) {
             case let .home(homeChild):
                 HomeView(homeChild.component)
-            case let .tokenNavigation(tokenNavigationChild):
-                TokenNavigationView(component: tokenNavigationChild.component)
+            case .tokenNavigation(_):
+                EmptyView() // used only on android
+            case let .tokenFeed(tokenFeedChild):
+                TokenFeedView(tokenFeedChild.component)
             }
         }
     }
