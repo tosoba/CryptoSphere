@@ -43,15 +43,6 @@ struct NewsFeedItemView: View {
             .clipShape(.circle)
 
             Button(action: {}) {
-                Image(systemName: "star")
-                    .font(.title2)
-            }
-            .buttonStyle(.bordered)
-            .feedShadow()
-            .clipShape(.circle)
-            .padding(.top, 24)
-
-            Button(action: {}) {
                 Image(systemName: "safari")
                     .font(.largeTitle)
             }
