@@ -35,17 +35,8 @@ class TokenDefaultRepository(
       ?.let { dao.selectTokensByNameOrSymbol(it) }
       ?.map(TokenEntity::toTokenItem) ?: emptyList()
 
-  override fun getTokensBySharedTags(id: Int): Flow<PagingData<TokenItem>> =
-    Pager(
-        config =
-          PagingConfig(
-            pageSize = TOKEN_DB_PAGE_SIZE,
-            prefetchDistance = TOKEN_DB_PREFETCH_DISTANCE,
-            initialLoadSize = TOKEN_DB_PAGE_SIZE,
-          )
-      ) {
-        dao.selectTokensBySharedTags(id)
-      }
+  override fun getTokensBySharedTags(id: Int, config: PagingConfig): Flow<PagingData<TokenItem>> =
+    Pager(config = config) { dao.selectTokensBySharedTags(id) }
       .flow
       .map { it.map(TokenWithTagNamesJunction::toTokenItem) }
 
@@ -61,8 +52,5 @@ class TokenDefaultRepository(
 
   companion object {
     private const val TOKEN_DB_PAGE_SIZE = 100
-
-    // significantly smaller than default value for ViewPager based lists
-    private const val TOKEN_DB_PREFETCH_DISTANCE = 5
   }
 }

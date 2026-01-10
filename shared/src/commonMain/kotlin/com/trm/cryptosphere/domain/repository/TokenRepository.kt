@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.domain.repository
 
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.trm.cryptosphere.domain.model.TokenItem
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ interface TokenRepository {
 
   suspend fun getTokensMatchingSearchTerms(searchTerms: List<String>): List<TokenItem>
 
-  fun getTokensBySharedTags(id: Int): Flow<PagingData<TokenItem>>
+  fun getTokensBySharedTags(id: Int, config: PagingConfig): Flow<PagingData<TokenItem>>
 
   fun getTokens(query: String): Flow<PagingData<TokenItem>>
 
