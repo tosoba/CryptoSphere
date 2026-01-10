@@ -92,20 +92,17 @@ struct NewsFeedItemView: View {
                 }
                 .background {
                     Rectangle()
-                        .fill(.ultraThinMaterial)
+                        .fill(.thinMaterial)
                         .mask {
-                            VStack(spacing: 0) {
-                                LinearGradient(
-                                    colors: [
-                                        .black.opacity(0),
-                                        .black.opacity(0.75),
-                                        .black,
-                                    ],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                                Rectangle()
-                            }
+                            LinearGradient(
+                                colors: [
+                                    .black.opacity(0),
+                                    .black.opacity(0.75),
+                                    .black,
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
                         }
                 }
             }
