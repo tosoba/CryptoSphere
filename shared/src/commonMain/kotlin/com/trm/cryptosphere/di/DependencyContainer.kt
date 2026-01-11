@@ -114,14 +114,14 @@ class DependencyContainer(
     TokenFeedComponent.Factory {
       componentContext,
       tokenId,
-      onCurrentFeedTokenChange,
+      onCurrentPresentedFeedTokenChange,
       navigateToTokenFeed ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
         tokenId = tokenId,
         tokenRepository = tokenRepository.value,
         dispatchers = appCoroutineDispatchers,
-        onCurrentFeedTokenChange = onCurrentFeedTokenChange,
+        onCurrentPresentedFeedTokenChange = onCurrentPresentedFeedTokenChange,
         navigateToTokenFeed = navigateToTokenFeed,
       )
     },

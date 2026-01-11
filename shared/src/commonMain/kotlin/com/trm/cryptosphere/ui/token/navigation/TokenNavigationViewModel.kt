@@ -21,16 +21,16 @@ class TokenNavigationViewModel(
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
 
-  private val _tokenIds: MutableStateFlow<List<Int>> = MutableStateFlow(initialTokenIds)
-  val currentTokenId: Flow<Int?> = _tokenIds.map { it.lastOrNull() }
-  val tokens: Flow<List<TokenItem>> =
-    _tokenIds.map {
+  private val navigationTokensIds: MutableStateFlow<List<Int>> = MutableStateFlow(initialTokenIds)
+  val currentNavigationTokenId: Flow<Int?> = navigationTokensIds.map { it.lastOrNull() }
+  val navigationTokens: Flow<List<TokenItem>> =
+    navigationTokensIds.map {
       val tokens = tokenRepository.getTokensByIds(it).associateBy(TokenItem::id)
       it.mapNotNull { tokenId -> tokens[tokenId] }
     }
 
-  fun updateTokenIds(tokenIds: List<Int>) {
-    _tokenIds.value = tokenIds
+  fun updateNavigationTokenIds(tokenIds: List<Int>) {
+    navigationTokensIds.value = tokenIds
   }
 
   fun addTokenToHistory(tokenId: Int) {

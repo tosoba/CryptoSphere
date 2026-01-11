@@ -3,9 +3,11 @@ package com.trm.cryptosphere.ui.token.navigation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -20,6 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -42,13 +46,14 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
 import com.trm.cryptosphere.core.base.openUrl
-import com.trm.cryptosphere.core.base.shareUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.util.isCompactHeight
+import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.util.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.shareUrl
+import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
 
 @OptIn(
@@ -65,6 +70,11 @@ fun TokenNavigationContent(
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
 
+  val tokens by component.viewModel.navigationTokens.collectAsStateWithLifecycle(emptyList())
+  val currentNavigationTokenId by
+    component.viewModel.currentNavigationTokenId.collectAsStateWithLifecycle(null)
+  val currentPresentedFeedToken by component.currentPresentedFeedToken.collectAsStateWithLifecycle()
+
   Scaffold(
     modifier = Modifier.fillMaxSize(),
     bottomBar = {
@@ -74,7 +84,15 @@ fun TokenNavigationContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
           ) {
-            NavigationBarButtons(component)
+            BottomAppBarButtons(
+              backText =
+                tokens.getOrNull(tokens.lastIndex - 1)?.symbol ?: MR.strings.home.resolve(),
+              forwardText = currentPresentedFeedToken?.symbol.orEmpty(),
+              forwardEnabled = tokens.lastOrNull()?.id != currentPresentedFeedToken?.id,
+              onBackClick = component::onBackClicked,
+              onHomeClick = component.navigateHome,
+              onForwardClick = component::navigateToTokenFeed,
+            )
           }
         }
       }
@@ -118,16 +136,13 @@ fun TokenNavigationContent(
         )
       }
 
-      val tokens by component.viewModel.tokens.collectAsStateWithLifecycle(emptyList())
-      val currentTokenId by component.viewModel.currentTokenId.collectAsStateWithLifecycle(null)
-
       val carouselState = rememberCarouselState(itemCount = tokens::size)
       LaunchedEffect(tokens.size) { carouselState.scrollToItem(tokens.lastIndex) }
 
       TokenCarousel(
         tokens = tokens,
         state = carouselState,
-        highlightedTokenId = currentTokenId,
+        highlightedTokenId = currentNavigationTokenId,
         onItemClick = component::popToToken,
         itemHeight = if (adaptiveInfo.isCompactHeight()) 56.dp else 80.dp,
         modifier =
@@ -148,29 +163,16 @@ fun TokenNavigationContent(
         contentPadding = PaddingValues(start = 16.dp),
       )
 
-      if (adaptiveInfo.isCompactHeight()) {
-        FloatingActionButton(
-          modifier =
-            Modifier.constrainAs(switchTokenButton) {
-              bottom.linkTo(parent.bottom, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
-            },
-          onClick = { component.currentFeedToken?.shareUrl?.let(context::openUrl) },
-        ) {
-          Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
-        }
-      } else {
-        MediumFloatingActionButton(
-          modifier =
-            Modifier.constrainAs(switchTokenButton) {
-              bottom.linkTo(parent.bottom, margin = 16.dp)
-              end.linkTo(parent.end, margin = 16.dp)
-            },
-          onClick = { component.currentFeedToken?.shareUrl?.let(context::openUrl) },
-        ) {
-          Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
-        }
-      }
+      OpenInBrowserFab(
+        modifier =
+          Modifier.constrainAs(switchTokenButton) {
+            bottom.linkTo(parent.bottom, margin = 16.dp)
+            end.linkTo(parent.end, margin = 16.dp)
+          },
+          onClick = {
+              currentPresentedFeedToken?.shareUrl?.let(context::openUrl)
+          }
+      )
 
       if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
         VerticalFloatingToolbar(
@@ -182,22 +184,72 @@ fun TokenNavigationContent(
               end.linkTo(parent.end, margin = 16.dp)
             },
         ) {
-          NavigationBarButtons(component)
+          VerticalToolbarButtons(
+            onBackClick = component::onBackClicked,
+            onHomeClick = component.navigateHome,
+            onForwardClick = component::navigateToTokenFeed,
+          )
         }
       }
     }
   }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun NavigationBarButtons(component: TokenNavigationComponent) {
-  IconButton(onClick = component::onBackClicked) {
-    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+private fun OpenInBrowserFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
+  if (currentWindowAdaptiveInfo().isCompactHeight()) {
+    FloatingActionButton(modifier = modifier, onClick = onClick) {
+      Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
+    }
+  } else {
+    MediumFloatingActionButton(modifier = modifier, onClick = onClick) {
+      Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
+    }
   }
-  FilledTonalIconButton(onClick = component.navigateHome) {
+}
+
+@Composable
+private fun BottomAppBarButtons(
+  backText: String,
+  forwardText: String,
+  forwardEnabled: Boolean,
+  onBackClick: () -> Unit,
+  onHomeClick: () -> Unit,
+  onForwardClick: () -> Unit,
+) {
+  TextButton(onClick = onBackClick) {
+    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+    Spacer(modifier = Modifier.width(2.dp))
+    Text(backText)
+  }
+
+  FilledTonalIconButton(onClick = onHomeClick) {
     Icon(imageVector = Icons.Filled.Home, contentDescription = null)
   }
-  IconButton(onClick = component::navigateToTokenFeed) {
+
+  TextButton(onClick = onForwardClick, enabled = forwardEnabled) {
+    Text(forwardText)
+    Spacer(modifier = Modifier.width(2.dp))
+    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+  }
+}
+
+@Composable
+private fun VerticalToolbarButtons(
+  onBackClick: () -> Unit,
+  onHomeClick: () -> Unit,
+  onForwardClick: () -> Unit,
+) {
+  IconButton(onClick = onBackClick) {
+    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+  }
+
+  FilledTonalIconButton(onClick = onHomeClick) {
+    Icon(imageVector = Icons.Filled.Home, contentDescription = null)
+  }
+
+  IconButton(onClick = onForwardClick) {
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
   }
 }

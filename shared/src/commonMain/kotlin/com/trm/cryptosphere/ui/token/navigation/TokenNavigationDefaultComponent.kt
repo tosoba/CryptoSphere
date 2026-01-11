@@ -16,6 +16,9 @@ import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenRepository
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 
 class TokenNavigationDefaultComponent(
@@ -48,12 +51,13 @@ class TokenNavigationDefaultComponent(
     )
   }
 
-  override var currentFeedToken: TokenItem? = null
-    private set
+  private val _currentPresentedFeedToken: MutableStateFlow<TokenItem?> = MutableStateFlow(null)
+  override val currentPresentedFeedToken: StateFlow<TokenItem?> =
+    _currentPresentedFeedToken.asStateFlow()
 
   init {
     stack.subscribe(lifecycle) {
-      viewModel.updateTokenIds(it.items.map { (config) -> config.tokenId })
+      viewModel.updateNavigationTokenIds(it.items.map { (config) -> config.tokenId })
     }
   }
 
@@ -69,18 +73,18 @@ class TokenNavigationDefaultComponent(
       tokenFeedComponentFactory(
         componentContext = componentContext,
         tokenId = config.tokenId,
-        onCurrentFeedTokenChange = { currentFeedToken = it },
+        onCurrentPresentedFeedTokenChange = { _currentPresentedFeedToken.value = it },
         navigateToTokenFeed = {},
       )
     )
 
   override fun navigateToTokenFeed() {
     val (currentFeedConfig) = stack.value.items.last()
-    if (currentFeedConfig.tokenId == currentFeedToken?.id) return
+    val currentFeedTokenId = currentPresentedFeedToken.value?.id ?: return
+    if (currentFeedConfig.tokenId == currentFeedTokenId) return
 
-    val tokenId = currentFeedToken?.id ?: return
-    viewModel.addTokenToHistory(tokenId)
-    navigation.pushToFront(TokenFeedConfig(tokenId))
+    viewModel.addTokenToHistory(currentFeedTokenId)
+    navigation.pushToFront(TokenFeedConfig(currentFeedTokenId))
   }
 
   override fun popToToken(token: TokenItem) {

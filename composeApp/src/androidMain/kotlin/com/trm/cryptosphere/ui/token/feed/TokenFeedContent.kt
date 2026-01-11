@@ -105,7 +105,7 @@ fun TokenFeedContent(
             override fun onResume() {
               if (pagerState.currentPage < tokens.itemCount) {
                 val currentToken = currentToken()
-                component.onCurrentFeedTokenChange(currentToken)
+                component.onCurrentPresentedFeedTokenChange(currentToken)
                 onImageUrlChange(currentToken?.logoUrl)
               }
             }

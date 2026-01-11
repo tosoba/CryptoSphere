@@ -78,7 +78,7 @@ class RootDefaultComponent(
           tokenFeedComponentFactory(
             componentContext = componentContext,
             tokenId = config.tokenId,
-            onCurrentFeedTokenChange = {},
+            onCurrentPresentedFeedTokenChange = {},
             navigateToTokenFeed = { token -> navigateToTokenFeed(token.id, null) },
           )
         )
