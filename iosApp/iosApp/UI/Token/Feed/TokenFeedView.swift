@@ -9,6 +9,10 @@ struct TokenFeedView: View {
 
     @State private var scrolledItemId: Int32?
     private var navigationToken: TokenItem? { feedItems.first }
+    private var currentPresentedToken: TokenItem? { feedItems.first(where: { $0.id == scrolledItemId }) }
+    private var navigateToTokenFeedToolbarItemVisible: Bool {
+        scrolledItemId != nil && navigationToken?.id != scrolledItemId
+    }
 
     init(_ component: TokenFeedComponent) {
         self.component = component
@@ -63,17 +67,26 @@ struct TokenFeedView: View {
         }
         .navigationTitle(navigationToken?.symbol ?? "")
         .toolbar {
-            if scrolledItemId != nil && navigationToken?.id != scrolledItemId {
+            if navigateToTokenFeedToolbarItemVisible {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        guard let item = feedItems.first(where: { $0.id == scrolledItemId }) else { return }
+                        guard let item = currentPresentedToken else { return }
                         component.navigateToTokenFeed(item)
                     }) {
-                        Image(systemName: "chevron.forward")
+                        if let item = currentPresentedToken {
+                            HStack(spacing: 4) {
+                                Text(item.symbol)
+                                Image(systemName: "chevron.forward")
+                            }
+                        } else {
+                            Image(systemName: "chevron.forward")
+                        }
                     }
+                    .transition(.opacity.combined(with: .scale))
                 }
             }
         }
+        .animation(.default, value: navigateToTokenFeedToolbarItemVisible)
     }
 
     @ViewBuilder
