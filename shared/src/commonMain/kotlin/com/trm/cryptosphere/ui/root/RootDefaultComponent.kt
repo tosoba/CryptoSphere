@@ -78,23 +78,16 @@ class RootDefaultComponent(
           tokenFeedComponentFactory(
             componentContext = componentContext,
             tokenId = config.tokenId,
-            onCurrentFeedTokenChange = { token ->
-              token
-                ?.id
-                ?.takeUnless {
-                  val config =
-                    stack.value.items.lastOrNull()?.configuration as? ChildConfig.TokenFeed
-                  it == config?.tokenId
-                }
-                ?.let { navigateToTokenFeed(it, null) }
-            },
+            onCurrentFeedTokenChange = {},
+            navigateToTokenFeed = { token -> navigateToTokenFeed(token.id, null) },
           )
         )
       }
     }
 
   private fun navigateToTokenFeed(tokenId: Int, tokenCarouselConfig: TokenCarouselConfig?) {
-    viewModel.onTokenSelected(tokenId)
+    val config = stack.value.items.lastOrNull()?.configuration as? ChildConfig.TokenFeed
+    if (config?.tokenId != tokenId) viewModel.onTokenSelected(tokenId)
     navigation.navigateToTokenFeed(tokenId, tokenCarouselConfig)
   }
 

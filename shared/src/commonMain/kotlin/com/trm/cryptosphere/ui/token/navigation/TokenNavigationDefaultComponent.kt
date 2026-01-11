@@ -69,7 +69,8 @@ class TokenNavigationDefaultComponent(
       tokenFeedComponentFactory(
         componentContext = componentContext,
         tokenId = config.tokenId,
-        onCurrentFeedTokenChange = { it?.let { currentFeedToken = it } },
+        onCurrentFeedTokenChange = { currentFeedToken = it },
+        navigateToTokenFeed = {},
       )
     )
 

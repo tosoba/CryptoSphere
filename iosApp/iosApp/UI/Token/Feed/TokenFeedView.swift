@@ -67,8 +67,8 @@ struct TokenFeedView: View {
     private func itemView(_ item: TokenItem, at _: Int, alignedTo _: EdgeInsets) -> some View {
         VStack(alignment: .center) {
             Text(item.name)
-            Button("Go to next") {
-                component.onCurrentFeedTokenChange(item)
+            Button("Go to token") {
+                component.navigateToTokenFeed(item)
             }
         }
         .containerRelativeFrame([.vertical, .horizontal])

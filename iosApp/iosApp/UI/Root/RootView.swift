@@ -17,7 +17,7 @@ struct RootView: View {
             case let .home(homeChild):
                 HomeView(homeChild.component)
             case .tokenNavigation:
-                EmptyView() // used only on android
+                EmptyView() // Used only on android.
             case let .tokenFeed(tokenFeedChild):
                 TokenFeedView(tokenFeedChild.component)
             }

@@ -12,6 +12,7 @@ class TokenFeedDefaultComponent(
   tokenRepository: TokenRepository,
   dispatchers: AppCoroutineDispatchers,
   override val onCurrentFeedTokenChange: (TokenItem?) -> Unit,
+  override val navigateToTokenFeed: (TokenItem) -> Unit,
 ) : TokenFeedComponent, ComponentContext by componentContext {
   override val viewModel = retainedInstance {
     TokenFeedViewModel(tokenId, tokenRepository, dispatchers)

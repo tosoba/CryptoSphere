@@ -111,13 +111,18 @@ class DependencyContainer(
       )
     },
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
-    TokenFeedComponent.Factory { componentContext, tokenId, onCurrentFeedTokenChange ->
+    TokenFeedComponent.Factory {
+      componentContext,
+      tokenId,
+      onCurrentFeedTokenChange,
+      navigateToTokenFeed ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
         tokenId = tokenId,
         tokenRepository = tokenRepository.value,
         dispatchers = appCoroutineDispatchers,
         onCurrentFeedTokenChange = onCurrentFeedTokenChange,
+        navigateToTokenFeed = navigateToTokenFeed,
       )
     },
   val tokenNavigationComponentFactory: TokenNavigationComponent.Factory =
