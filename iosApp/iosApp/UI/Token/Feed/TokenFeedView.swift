@@ -7,7 +7,8 @@ struct TokenFeedView: View {
     @StateObject @KotlinStateFlow private var feedItems: [TokenItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
-    @State private var scrolledItemId: String?
+    @State private var scrolledItemId: Int32?
+    private var navigationToken: TokenItem? { feedItems.first }
 
     init(_ component: TokenFeedComponent) {
         self.component = component
@@ -60,16 +61,25 @@ struct TokenFeedView: View {
                 IndeterminateLinearProgressView(isVisible: progressVisible)
             }
         }
-        .navigationTitle(feedItems.first?.name ?? "")
+        .navigationTitle(navigationToken?.symbol ?? "")
+        .toolbar {
+            if scrolledItemId != nil && navigationToken?.id != scrolledItemId {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        guard let item = feedItems.first(where: { $0.id == scrolledItemId }) else { return }
+                        component.navigateToTokenFeed(item)
+                    }) {
+                        Image(systemName: "chevron.forward")
+                    }
+                }
+            }
+        }
     }
 
     @ViewBuilder
     private func itemView(_ item: TokenItem, at _: Int, alignedTo _: EdgeInsets) -> some View {
         VStack(alignment: .center) {
             Text(item.name)
-            Button("Go to token") {
-                component.navigateToTokenFeed(item)
-            }
         }
         .containerRelativeFrame([.vertical, .horizontal])
     }
