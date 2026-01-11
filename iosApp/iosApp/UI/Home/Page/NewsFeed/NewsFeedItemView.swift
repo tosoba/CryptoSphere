@@ -107,7 +107,7 @@ struct NewsFeedItemView: View {
             .controlSize(.large)
             .feedShadow()
             .clipShape(.circle)
-            .padding(.top, 24)
+            .padding(.top, 16)
 
             Spacer().frame(height: insets.bottom)
         }
