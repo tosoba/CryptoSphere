@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ReadMore
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.outlined.ImageNotSupported
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -152,11 +152,7 @@ fun NewsFeedItemContent(
               context.openUrl(news.link)
             },
           ) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ReadMore,
-              contentDescription = null,
-              modifier = Modifier.size(32.dp),
-            )
+            Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
           }
         } else {
           MediumFloatingActionButton(
@@ -170,11 +166,7 @@ fun NewsFeedItemContent(
               context.openUrl(news.link)
             },
           ) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ReadMore,
-              contentDescription = null,
-              modifier = Modifier.size(32.dp),
-            )
+            Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
           }
         }
 

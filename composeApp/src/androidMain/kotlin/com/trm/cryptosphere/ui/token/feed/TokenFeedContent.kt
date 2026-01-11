@@ -26,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -56,7 +55,6 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.base.fullDecimalFormat
-import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
@@ -69,8 +67,6 @@ import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
 import kotlin.math.sign
-
-private const val CMC_CURRENCIES_URL_PREFIX = "https://coinmarketcap.com/currencies/"
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -95,11 +91,9 @@ fun TokenFeedContent(
         modifier = Modifier.fillMaxSize(),
       ) { page ->
         tokens[page]?.let { token ->
-          val context = LocalContext.current
           TokenFeedPagerItem(
             token = token,
             mainTokenTagNames = tokens.peek(0)?.tagNames.orEmpty().toSet(),
-            onSeeMoreClick = { context.openUrl("$CMC_CURRENCIES_URL_PREFIX${token.slug}") },
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -127,7 +121,6 @@ fun TokenFeedContent(
 private fun TokenFeedPagerItem(
   token: TokenItem,
   mainTokenTagNames: Set<String>,
-  onSeeMoreClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val context = LocalContext.current
@@ -271,7 +264,6 @@ private fun TokenFeedPagerItem(
         },
       contentAlignment = if (isCompactHeight) Alignment.Center else Alignment.TopCenter,
     ) {
-      val seeMoreButtonHeight = 40.dp
       val parameters = remember {
         val valueChangeFormat: (Number?) -> String = {
           it?.toDouble()?.fullDecimalFormat()?.let { formatted -> " $formatted% " }.orEmpty()
@@ -310,11 +302,7 @@ private fun TokenFeedPagerItem(
 
       TokenParameterCardsColumn(
         parameters =
-          parameters.take(
-            ((maxHeight - seeMoreButtonHeight).value / calculateTokenParametersCardHeight().value)
-              .toInt()
-          ),
-        onSeeMoreClick = onSeeMoreClick,
+          parameters.take((maxHeight.value / calculateTokenParametersCardHeight().value).toInt()),
         modifier = Modifier.fillMaxWidth(),
       )
     }
@@ -324,7 +312,6 @@ private fun TokenFeedPagerItem(
 @Composable
 private fun TokenParameterCardsColumn(
   parameters: List<TokenParameter>,
-  onSeeMoreClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
@@ -350,10 +337,6 @@ private fun TokenParameterCardsColumn(
       )
 
       Spacer(modifier = Modifier.height(2.dp))
-    }
-
-    TextButton(onClick = onSeeMoreClick, modifier = Modifier.fillMaxWidth()) {
-      Text(MR.strings.see_more.resolve())
     }
   }
 }

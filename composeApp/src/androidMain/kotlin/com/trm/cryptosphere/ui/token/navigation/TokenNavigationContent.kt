@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
@@ -41,6 +41,7 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.base.shareUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
@@ -60,6 +61,7 @@ fun TokenNavigationContent(
   component: TokenNavigationComponent,
   onImageUrlChange: (String?) -> Unit,
 ) {
+  val context = LocalContext.current
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
 
@@ -153,9 +155,9 @@ fun TokenNavigationContent(
               bottom.linkTo(parent.bottom, margin = 16.dp)
               end.linkTo(parent.end, margin = 16.dp)
             },
-          onClick = component::navigateToTokenFeed,
+          onClick = { component.currentFeedToken?.shareUrl?.let(context::openUrl) },
         ) {
-          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+          Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
         }
       } else {
         MediumFloatingActionButton(
@@ -164,9 +166,9 @@ fun TokenNavigationContent(
               bottom.linkTo(parent.bottom, margin = 16.dp)
               end.linkTo(parent.end, margin = 16.dp)
             },
-          onClick = component::navigateToTokenFeed,
+          onClick = { component.currentFeedToken?.shareUrl?.let(context::openUrl) },
         ) {
-          Icon(imageVector = Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+          Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
         }
       }
 
@@ -189,14 +191,13 @@ fun TokenNavigationContent(
 
 @Composable
 private fun NavigationBarButtons(component: TokenNavigationComponent) {
-  val context = LocalContext.current
   IconButton(onClick = component::onBackClicked) {
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
   }
   FilledTonalIconButton(onClick = component.navigateHome) {
     Icon(imageVector = Icons.Filled.Home, contentDescription = null)
   }
-  IconButton(onClick = { component.currentFeedToken?.shareUrl?.let(context::shareUrl) }) {
-    Icon(imageVector = Icons.Filled.Share, contentDescription = null)
+  IconButton(onClick = component::navigateToTokenFeed) {
+    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
   }
 }
