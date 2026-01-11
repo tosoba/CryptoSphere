@@ -18,6 +18,12 @@ struct HomeView: View {
                 page(at: index).tab
             }
         }
+        .navigationTitle(String(\.home))
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("")
+            }
+        }
     }
 
     private func page(at index: Int) -> HomeComponentPage {
