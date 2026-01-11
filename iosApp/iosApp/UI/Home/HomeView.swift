@@ -42,9 +42,9 @@ private extension HomeComponentPage {
 
     private var systemImage: String {
         switch onEnum(of: self) {
-        case .newsFeed: "list.bullet.below.rectangle"
+        case .newsFeed: "newspaper"
         case .prices: "dollarsign.circle"
-        case .history: "archivebox"
+        case .history: "clock"
         }
     }
 
