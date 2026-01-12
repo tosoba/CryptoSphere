@@ -267,7 +267,7 @@ private fun RowScope.TokenPriceItemInfoColumn(token: TokenItem) {
 private fun TokenPriceItemPriceColumn(token: TokenItem) {
   Column(horizontalAlignment = Alignment.End) {
     Text(
-      text = token.quote.price.fullDecimalFormat(),
+      text = "$${token.quote.price.fullDecimalFormat()}",
       style = MaterialTheme.typography.bodyLarge,
       color = MaterialTheme.colorScheme.onSurface,
     )

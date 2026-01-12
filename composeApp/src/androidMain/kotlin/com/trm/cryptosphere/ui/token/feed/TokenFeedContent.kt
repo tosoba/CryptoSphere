@@ -272,7 +272,7 @@ private fun TokenFeedPagerItem(
           TokenParameter(
             label = MR.strings.price.resolve(context),
             value = token.quote.price,
-            valueFormat = { it.toDouble().fullDecimalFormat() },
+            valueFormat = { "$${it.toDouble().fullDecimalFormat()}" },
             valueChange = token.quote.percentChange24h,
             valueChangeFormat = valueChangeFormat,
           ),
@@ -442,7 +442,7 @@ private fun calculateTokenParametersCardHeight(): Dp {
 private data class TokenParameter(
   val label: String,
   val value: Number,
-  val valueFormat: (Number) -> String = { it.toDouble().shortDecimalFormat() },
+  val valueFormat: (Number) -> String = { "$${it.toDouble().shortDecimalFormat()}" },
   val valueChange: Number? = null,
   val valueChangeFormat: ((Number?) -> String)? = null,
 )
