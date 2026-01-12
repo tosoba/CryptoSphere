@@ -21,102 +21,74 @@ fun Double.shortDecimalFormat(): String {
   }
 }
 
-fun Double.fullDecimalFormat(significantDecimals: Int = 3, signed: Boolean = false): String =
-  buildString {
-    val absValue = abs(this@fullDecimalFormat)
-
-    // Handle Sign
-    if (signed) {
-      append(if (this@fullDecimalFormat.sign >= 0.0) "+" else "-")
-    } else if (this@fullDecimalFormat < 0) {
-      append("-")
-    }
-
-    if (absValue >= 1.0) {
-      append(absValue.formatNoScientific(significantDecimals))
-    } else if (absValue == 0.0) {
-      append("0")
-    } else {
-      // 1. Calculate leading zeros based on raw input
-      var leadingZeros = -floor(log10(absValue)).toInt() - 1
-
-      // 2. Calculate the multiplier required to get significant digits
-      val power = leadingZeros + significantDecimals
-      val shifted = absValue * 10.0.pow(power.toDouble())
-
-      // 3. Round to integer
-      var significantPart = round(shifted).toLong()
-
-      // 4. Check for rounding overflow (e.g., 0.999 -> 1000)
-      // If the rounded number has more digits than requested, we bumped a magnitude.
-      if (significantPart.toString().length > significantDecimals) {
-        significantPart /= 10
-        leadingZeros--
-      }
-
-      // 5. Construct the string
-      if (leadingZeros < 0) {
-        // If leading zeros dropped below 0, the number rounded up to >= 1.0
-        append("1")
-      } else {
-        append("0.")
-        repeat(leadingZeros) { append('0') }
-        append(significantPart)
-      }
-
-      // 6. Remove trailing zeros
-      // Check length > 2 to protect "0."
-      if (contains('.')) {
-        while (length > 2 && last() == '0') {
-          deleteAt(lastIndex)
-        }
-        // Optional: Remove trailing decimal point if it occurs (e.g. "1.")
-        if (last() == '.') {
-          deleteAt(lastIndex)
-        }
-      }
+fun Double.fullDecimalFormat(significantDecimals: Int = 3, signed: Boolean = false): String {
+  // 1. Handle non-finite numbers first
+  if (!this.isFinite()) {
+    return when {
+      this.isNaN() -> "NaN"
+      this > 0 -> if (signed) "+Infinity" else "Infinity"
+      else -> "-Infinity"
     }
   }
 
-/** Formats a Double without scientific notation, avoiding toString() issues */
+  val absValue = abs(this@fullDecimalFormat)
+
+  // 2. Handle Zero
+  if (absValue == 0.0) {
+    return if (signed) "+0" else "0"
+  }
+
+  return buildString {
+      // 3. Handle Sign
+      if (signed) {
+        append(if (this@fullDecimalFormat.sign >= 0.0) "+" else "-")
+      } else if (this@fullDecimalFormat < 0) {
+        append("-")
+      }
+
+      if (absValue >= 1.0) {
+        // Treat significantDecimals as fixed decimal places for numbers >= 1
+        append(absValue.formatNoScientific(significantDecimals))
+      } else {
+        // Significant digits logic for numbers < 1
+        val leadingZeros = -floor(log10(absValue)).toInt() - 1
+        val totalDecimalsNeeded = leadingZeros + significantDecimals
+
+        // Use the robust scaling logic
+        val formatted = absValue.formatNoScientific(totalDecimalsNeeded)
+
+        // If rounding caused the number to become 1.0 (e.g., 0.999 -> 1)
+        if (!formatted.startsWith("0.")) {
+          append(formatted)
+        } else {
+          append(formatted)
+        }
+      }
+    }
+    .removeExtraZeros()
+}
+
 private fun Double.formatNoScientific(decimals: Int): String {
-  if (this.isNaN()) return "NaN"
-  if (this.isInfinite()) return if (this > 0) "Infinity" else "-Infinity"
-  if (this == 0.0) return "0"
+  if (!this.isFinite()) return this.toString()
 
   val absValue = abs(this)
   val multiplier = 10.0.pow(decimals.toDouble())
-  val rounded = round(absValue * multiplier) / multiplier
+  val scaled = round(absValue * multiplier).toLong()
+  val scaledStr = scaled.toString()
 
-  // Split into integer and fractional parts
-  val integerPart = floor(rounded).toLong()
-  val fractionalPart = rounded - integerPart
-
-  return buildString {
-    if (this@formatNoScientific < 0) append('-')
-    append(integerPart)
-
-    if (decimals > 0 && fractionalPart > 0) {
-      append('.')
-
-      // Extract decimal digits manually
-      var fraction = fractionalPart
-      repeat(decimals) {
-        fraction *= 10
-        val digit = floor(fraction).toInt()
-        append(digit)
-        fraction -= digit
-      }
-
-      // Remove trailing zeros
-      while (last() == '0') {
-        deleteAt(lastIndex)
-      }
-
-      // Remove decimal point if no decimals left
-      if (last() == '.') {
-        deleteAt(lastIndex)
-      }
-    }
+  return if (decimals <= 0) {
+    scaledStr
+  } else {
+    val padded = scaledStr.padStart(decimals + 1, '0')
+    val splitAt = padded.length - decimals
+    val intPart = padded.take(splitAt)
+    val fracPart = padded.substring(splitAt)
+    "$intPart.$fracPart".removeExtraZeros()
   }
+}
+
+private fun String.removeExtraZeros(): String {
+  if (!contains('.')) return this
+  val trimmed = dropLastWhile { it == '0' }
+  return if (trimmed.endsWith('.')) trimmed.dropLast(1) else trimmed
 }
