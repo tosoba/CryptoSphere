@@ -1,6 +1,5 @@
-package com.trm.cryptosphere.api.coinmarketcap
+package com.trm.cryptosphere.data.api.coinmarketcap
 
-import com.trm.cryptosphere.data.api.coinmarketcap.CoinMarketCapApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
