@@ -71,8 +71,8 @@ interface TokenDao {
     """
     SELECT 
         T2.*, 
-        GROUP_CONCAT(TT3.tag_name) AS all_tag_names, 
-        GROUP_CONCAT(TT2.tag_name) AS shared_tag_names 
+        GROUP_CONCAT(DISTINCT TT3.tag_name) AS all_tag_names, 
+        GROUP_CONCAT(DISTINCT TT2.tag_name) AS shared_tag_names 
     FROM token AS T1
     JOIN token_tag AS TT1 ON T1.id = TT1.token_id
     JOIN token_tag AS TT2 ON TT1.tag_name = TT2.tag_name
@@ -95,7 +95,7 @@ interface TokenDao {
       AND t2.cmc_rank < T2.cmc_rank
     )
     GROUP BY T2.id
-    ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, COUNT(TT2.tag_name) DESC, T2.cmc_rank
+    ORDER BY CASE WHEN T2.id = :id THEN 0 ELSE 1 END, COUNT(DISTINCT TT2.tag_name) DESC, T2.cmc_rank
     """
   )
   fun selectTokensBySharedTags(id: Int): PagingSource<Int, TokenWithTagNamesJunction>
