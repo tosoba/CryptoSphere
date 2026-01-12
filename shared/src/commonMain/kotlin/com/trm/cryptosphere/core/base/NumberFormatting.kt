@@ -25,6 +25,7 @@ fun Double.fullDecimalFormat(significantDecimals: Int = 3, signed: Boolean = fal
   buildString {
     val absValue = abs(this@fullDecimalFormat)
 
+    // Handle Sign
     if (signed) {
       append(if (this@fullDecimalFormat.sign >= 0.0) "+" else "-")
     } else if (this@fullDecimalFormat < 0) {
@@ -36,24 +37,43 @@ fun Double.fullDecimalFormat(significantDecimals: Int = 3, signed: Boolean = fal
     } else if (absValue == 0.0) {
       append("0")
     } else {
-      append("0.")
+      // 1. Calculate leading zeros based on raw input
+      var leadingZeros = -floor(log10(absValue)).toInt() - 1
 
-      // Count leading zeros after decimal point
-      val leadingZeros = -floor(log10(absValue)).toInt() - 1
+      // 2. Calculate the multiplier required to get significant digits
+      val power = leadingZeros + significantDecimals
+      val shifted = absValue * 10.0.pow(power.toDouble())
 
-      // Append leading zeros
-      repeat(leadingZeros) { append('0') }
+      // 3. Round to integer
+      var significantPart = round(shifted).toLong()
 
-      // Extract significant digits
-      val shifted = absValue * 10.0.pow((leadingZeros + significantDecimals).toDouble())
-      val significantPart = round(shifted).toLong()
-      val significantStr = significantPart.toString().take(significantDecimals)
+      // 4. Check for rounding overflow (e.g., 0.999 -> 1000)
+      // If the rounded number has more digits than requested, we bumped a magnitude.
+      if (significantPart.toString().length > significantDecimals) {
+        significantPart /= 10
+        leadingZeros--
+      }
 
-      append(significantStr)
+      // 5. Construct the string
+      if (leadingZeros < 0) {
+        // If leading zeros dropped below 0, the number rounded up to >= 1.0
+        append("1")
+      } else {
+        append("0.")
+        repeat(leadingZeros) { append('0') }
+        append(significantPart)
+      }
 
-      // Remove trailing zeros
-      while (length > 2 && last() == '0') {
-        deleteAt(lastIndex)
+      // 6. Remove trailing zeros
+      // Check length > 2 to protect "0."
+      if (contains('.')) {
+        while (length > 2 && last() == '0') {
+          deleteAt(lastIndex)
+        }
+        // Optional: Remove trailing decimal point if it occurs (e.g. "1.")
+        if (last() == '.') {
+          deleteAt(lastIndex)
+        }
       }
     }
   }
