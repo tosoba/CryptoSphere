@@ -60,7 +60,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.fullDecimalFormat
-import com.trm.cryptosphere.core.base.shortDecimalFormat
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
@@ -70,8 +69,8 @@ import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
-import kotlinx.coroutines.launch
 import kotlin.math.sign
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -284,7 +283,7 @@ private fun TokenPriceItemPriceColumn(token: TokenItem) {
         ),
     ) {
       Text(
-        text = "${percentChange24h.shortDecimalFormat()}%",
+        text = "${percentChange24h.fullDecimalFormat(significantDecimals = 2, signed = true)}%",
         style =
           MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Medium,

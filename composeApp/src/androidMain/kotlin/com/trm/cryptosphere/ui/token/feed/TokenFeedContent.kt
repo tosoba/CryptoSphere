@@ -266,7 +266,11 @@ private fun TokenFeedPagerItem(
     ) {
       val parameters = remember {
         val valueChangeFormat: (Number?) -> String = {
-          it?.toDouble()?.fullDecimalFormat()?.let { formatted -> " $formatted% " }.orEmpty()
+          it
+            ?.toDouble()
+            ?.fullDecimalFormat(significantDecimals = 2, signed = true)
+            ?.let { formatted -> " $formatted% " }
+            .orEmpty()
         }
         listOfNotNull(
           TokenParameter(
