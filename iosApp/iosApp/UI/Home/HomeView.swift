@@ -7,22 +7,44 @@ struct HomeView: View {
     @StateValue
     private var pages: ChildPages<AnyObject, HomeComponentPage>
 
+    private var selectedPageIndex: Int {
+        Int(pages.selectedIndex)
+    }
+
+    private var selectedPage: HomeComponentPage {
+        page(at: selectedPageIndex)
+    }
+
     init(_ component: HomeComponent) {
         self.component = component
         _pages = StateValue(component.pages)
     }
 
     var body: some View {
-        TabView {
+        TabView(
+            selection: Binding(
+                get: { selectedPageIndex },
+                set: { updatedIndex in component.selectPage(index: Int32(updatedIndex)) }
+            )
+        ) {
             ForEach(pages.items.indices, id: \.self) { index in
-                page(at: index).tab
+                tab(at: index)
             }
         }
-        .navigationTitle(String(\.home))
+        .navigationTitle(selectedPage.title)
         .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("")
+            if case .newsFeed = onEnum(of: selectedPage) {
+                ToolbarItem(placement: .principal) {
+                    Text("")
+                }
             }
+        }
+    }
+
+    private func tab(at index: Int) -> Tab<Int, PageView, DefaultTabLabel> {
+        let page = page(at: index)
+        return Tab(page.title, systemImage: page.systemImage, value: index) {
+            PageView(page: page)
         }
     }
 
@@ -32,7 +54,7 @@ struct HomeView: View {
 }
 
 private extension HomeComponentPage {
-    private var title: String {
+    var title: String {
         switch onEnum(of: self) {
         case .newsFeed: String(\.feed)
         case .prices: String(\.prices)
@@ -40,17 +62,11 @@ private extension HomeComponentPage {
         }
     }
 
-    private var systemImage: String {
+    var systemImage: String {
         switch onEnum(of: self) {
         case .newsFeed: "newspaper"
         case .prices: "dollarsign.circle"
         case .history: "clock"
-        }
-    }
-
-    var tab: Tab<Never, PageView, DefaultTabLabel> {
-        Tab(title, systemImage: systemImage) {
-            PageView(page: self)
         }
     }
 }
