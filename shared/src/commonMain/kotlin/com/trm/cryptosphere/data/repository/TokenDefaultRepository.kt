@@ -40,8 +40,8 @@ class TokenDefaultRepository(
       .flow
       .map { it.map(TokenWithTagNamesJunction::toTokenItem) }
 
-  override fun getTokens(query: String): Flow<PagingData<TokenItem>> =
-    Pager(config = PagingConfig(pageSize = TOKEN_DB_PAGE_SIZE)) {
+  override fun getTokens(query: String, config: PagingConfig): Flow<PagingData<TokenItem>> =
+    Pager(config = config) {
         dao.selectPagedTokens(query.lowercase().trim().takeUnless(String::isEmpty))
       }
       .flow
@@ -49,8 +49,4 @@ class TokenDefaultRepository(
 
   override suspend fun getTokensByIds(ids: List<Int>): List<TokenItem> =
     dao.selectByIdsIn(ids).map(TokenEntity::toTokenItem)
-
-  companion object {
-    private const val TOKEN_DB_PAGE_SIZE = 100
-  }
 }

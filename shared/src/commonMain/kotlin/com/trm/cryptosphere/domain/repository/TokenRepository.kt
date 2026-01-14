@@ -14,7 +14,7 @@ interface TokenRepository {
 
   fun getTokensBySharedTags(id: Int, config: PagingConfig): Flow<PagingData<TokenItem>>
 
-  fun getTokens(query: String): Flow<PagingData<TokenItem>>
+  fun getTokens(query: String, config: PagingConfig): Flow<PagingData<TokenItem>>
 
   suspend fun getTokensByIds(ids: List<Int>): List<TokenItem>
 }

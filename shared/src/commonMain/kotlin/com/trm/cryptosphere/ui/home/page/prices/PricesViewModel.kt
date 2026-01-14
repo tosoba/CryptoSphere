@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.prices
 
+import androidx.paging.PagingConfig
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.base.PagingItemsState
@@ -23,7 +24,14 @@ class PricesViewModel(
   private val query = MutableStateFlow("")
 
   val tokensPagingState =
-    PagingItemsState(scope) { query.debounce(250).flatMapLatest(tokenRepository::getTokens) }
+    PagingItemsState(scope) {
+      query.debounce(250).flatMapLatest {
+        tokenRepository.getTokens(
+          query = it,
+          config = PagingConfig(pageSize = PAGE_SIZE, initialLoadSize = PAGE_SIZE),
+        )
+      }
+    }
 
   fun onQueryChange(newQuery: String) {
     query.value = newQuery.trim()
@@ -31,5 +39,9 @@ class PricesViewModel(
 
   override fun onDestroy() {
     scope.cancel()
+  }
+
+  companion object {
+    const val PAGE_SIZE = 100
   }
 }
