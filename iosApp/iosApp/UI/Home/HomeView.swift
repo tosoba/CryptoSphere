@@ -24,7 +24,7 @@ struct HomeView: View {
         TabView(
             selection: Binding(
                 get: { selectedPageIndex },
-                set: { updatedIndex in component.selectPage(index: Int32(updatedIndex)) }
+                set: { index in component.selectPage(index: Int32(index)) }
             )
         ) {
             ForEach(pages.items.indices, id: \.self) { index in

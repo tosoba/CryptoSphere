@@ -45,7 +45,7 @@ struct StackView<T: AnyObject, Content: View>: View {
         NavigationStack(
             path: Binding(
                 get: { stack.dropFirst() },
-                set: { updatedPath in onBack(Int32(updatedPath.count)) }
+                set: { path in onBack(Int32(path.count)) }
             )
         ) {
             content(stack.first!.instance!)
