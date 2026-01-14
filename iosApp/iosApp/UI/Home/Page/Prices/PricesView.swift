@@ -68,6 +68,7 @@ struct PricesView: View {
                 }
             }
         }
+        .background(Color(.systemGroupedBackground))
         .overlay(alignment: .bottom) {
             let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
             IndeterminateLinearProgressView(isVisible: progressVisible)
