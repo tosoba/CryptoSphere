@@ -129,8 +129,9 @@ private struct TokenPriceItemView: View {
 
             VStack(alignment: .leading) {
                 Text(token.symbol)
-                    .font(.body)
+                    .font(.headline)
                     .fontWeight(.medium)
+                    .foregroundColor(.primary)
 
                 Text(token.name)
                     .font(.subheadline)
@@ -142,14 +143,15 @@ private struct TokenPriceItemView: View {
 
             VStack(alignment: .trailing) {
                 Text("$\(token.quote.price.fullDecimalFormat(significantDecimals: 3, signed: false))")
-                    .font(.body)
+                    .font(.headline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
 
                 let percentChange24h = token.quote.percentChange24h
                 let valueChangePositive = percentChange24h >= 0
 
                 Text("\(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))%")
                     .font(.subheadline)
-                    .fontWeight(.medium)
                     .padding(.horizontal, 4)
                     .foregroundColor(valueChangePositive ? .black : .white)
                     .background(valueChangePositive ? Color.green : Color.red)
