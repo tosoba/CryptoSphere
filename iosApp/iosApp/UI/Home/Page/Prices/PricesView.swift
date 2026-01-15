@@ -18,26 +18,49 @@ struct PricesView: View {
 
     @ViewBuilder
     var body: some View {
-        ZStack {
-            switch onEnum(of: loadStates?.refresh) {
-            case .loading, .none:
-                loadingView
-            case .error:
-                errorView
-            case .notLoading:
-                if tokens.isEmpty {
-                    emptyView
-                } else {
-                    tokensList
+        VStack {
+            searchBar.padding(.horizontal)
+
+            ZStack {
+                switch onEnum(of: loadStates?.refresh) {
+                case .loading, .none:
+                    loadingView
+                case .error:
+                    errorView
+                case .notLoading:
+                    if tokens.isEmpty {
+                        emptyView
+                    } else {
+                        tokensList
+                    }
+                }
+            }
+            .animation(.default, value: onEnum(of: loadStates?.refresh))
+        }
+        .onChange(of: searchQuery) { _, newQuery in
+            component.viewModel.onQueryChange(newQuery: newQuery)
+        }
+    }
+
+    @ViewBuilder
+    private var searchBar: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+
+            TextField(String(\.search_tokens), text: $searchQuery)
+                .autocorrectionDisabled()
+
+            if !searchQuery.isEmpty {
+                Button(action: { searchQuery = "" }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
                 }
             }
         }
-        .animation(.default, value: onEnum(of: loadStates?.refresh))
-        // TODO: FIXME
-//        .searchable(text: $searchQuery, prompt: String(\.search_tokens))
-//        .onChange(of: searchQuery) { _, newQuery in
-//            component.viewModel.onQueryChange(newQuery: newQuery)
-//        }
+        .padding(8)
+        .background(Color(.systemGray6))
+        .cornerRadius(8)
     }
 
     @ViewBuilder
@@ -50,11 +73,13 @@ struct PricesView: View {
     @ViewBuilder
     private var tokensList: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: 8) {
                 ForEach(Array(tokens.enumerated()), id: \.element.id) { index, token in
-                    Button(action: {
-                        component.onTokenClick(KotlinInt(value: token.id), TokenCarouselConfig())
-                    }) {
+                    Button(
+                        action: {
+                            component.onTokenClick(KotlinInt(value: token.id), TokenCarouselConfig())
+                        }
+                    ) {
                         TokenPriceItemView(token: token)
                             .onAppear {
                                 guard case .notLoading = onEnum(of: loadStates?.append) else { return }
@@ -63,10 +88,10 @@ struct PricesView: View {
                                 }
                             }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 2)
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
         }
         .background(Color(.systemGroupedBackground))
         .overlay(alignment: .bottom) {
