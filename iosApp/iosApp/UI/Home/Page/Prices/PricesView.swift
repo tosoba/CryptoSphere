@@ -6,14 +6,14 @@ struct PricesView: View {
 
     @StateObject @KotlinStateFlow private var tokens: [TokenItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
-
-    @State private var searchQuery: String = ""
+    @StateObject @KotlinStateFlow private var query: String
 
     init(component: PricesComponent) {
         self.component = component
 
         _tokens = .init(component.viewModel.tokensPagingState.itemsSnapshotList)
         _loadStates = .init(component.viewModel.tokensPagingState.loadStates)
+        _query = .init(component.viewModel.query)
     }
 
     @ViewBuilder
@@ -37,9 +37,6 @@ struct PricesView: View {
             }
             .animation(.default, value: onEnum(of: loadStates?.refresh))
         }
-        .onChange(of: searchQuery) { _, newQuery in
-            component.viewModel.onQueryChange(newQuery: newQuery)
-        }
     }
 
     @ViewBuilder
@@ -48,11 +45,17 @@ struct PricesView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
 
-            TextField(String(\.search_tokens), text: $searchQuery)
-                .autocorrectionDisabled()
+            TextField(
+                String(\.search_tokens),
+                text: Binding(
+                    get: { query },
+                    set: { newQuery in component.viewModel.onQueryChange(newQuery: newQuery) }
+                )
+            )
+            .autocorrectionDisabled()
 
-            if !searchQuery.isEmpty {
-                Button(action: { searchQuery = "" }) {
+            if !query.isEmpty {
+                Button(action: { component.viewModel.onQueryChange(newQuery: "") }) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }

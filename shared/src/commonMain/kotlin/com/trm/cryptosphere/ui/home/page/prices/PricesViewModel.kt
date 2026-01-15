@@ -11,6 +11,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 
@@ -21,11 +23,12 @@ class PricesViewModel(
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
 
-  private val query = MutableStateFlow("")
+  private val _query = MutableStateFlow("")
+  val query: StateFlow<String> = _query.asStateFlow()
 
   val tokensPagingState =
     PagingItemsState(scope) {
-      query.debounce(250).flatMapLatest {
+      _query.debounce(250).flatMapLatest {
         tokenRepository.getTokens(
           query = it,
           config = PagingConfig(pageSize = PAGE_SIZE, initialLoadSize = PAGE_SIZE),
@@ -34,7 +37,7 @@ class PricesViewModel(
     }
 
   fun onQueryChange(newQuery: String) {
-    query.value = newQuery.trim()
+    _query.value = newQuery.trim()
   }
 
   override fun onDestroy() {
