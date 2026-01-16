@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.trm.cryptosphere.core.base.nowDateTime
 import com.trm.cryptosphere.data.db.dao.TokenHistoryDao
 import com.trm.cryptosphere.data.db.entity.TokenHistoryEntity
 import com.trm.cryptosphere.data.db.entity.junction.TokenHistoryWithTokenJunction
@@ -12,20 +13,10 @@ import com.trm.cryptosphere.domain.model.TokenHistoryItem
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 class TokenHistoryDefaultRepository(private val dao: TokenHistoryDao) : TokenHistoryRepository {
   override suspend fun addTokenToHistory(tokenId: Int) {
-    dao.insert(
-      TokenHistoryEntity(
-        tokenId = tokenId,
-        visitedAt = Clock.System.now().toLocalDateTime(TimeZone.UTC),
-      )
-    )
+    dao.insert(TokenHistoryEntity(tokenId = tokenId, visitedAt = nowDateTime()))
   }
 
   override fun getHistory(query: String): Flow<PagingData<TokenHistoryItem>> =

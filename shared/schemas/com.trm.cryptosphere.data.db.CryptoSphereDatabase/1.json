@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3a748488b58c0b336e8060cb9244d0a5",
+    "identityHash": "751261a4ba835b91364b894fb4da5dae",
     "entities": [
       {
         "tableName": "token",
@@ -360,6 +360,17 @@
             "id"
           ]
         },
+        "indices": [
+          {
+            "name": "index_token_history_token_id",
+            "unique": true,
+            "columnNames": [
+              "token_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_token_history_token_id` ON `${TABLE_NAME}` (`token_id`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "token",
@@ -424,7 +435,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3a748488b58c0b336e8060cb9244d0a5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '751261a4ba835b91364b894fb4da5dae')"
     ]
   }
 }

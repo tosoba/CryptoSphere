@@ -4,15 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
+import com.trm.cryptosphere.core.base.nowDateTime
 import com.trm.cryptosphere.core.ui.SharedTransitionPreview
 import com.trm.cryptosphere.domain.model.NewsFeedItem
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.TokenQuote
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 @Preview(showBackground = true, backgroundColor = 0xFF000000, name = "Carousel Test")
 @Composable
@@ -24,11 +21,10 @@ private fun NewsFeedItemContentPreview(
       item =
         NewsFeedItem(
           news =
-            @OptIn(ExperimentalTime::class)
             NewsItem(
               id = "1",
               searchKeyWords = listOf("dogecoin", "DOGE"),
-              feedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+              feedDate = nowDateTime(),
               source = "U.Today",
               title = "Dogecoin Account Drops Casual 'Sup' Tweet: What's Behind It?",
               sourceLink = "https://u.today/",
@@ -36,7 +32,7 @@ private fun NewsFeedItemContentPreview(
               relatedCoins = emptyList(),
               link =
                 "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
-              fetchedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC),
+              fetchedDate = nowDateTime(),
             ),
           relatedTokens = relatedTokens,
         ),
