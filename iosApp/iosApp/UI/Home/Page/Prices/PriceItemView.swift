@@ -8,7 +8,7 @@ struct PriceItemView: View {
         HStack(spacing: 16) {
             Text("\(token.cmcRank)")
                 .font(.title2)
-                .foregroundColor(.secondary)
+                .foregroundColor(.primary)
 
             AsyncImage(
                 url: URL(string: token.logoUrl),
@@ -56,7 +56,7 @@ struct PriceItemView: View {
             Text("\(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))%")
                 .font(.subheadline)
                 .padding(.horizontal, 4)
-                .foregroundColor(valueChangePositive ? .black : .white)
+                .foregroundColor(valueChangePositive ? .primary : .white)
                 .background(valueChangePositive ? Color.green : Color.red)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
         }
