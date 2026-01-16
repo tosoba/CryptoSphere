@@ -75,6 +75,7 @@ struct PricesView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
         }
+        .scrollDismissesKeyboard(.interactively)
         .background(Color(.systemGroupedBackground))
         .overlay(alignment: .bottom) {
             let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
