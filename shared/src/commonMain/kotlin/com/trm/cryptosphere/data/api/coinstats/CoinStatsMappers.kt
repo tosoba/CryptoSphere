@@ -3,11 +3,10 @@ package com.trm.cryptosphere.data.api.coinstats
 import com.trm.cryptosphere.core.base.nowDateTime
 import com.trm.cryptosphere.data.api.coinstats.model.CoinStatsNewsItem
 import com.trm.cryptosphere.domain.model.NewsItem
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class)
 fun CoinStatsNewsItem.toNewsItem(): NewsItem =

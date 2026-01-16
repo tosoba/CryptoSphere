@@ -11,11 +11,9 @@ import com.trm.cryptosphere.data.db.mapper.toDomain
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.NewsItem
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@OptIn(ExperimentalTime::class)
 class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistoryRepository {
   override suspend fun addNewsToHistory(news: NewsItem) {
     dao.insert(
@@ -23,6 +21,18 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
         title = news.title,
         source = news.source,
         url = news.link,
+        imgUrl = news.imgUrl,
+        visitedAt = nowDateTime(),
+      )
+    )
+  }
+
+  override suspend fun updateNewsInHistory(news: NewsHistoryItem) {
+    dao.insert(
+      NewsHistoryEntity(
+        title = news.title,
+        source = news.source,
+        url = news.url,
         imgUrl = news.imgUrl,
         visitedAt = nowDateTime(),
       )

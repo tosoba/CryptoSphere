@@ -6,6 +6,7 @@ import androidx.paging.map
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.base.PagingItemsState
+import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.repository.NewsHistoryRepository
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import kotlinx.coroutines.CoroutineScope
@@ -82,6 +83,10 @@ class HistoryViewModel(
       HistoryPage.NEWS -> deleteAllNewsHistory()
       HistoryPage.TOKENS -> deleteAllTokenHistory()
     }
+  }
+
+  fun onNewsClick(news: NewsHistoryItem) {
+    scope.launch { newsHistoryRepository.updateNewsInHistory(news) }
   }
 
   private fun deleteAllNewsHistory() {

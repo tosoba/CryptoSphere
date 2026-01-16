@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "751261a4ba835b91364b894fb4da5dae",
+    "identityHash": "e3b571009289373d53a9e37e15dd91ab",
     "entities": [
       {
         "tableName": "token",
@@ -430,12 +430,23 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_news_history_url",
+            "unique": true,
+            "columnNames": [
+              "url"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_news_history_url` ON `${TABLE_NAME}` (`url`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '751261a4ba835b91364b894fb4da5dae')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e3b571009289373d53a9e37e15dd91ab')"
     ]
   }
 }

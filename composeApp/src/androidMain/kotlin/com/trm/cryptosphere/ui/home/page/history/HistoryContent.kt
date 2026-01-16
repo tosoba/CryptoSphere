@@ -173,7 +173,10 @@ fun HistoryContent(component: HistoryComponent) {
         if (index == 0) {
           NewsHistoryList(
             items = newsHistory,
-            onClick = { item -> context.openUrl(item.url) },
+            onClick = { item ->
+              component.viewModel.onNewsClick(item)
+              context.openUrl(item.url)
+            },
             onDelete = viewModel::onDeleteNewsHistoryClick,
           )
         } else {
