@@ -19,7 +19,13 @@ struct PricesView: View {
     @ViewBuilder
     var body: some View {
         VStack {
-            searchBar.padding(.horizontal)
+            SearchBar(
+                query: Binding(
+                    get: { query },
+                    set: { newQuery in component.viewModel.onQueryChange(newQuery: newQuery) }
+                )
+            )
+            .padding(.horizontal)
 
             ZStack {
                 switch onEnum(of: loadStates?.refresh) {
@@ -37,33 +43,6 @@ struct PricesView: View {
             }
             .animation(.default, value: onEnum(of: loadStates?.refresh))
         }
-    }
-
-    @ViewBuilder
-    private var searchBar: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
-
-            TextField(
-                String(\.search_tokens),
-                text: Binding(
-                    get: { query },
-                    set: { newQuery in component.viewModel.onQueryChange(newQuery: newQuery) }
-                )
-            )
-            .autocorrectionDisabled()
-
-            if !query.isEmpty {
-                Button(action: { component.viewModel.onQueryChange(newQuery: "") }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .padding(8)
-        .background(Color(.systemGray6))
-        .cornerRadius(8)
     }
 
     @ViewBuilder
