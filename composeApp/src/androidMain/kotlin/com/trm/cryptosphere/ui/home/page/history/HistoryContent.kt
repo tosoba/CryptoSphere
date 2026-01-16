@@ -70,6 +70,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -79,13 +80,16 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
+import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
+import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
@@ -99,10 +103,12 @@ fun HistoryContent(component: HistoryComponent) {
   val newsHistory = viewModel.newsHistoryPagingState.flow.collectAsLazyPagingItems()
   val tokenHistory = viewModel.tokenHistoryPagingState.flow.collectAsLazyPagingItems()
 
+  val context = LocalContext.current
   val scope = rememberCoroutineScope()
   val pagerState = rememberPagerState(pageCount = HistoryPage.entries::size)
   var deleteAllDialogVisible by rememberSaveable { mutableStateOf(false) }
   val searchBarState = rememberSearchBarState()
+
   fun collapseSearchBar() {
     scope.launch { searchBarState.animateToCollapsed() }
   }
@@ -165,9 +171,17 @@ fun HistoryContent(component: HistoryComponent) {
             .background(color = MaterialTheme.colorScheme.surfaceContainer),
       ) { index ->
         if (index == 0) {
-          NewsHistoryList(items = newsHistory, onDelete = viewModel::onDeleteNewsHistoryClick)
+          NewsHistoryList(
+            items = newsHistory,
+            onClick = { item -> context.openUrl(item.url) },
+            onDelete = viewModel::onDeleteNewsHistoryClick,
+          )
         } else {
-          TokenHistoryList(items = tokenHistory, onDelete = viewModel::onDeleteTokenHistoryClick)
+          TokenHistoryList(
+            items = tokenHistory,
+            onClick = { token -> component.onTokenClick(token.id, TokenCarouselConfig(null)) },
+            onDelete = viewModel::onDeleteTokenHistoryClick,
+          )
         }
       }
     }
@@ -266,7 +280,11 @@ private fun TopSearchBar(
 }
 
 @Composable
-private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>, onDelete: (Long) -> Unit) {
+private fun NewsHistoryList(
+  items: LazyPagingItems<NewsHistoryListItem>,
+  onClick: (NewsHistoryItem) -> Unit,
+  onDelete: (Long) -> Unit,
+) {
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
@@ -289,7 +307,7 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>, onDelet
       key =
         items.itemKey {
           when (it) {
-            is NewsHistoryListItem.Item -> it.news.id
+            is NewsHistoryListItem.Item -> it.data.id
             is NewsHistoryListItem.DateHeader -> it.date.toEpochDays()
           }
         },
@@ -309,8 +327,14 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>, onDelet
           SwipeToDismissBox(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
-            content = { NewsHistoryItem(item = currentItem.news, shape = shape) },
-            onDismiss = { if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.news.id) },
+            content = {
+              NewsHistoryItem(
+                item = currentItem.data,
+                shape = shape,
+                onClick = { onClick(currentItem.data) },
+              )
+            },
+            onDismiss = { if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id) },
             modifier = Modifier.animateItem(),
           )
         }
@@ -326,6 +350,7 @@ private fun NewsHistoryList(items: LazyPagingItems<NewsHistoryListItem>, onDelet
 @Composable
 private fun TokenHistoryList(
   items: LazyPagingItems<TokenHistoryListItem>,
+  onClick: (TokenItem) -> Unit,
   onDelete: (Long) -> Unit,
 ) {
   LazyColumn(
@@ -350,7 +375,7 @@ private fun TokenHistoryList(
       key =
         items.itemKey {
           when (it) {
-            is TokenHistoryListItem.Item -> it.token.id
+            is TokenHistoryListItem.Item -> it.data.id
             is TokenHistoryListItem.DateHeader -> it.date.toEpochDays()
           }
         },
@@ -370,10 +395,14 @@ private fun TokenHistoryList(
           SwipeToDismissBox(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
-            content = { TokenHistoryItem(item = currentItem.token, shape = shape) },
-            onDismiss = {
-              if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.token.id)
+            content = {
+              TokenHistoryItem(
+                item = currentItem.data,
+                shape = shape,
+                onClick = { onClick(currentItem.data.token) },
+              )
             },
+            onDismiss = { if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id) },
             modifier = Modifier.animateItem(),
           )
         }
@@ -425,11 +454,12 @@ private fun LazyItemScope.DateHeader(date: LocalDate) {
 }
 
 @Composable
-private fun NewsHistoryItem(item: NewsHistoryItem, shape: RoundedCornerShape) {
+private fun NewsHistoryItem(item: NewsHistoryItem, shape: RoundedCornerShape, onClick: () -> Unit) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    onClick = onClick,
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
       AsyncImage(
@@ -471,11 +501,16 @@ private fun NewsHistoryItem(item: NewsHistoryItem, shape: RoundedCornerShape) {
 }
 
 @Composable
-private fun TokenHistoryItem(item: TokenHistoryItem, shape: RoundedCornerShape) {
+private fun TokenHistoryItem(
+  item: TokenHistoryItem,
+  shape: RoundedCornerShape,
+  onClick: () -> Unit,
+) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    onClick = onClick,
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
       AsyncImage(

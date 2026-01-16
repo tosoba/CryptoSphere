@@ -36,7 +36,7 @@ class HistoryViewModel(
         pagingData
           .map(NewsHistoryListItem::Item)
           .insertDateSeparators(
-            date = { it.news.visitedAt.date },
+            date = { (data) -> data.visitedAt.date },
             separatorItem = NewsHistoryListItem::DateHeader,
           )
       }
@@ -48,7 +48,7 @@ class HistoryViewModel(
         pagingData
           .map(TokenHistoryListItem::Item)
           .insertDateSeparators(
-            date = { it.token.visitedAt.date },
+            date = { (data) -> data.visitedAt.date },
             separatorItem = TokenHistoryListItem::DateHeader,
           )
       }

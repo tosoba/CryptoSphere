@@ -92,9 +92,10 @@ class DependencyContainer(
       )
     },
   private val historyComponentFactory: HistoryComponent.Factory =
-    HistoryComponent.Factory { componentContext ->
+    HistoryComponent.Factory { componentContext, onTokenClick ->
       HistoryDefaultComponent(
         componentContext = componentContext,
+        onTokenClick = onTokenClick,
         newsHistoryRepository = newsHistoryRepository.value,
         tokenHistoryRepository = tokenHistoryRepository.value,
         dispatchers = appCoroutineDispatchers,

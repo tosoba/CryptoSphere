@@ -57,7 +57,9 @@ class HomeDefaultComponent(
         )
       }
       HomePageConfig.HISTORY -> {
-        HomeComponent.Page.History(historyComponentFactory(componentContext))
+        HomeComponent.Page.History(
+          historyComponentFactory(componentContext = componentContext, onTokenClick = onTokenClick)
+        )
       }
     }
 }
