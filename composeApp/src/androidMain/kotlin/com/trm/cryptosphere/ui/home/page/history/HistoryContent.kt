@@ -1,8 +1,5 @@
 package com.trm.cryptosphere.ui.home.page.history
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -21,30 +18,18 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SearchBarState
-import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
@@ -59,7 +44,6 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -71,9 +55,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -82,6 +63,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
+import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
@@ -141,13 +123,30 @@ fun HistoryContent(component: HistoryComponent) {
     topBar = {
       TopSearchBar(
         searchBarState = searchBarState,
-        deleteEnabled =
-          when (HistoryPage.fromIndex(pagerState.currentPage)) {
-            HistoryPage.NEWS -> newsHistory
-            HistoryPage.TOKENS -> tokenHistory
-          }.itemCount > 0,
-        onDeleteClick = { deleteAllDialogVisible = true },
+        placeholder = MR.strings.search_history.resolve(),
         onQueryChange = viewModel::onQueryChange,
+        actions = {
+          TooltipBox(
+            positionProvider =
+              TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+            tooltip = { PlainTooltip { Text(MR.strings.delete_history.resolve()) } },
+            state = rememberTooltipState(),
+          ) {
+            FilledTonalIconButton(
+              onClick = { deleteAllDialogVisible = true },
+              enabled =
+                when (HistoryPage.fromIndex(pagerState.currentPage)) {
+                  HistoryPage.NEWS -> newsHistory
+                  HistoryPage.TOKENS -> tokenHistory
+                }.itemCount > 0,
+            ) {
+              Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = MR.strings.delete_history.resolve(),
+              )
+            }
+          }
+        },
       )
     },
   ) {
@@ -189,97 +188,6 @@ fun HistoryContent(component: HistoryComponent) {
       }
     }
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TopSearchBar(
-  searchBarState: SearchBarState,
-  deleteEnabled: Boolean,
-  onDeleteClick: () -> Unit,
-  onQueryChange: (String) -> Unit,
-) {
-  val scope = rememberCoroutineScope()
-  val textFieldState = rememberTextFieldState()
-
-  LaunchedEffect(textFieldState.text) { onQueryChange(textFieldState.text.toString()) }
-
-  AppBarWithSearch(
-    state = searchBarState,
-    inputField = {
-      SearchBarDefaults.InputField(
-        searchBarState = searchBarState,
-        textFieldState = textFieldState,
-        onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
-        placeholder = {
-          AnimatedVisibility(
-            visible =
-              textFieldState.text.isEmpty() &&
-                searchBarState.currentValue == SearchBarValue.Collapsed,
-            enter = fadeIn(),
-            exit = fadeOut(),
-          ) {
-            val searchIconId = "search_icon"
-            Text(
-              modifier = Modifier.fillMaxWidth(),
-              text =
-                buildAnnotatedString {
-                  appendInlineContent(searchIconId)
-                  append(" ")
-                  append(MR.strings.search_history.resolve())
-                },
-              inlineContent =
-                mapOf(
-                  searchIconId to
-                    InlineTextContent(
-                      Placeholder(
-                        width = LocalTextStyle.current.lineHeight,
-                        height = LocalTextStyle.current.lineHeight,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-                      )
-                    ) {
-                      Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                      )
-                    }
-                ),
-            )
-          }
-        },
-        trailingIcon = {
-          AnimatedVisibility(
-            visible = textFieldState.text.isNotEmpty(),
-            enter = fadeIn(),
-            exit = fadeOut(),
-          ) {
-            IconButton(onClick = { textFieldState.setTextAndPlaceCursorAtEnd("") }) {
-              Icon(
-                imageVector = Icons.Default.Clear,
-                contentDescription = MR.strings.clear.resolve(),
-              )
-            }
-          }
-        },
-      )
-    },
-    actions = {
-      TooltipBox(
-        positionProvider =
-          TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-        tooltip = { PlainTooltip { Text(MR.strings.delete_history.resolve()) } },
-        state = rememberTooltipState(),
-      ) {
-        FilledTonalIconButton(onClick = onDeleteClick, enabled = deleteEnabled) {
-          Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = MR.strings.delete_history.resolve(),
-          )
-        }
-      }
-    },
-  )
 }
 
 @Composable
