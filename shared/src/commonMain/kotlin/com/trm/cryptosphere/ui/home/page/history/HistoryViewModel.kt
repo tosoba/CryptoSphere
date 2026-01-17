@@ -15,6 +15,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -29,28 +31,29 @@ class HistoryViewModel(
 ) : InstanceKeeper.Instance {
   private val scope = CoroutineScope(dispatchers.main + SupervisorJob())
 
-  private val query = MutableStateFlow("")
+  private val _query = MutableStateFlow("")
+  val query: StateFlow<String> = _query.asStateFlow()
 
-  val newsHistoryPagingState: PagingItemsState<NewsHistoryListItem> =
+  val newsHistoryPagingState: PagingItemsState<HistoryNewsListItem> =
     PagingItemsState(scope) {
-      query.debounce(250).flatMapLatest(newsHistoryRepository::getHistory).map { pagingData ->
+      _query.debounce(250).flatMapLatest(newsHistoryRepository::getHistory).map { pagingData ->
         pagingData
-          .map(NewsHistoryListItem::Item)
+          .map(HistoryNewsListItem::Item)
           .insertDateSeparators(
             date = { (data) -> data.visitedAt.date },
-            separatorItem = NewsHistoryListItem::DateHeader,
+            separatorItem = HistoryNewsListItem::DateHeader,
           )
       }
     }
 
-  val tokenHistoryPagingState: PagingItemsState<TokenHistoryListItem> =
+  val tokenHistoryPagingState: PagingItemsState<HistoryTokenListItem> =
     PagingItemsState(scope) {
-      query.debounce(250).flatMapLatest(tokenHistoryRepository::getHistory).map { pagingData ->
+      _query.debounce(250).flatMapLatest(tokenHistoryRepository::getHistory).map { pagingData ->
         pagingData
-          .map(TokenHistoryListItem::Item)
+          .map(HistoryTokenListItem::Item)
           .insertDateSeparators(
             date = { (data) -> data.visitedAt.date },
-            separatorItem = TokenHistoryListItem::DateHeader,
+            separatorItem = HistoryTokenListItem::DateHeader,
           )
       }
     }
@@ -75,7 +78,7 @@ class HistoryViewModel(
   }
 
   fun onQueryChange(newQuery: String) {
-    query.value = newQuery.trim()
+    _query.value = newQuery.trim()
   }
 
   fun onDeleteHistoryClick(page: HistoryPage) {
