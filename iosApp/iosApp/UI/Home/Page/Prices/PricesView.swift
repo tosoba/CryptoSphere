@@ -69,8 +69,7 @@ struct PricesView: View {
                     ) {
                         PriceItemView(token: token)
                             .onAppear {
-                                guard case .notLoading = onEnum(of: loadStates?.append) else { return }
-                                if tokens.count - index < PricesViewModel.companion.PAGE_SIZE {
+                                if loadStates.canLoadMoreItems() && tokens.count - index == PricesViewModel.companion.PAGE_SIZE {
                                     component.viewModel.tokensPagingState.loadMore()
                                 }
                             }

@@ -92,8 +92,7 @@ struct NewsFeedView: View {
                 .scaleEffect(1.0 - (abs(phase.value) * 0.05))
         }
         .onAppear {
-            guard case .notLoading = onEnum(of: loadStates?.append) else { return }
-            if feedItems.count - index < NewsFeedViewModel.companion.PREFETCH_DISTANCE {
+            if loadStates.canLoadMoreItems() && feedItems.count - index == NewsFeedViewModel.companion.PREFETCH_DISTANCE {
                 component.viewModel.newsPagingState.loadMore()
             }
         }

@@ -36,7 +36,7 @@ actual constructor(scope: CoroutineScope, useCase: () -> Flow<PagingData<Item>>)
 
   @Suppress("unused") // Used in Swift
   fun loadMore() {
-    pagingDataPresenter[pagingDataPresenter.size - 1]
+    pagingDataPresenter[itemsSnapshotList.value.size - 1]
   }
 
   @Suppress("unused") // Used in Swift

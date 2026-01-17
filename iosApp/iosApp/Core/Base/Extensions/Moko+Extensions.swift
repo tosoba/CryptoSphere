@@ -1,7 +1,7 @@
 import Shared
 import SwiftUI
 
-public extension String {
+extension String {
     init(_ resourceKey: KeyPath<MR.strings, StringResource>) {
         self.init(
             ResourcesKt.getString(

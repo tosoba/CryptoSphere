@@ -149,8 +149,7 @@ private struct HistoryNewsListView: View {
                                 onDelete: { onDelete(news.data.id) }
                             )
                             .onAppear {
-                                guard case .notLoading = onEnum(of: loadStates?.append) else { return }
-                                if items.count - index < HistoryViewModel.companion.PAGE_SIZE {
+                                if loadStates.canLoadMoreItems() && items.count - index == HistoryViewModel.companion.PAGE_SIZE {
                                     loadMore()
                                 }
                             }
@@ -245,8 +244,7 @@ private struct HistoryTokensListView: View {
                                 onDelete: { onDelete(token.data.id) }
                             )
                             .onAppear {
-                                guard case .notLoading = onEnum(of: loadStates?.append) else { return }
-                                if items.count - index < HistoryViewModel.companion.PAGE_SIZE {
+                                if loadStates.canLoadMoreItems() && items.count - index == HistoryViewModel.companion.PAGE_SIZE {
                                     loadMore()
                                 }
                             }
@@ -393,7 +391,7 @@ private struct DateHeaderView: View {
         ) else {
             return localDate.description()
         }
-        
+
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
