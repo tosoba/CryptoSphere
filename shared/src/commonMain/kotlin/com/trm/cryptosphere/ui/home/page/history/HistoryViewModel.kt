@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.history
 
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.insertSeparators
 import androidx.paging.map
@@ -36,26 +37,32 @@ class HistoryViewModel(
 
   val newsHistoryPagingState: PagingItemsState<HistoryNewsListItem> =
     PagingItemsState(scope) {
-      _query.debounce(250).flatMapLatest(newsHistoryRepository::getHistory).map { pagingData ->
-        pagingData
-          .map(HistoryNewsListItem::Item)
-          .insertDateSeparators(
-            date = { (data) -> data.visitedAt.date },
-            separatorItem = HistoryNewsListItem::DateHeader,
-          )
-      }
+      _query
+        .debounce(250)
+        .flatMapLatest { newsHistoryRepository.getHistory(query = it, config = pagingConfig) }
+        .map { pagingData ->
+          pagingData
+            .map(HistoryNewsListItem::Item)
+            .insertDateSeparators(
+              date = { (data) -> data.visitedAt.date },
+              separatorItem = HistoryNewsListItem::DateHeader,
+            )
+        }
     }
 
   val tokenHistoryPagingState: PagingItemsState<HistoryTokenListItem> =
     PagingItemsState(scope) {
-      _query.debounce(250).flatMapLatest(tokenHistoryRepository::getHistory).map { pagingData ->
-        pagingData
-          .map(HistoryTokenListItem::Item)
-          .insertDateSeparators(
-            date = { (data) -> data.visitedAt.date },
-            separatorItem = HistoryTokenListItem::DateHeader,
-          )
-      }
+      _query
+        .debounce(250)
+        .flatMapLatest { tokenHistoryRepository.getHistory(query = it, config = pagingConfig) }
+        .map { pagingData ->
+          pagingData
+            .map(HistoryTokenListItem::Item)
+            .insertDateSeparators(
+              date = { (data) -> data.visitedAt.date },
+              separatorItem = HistoryTokenListItem::DateHeader,
+            )
+        }
     }
 
   private fun <R : Any, T : R, S : R> PagingData<T>.insertDateSeparators(
@@ -110,5 +117,12 @@ class HistoryViewModel(
 
   override fun onDestroy() {
     scope.cancel()
+  }
+
+  companion object {
+    const val PAGE_SIZE = 100
+
+    private val pagingConfig: PagingConfig
+      get() = PagingConfig(pageSize = PAGE_SIZE, initialLoadSize = PAGE_SIZE)
   }
 }

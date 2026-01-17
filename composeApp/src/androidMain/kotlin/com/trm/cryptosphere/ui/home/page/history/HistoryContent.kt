@@ -417,7 +417,7 @@ private fun HistoryTokenItem(
 
       Column(modifier = Modifier.weight(1f)) {
         Text(
-          text = item.token.symbol,
+          text = item.token.name,
           style = MaterialTheme.typography.bodyLarge,
           color = MaterialTheme.colorScheme.onSurface,
           maxLines = 1,
@@ -425,7 +425,7 @@ private fun HistoryTokenItem(
         )
 
         Text(
-          text = item.token.name,
+          text = item.token.symbol,
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onSurfaceVariant,
           maxLines = 1,

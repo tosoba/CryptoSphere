@@ -78,7 +78,7 @@ fun PriceItem(token: TokenItem, shape: Shape, modifier: Modifier = Modifier, onC
 private fun RowScope.PriceItemTokenInfoColumn(token: TokenItem) {
   Column(modifier = Modifier.weight(1f)) {
     Text(
-      text = token.symbol,
+      text = token.name,
       style = MaterialTheme.typography.bodyLarge,
       color = MaterialTheme.colorScheme.onSurface,
       maxLines = 1,
@@ -86,7 +86,7 @@ private fun RowScope.PriceItemTokenInfoColumn(token: TokenItem) {
     )
 
     Text(
-      text = token.name,
+      text = token.symbol,
       style = MaterialTheme.typography.bodyMedium,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = 1,

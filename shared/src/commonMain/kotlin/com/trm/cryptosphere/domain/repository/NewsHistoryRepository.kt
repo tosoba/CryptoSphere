@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.domain.repository
 
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.NewsItem
@@ -10,7 +11,7 @@ interface NewsHistoryRepository {
 
   suspend fun updateNewsInHistory(news: NewsHistoryItem)
 
-  fun getHistory(query: String): Flow<PagingData<NewsHistoryItem>>
+  fun getHistory(query: String, config: PagingConfig): Flow<PagingData<NewsHistoryItem>>
 
   suspend fun deleteAll()
 

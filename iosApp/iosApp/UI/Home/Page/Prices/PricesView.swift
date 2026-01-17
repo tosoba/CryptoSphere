@@ -20,6 +20,7 @@ struct PricesView: View {
     var body: some View {
         VStack {
             SearchBar(
+                placeholder: String(\.search_tokens),
                 query: Binding(
                     get: { query },
                     set: { newQuery in component.viewModel.onQueryChange(newQuery: newQuery) }
@@ -31,13 +32,17 @@ struct PricesView: View {
                 switch onEnum(of: loadStates?.refresh) {
                 case .loading, .none:
                     loadingView
+                        .transition(.opacity)
                 case .error:
                     errorView
+                        .transition(.opacity)
                 case .notLoading:
                     if tokens.isEmpty {
                         emptyView
+                            .transition(.opacity)
                     } else {
                         tokensList
+                            .transition(.opacity)
                     }
                 }
             }

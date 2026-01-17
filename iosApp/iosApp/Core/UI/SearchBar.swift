@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SearchBar: View {
+    let placeholder: String
     @Binding var query: String
 
     var body: some View {
@@ -8,11 +9,8 @@ struct SearchBar: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
 
-            TextField(
-                String(\.search_tokens),
-                text: $query
-            )
-            .autocorrectionDisabled()
+            TextField(placeholder, text: $query)
+                .autocorrectionDisabled()
 
             if !query.isEmpty {
                 Button(action: { query = "" }) {

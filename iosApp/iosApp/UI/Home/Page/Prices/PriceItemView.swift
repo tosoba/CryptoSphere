@@ -31,12 +31,11 @@ struct PriceItemView: View {
 
     private var tokenInfo: some View {
         VStack(alignment: .leading) {
-            Text(token.symbol)
+            Text(token.name)
                 .font(.headline)
-                .fontWeight(.medium)
                 .foregroundColor(.primary)
 
-            Text(token.name)
+            Text(token.symbol)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
