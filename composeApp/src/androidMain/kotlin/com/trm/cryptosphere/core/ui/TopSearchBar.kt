@@ -4,10 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
@@ -17,18 +13,12 @@ import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarState
-import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
@@ -53,43 +43,8 @@ fun TopSearchBar(
         searchBarState = searchBarState,
         textFieldState = textFieldState,
         onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
-        placeholder = {
-          AnimatedVisibility(
-            visible =
-              textFieldState.text.isEmpty() &&
-                searchBarState.currentValue == SearchBarValue.Collapsed,
-            enter = fadeIn(),
-            exit = fadeOut(),
-          ) {
-            val searchIconId = "search_icon"
-            Text(
-              modifier = Modifier.fillMaxWidth(),
-              text =
-                buildAnnotatedString {
-                  appendInlineContent(searchIconId)
-                  append(" ")
-                  append(placeholder)
-                },
-              inlineContent =
-                mapOf(
-                  searchIconId to
-                    InlineTextContent(
-                      Placeholder(
-                        width = LocalTextStyle.current.lineHeight,
-                        height = LocalTextStyle.current.lineHeight,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-                      )
-                    ) {
-                      Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                      )
-                    }
-                ),
-            )
-          }
-        },
+        placeholder = { Text(placeholder) },
+        leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
         trailingIcon = {
           AnimatedVisibility(
             visible = textFieldState.text.isNotEmpty(),
