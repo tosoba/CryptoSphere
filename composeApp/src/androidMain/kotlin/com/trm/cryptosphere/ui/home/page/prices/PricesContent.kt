@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,8 +28,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
-import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.util.resolve
@@ -69,11 +70,13 @@ fun PricesContent(component: PricesComponent) {
       contentPadding = PaddingValues(vertical = if (tokens.itemCount == 0) 0.dp else 8.dp),
     ) {
       if (tokens.loadState.refresh is LoadState.NotLoading && tokens.itemCount == 0) {
-        item { PricesEmptyItem(modifier = Modifier.fillParentMaxSize()) }
+        item { PricesEmptyItem(modifier = Modifier.fillParentMaxSize().animateItem()) }
       }
 
       if (tokens.loadState.refresh is LoadState.Loading) {
-        item { LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize()) }
+        item {
+          LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem())
+        }
       }
 
       items(count = tokens.itemCount, key = tokens.itemKey(TokenItem::id)) { index ->
@@ -85,6 +88,8 @@ fun PricesContent(component: PricesComponent) {
                 isTopRounded = index == 0,
                 isBottomRounded = index == tokens.itemCount - 1,
               ),
+            modifier =
+              Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp).animateItem(),
             onClick = { component.onTokenClick(token.id, TokenCarouselConfig(null)) },
           )
         }

@@ -36,9 +36,9 @@ import com.trm.cryptosphere.domain.model.logoUrl
 import kotlin.math.sign
 
 @Composable
-fun PriceItem(token: TokenItem, shape: Shape, onClick: () -> Unit) {
+fun PriceItem(token: TokenItem, shape: Shape, modifier: Modifier = Modifier, onClick: () -> Unit) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+    modifier = modifier,
     shape = shape,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     onClick = onClick,

@@ -63,8 +63,8 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
-import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
@@ -170,7 +170,7 @@ fun HistoryContent(component: HistoryComponent) {
             .background(color = MaterialTheme.colorScheme.surfaceContainer),
       ) { index ->
         if (index == 0) {
-          NewsHistoryList(
+          HistoryNewsPage(
             items = newsHistory,
             onClick = { item ->
               component.viewModel.onNewsClick(item)
@@ -179,7 +179,7 @@ fun HistoryContent(component: HistoryComponent) {
             onDelete = viewModel::onDeleteNewsHistoryClick,
           )
         } else {
-          TokenHistoryList(
+          HistoryTokensPage(
             items = tokenHistory,
             onClick = { token -> component.onTokenClick(token.id, TokenCarouselConfig(null)) },
             onDelete = viewModel::onDeleteTokenHistoryClick,
@@ -191,7 +191,7 @@ fun HistoryContent(component: HistoryComponent) {
 }
 
 @Composable
-private fun NewsHistoryList(
+private fun HistoryNewsPage(
   items: LazyPagingItems<NewsHistoryListItem>,
   onClick: (NewsHistoryItem) -> Unit,
   onDelete: (Long) -> Unit,
@@ -201,12 +201,7 @@ private fun NewsHistoryList(
     contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
   ) {
     if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
-      item {
-        EmptyHistory(
-          text = MR.strings.no_news_history.resolve(),
-          modifier = Modifier.fillParentMaxSize().animateItem(),
-        )
-      }
+      item { HistoryEmptyItem(modifier = Modifier.fillParentMaxSize().animateItem()) }
     }
 
     if (items.loadState.refresh is LoadState.Loading) {
@@ -239,7 +234,7 @@ private fun NewsHistoryList(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
             content = {
-              NewsHistoryItem(
+              HistoryNewsItem(
                 item = currentItem.data,
                 shape = shape,
                 onClick = { onClick(currentItem.data) },
@@ -259,7 +254,7 @@ private fun NewsHistoryList(
 }
 
 @Composable
-private fun TokenHistoryList(
+private fun HistoryTokensPage(
   items: LazyPagingItems<TokenHistoryListItem>,
   onClick: (TokenItem) -> Unit,
   onDelete: (Long) -> Unit,
@@ -269,12 +264,7 @@ private fun TokenHistoryList(
     contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
   ) {
     if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
-      item {
-        EmptyHistory(
-          text = MR.strings.no_tokens_history.resolve(),
-          modifier = Modifier.fillParentMaxSize(),
-        )
-      }
+      item { HistoryEmptyItem(modifier = Modifier.fillParentMaxSize().animateItem()) }
     }
 
     if (items.loadState.refresh is LoadState.Loading) {
@@ -307,7 +297,7 @@ private fun TokenHistoryList(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
             content = {
-              TokenHistoryItem(
+              HistoryTokenItem(
                 item = currentItem.data,
                 shape = shape,
                 onClick = { onClick(currentItem.data.token) },
@@ -365,7 +355,7 @@ private fun LazyItemScope.DateHeader(date: LocalDate) {
 }
 
 @Composable
-private fun NewsHistoryItem(item: NewsHistoryItem, shape: RoundedCornerShape, onClick: () -> Unit) {
+private fun HistoryNewsItem(item: NewsHistoryItem, shape: RoundedCornerShape, onClick: () -> Unit) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
@@ -412,7 +402,7 @@ private fun NewsHistoryItem(item: NewsHistoryItem, shape: RoundedCornerShape, on
 }
 
 @Composable
-private fun TokenHistoryItem(
+private fun HistoryTokenItem(
   item: TokenHistoryItem,
   shape: RoundedCornerShape,
   onClick: () -> Unit,
@@ -463,7 +453,7 @@ private fun TokenHistoryItem(
 }
 
 @Composable
-private fun EmptyHistory(text: String, modifier: Modifier = Modifier) {
+private fun HistoryEmptyItem(modifier: Modifier = Modifier) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center,
@@ -479,7 +469,7 @@ private fun EmptyHistory(text: String, modifier: Modifier = Modifier) {
     Spacer(modifier = Modifier.size(16.dp))
 
     Text(
-      text = text,
+      text = MR.strings.no_news_history.resolve(),
       style = MaterialTheme.typography.titleLarge,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       modifier = Modifier.padding(horizontal = 16.dp),
