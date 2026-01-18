@@ -12,12 +12,12 @@ struct SearchBar: View {
             TextField(placeholder, text: $query)
                 .autocorrectionDisabled()
 
-            if !query.isEmpty {
-                Button(action: { query = "" }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
-                }
+            Button(action: { query = "" }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.secondary)
             }
+            .opacity(query.isEmpty ? 0 : 1)
+            .disabled(query.isEmpty)
         }
         .padding(8)
         .background(Color(.systemGray6))
