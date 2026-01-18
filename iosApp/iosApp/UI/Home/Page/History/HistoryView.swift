@@ -59,7 +59,6 @@ struct HistoryView: View {
                         loadMore: { viewModel.newsHistoryPagingState.loadMore() },
                         retry: { viewModel.newsHistoryPagingState.retry() }
                     )
-                    .transition(.opacity)
                 case .tokens:
                     HistoryTokensListView(
                         items: tokenItems,
@@ -73,7 +72,6 @@ struct HistoryView: View {
                         loadMore: { viewModel.tokenHistoryPagingState.loadMore() },
                         retry: { viewModel.tokenHistoryPagingState.retry() }
                     )
-                    .transition(.opacity)
                 }
             }
             .animation(.default, value: selectedPage)
@@ -93,18 +91,14 @@ private struct HistoryNewsListView: View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
-                loadingView
-                    .transition(.opacity)
+                LargeCircularProgressView()
             case .error:
                 errorView
-                    .transition(.opacity)
             case .notLoading:
                 if items.isEmpty {
                     emptyView
-                        .transition(.opacity)
                 } else {
                     newsList
-                        .transition(.opacity)
                 }
             }
         }
@@ -112,23 +106,13 @@ private struct HistoryNewsListView: View {
     }
 
     @ViewBuilder
-    private var loadingView: some View {
-        ProgressView()
-            .scaleEffect(1.5)
-            .containerRelativeFrame([.vertical, .horizontal])
-    }
-
-    @ViewBuilder
     private var errorView: some View {
-        VStack(alignment: .center, spacing: 8) {
-            Text(String(\.error_occurred))
-            Button(action: retry) { Text(String(\.retry)) }
-        }
+        ErrorListView(text: String(\.error_occurred), onRetryClick: retry)
     }
 
     @ViewBuilder
     private var emptyView: some View {
-        HistoryEmptyView(icon: "clock.arrow.circlepath", text: String(\.no_tokens_history))
+        EmptyListView(icon: "clock.arrow.circlepath", text: String(\.no_news_history))
     }
 
     private var newsList: some View {
@@ -141,7 +125,7 @@ private struct HistoryNewsListView: View {
                     Group {
                         switch onEnum(of: item) {
                         case let .dateHeader(header):
-                            DateHeaderView(date: header.date)
+                            HistoryDateHeaderView(date: header.date)
                         case let .item(news):
                             HistoryNewsItemRow(
                                 item: news.data,
@@ -187,18 +171,14 @@ private struct HistoryTokensListView: View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
-                loadingView
-                    .transition(.opacity)
+                LargeCircularProgressView()
             case .error:
                 errorView
-                    .transition(.opacity)
             case .notLoading:
                 if items.isEmpty {
                     emptyView
-                        .transition(.opacity)
                 } else {
                     tokensList
-                        .transition(.opacity)
                 }
             }
         }
@@ -206,23 +186,13 @@ private struct HistoryTokensListView: View {
     }
 
     @ViewBuilder
-    private var loadingView: some View {
-        ProgressView()
-            .scaleEffect(1.5)
-            .containerRelativeFrame([.vertical, .horizontal])
-    }
-
-    @ViewBuilder
     private var errorView: some View {
-        VStack(alignment: .center, spacing: 8) {
-            Text(String(\.error_occurred))
-            Button(action: retry) { Text(String(\.retry)) }
-        }
+        ErrorListView(text: String(\.error_occurred), onRetryClick: retry)
     }
 
     @ViewBuilder
     private var emptyView: some View {
-        HistoryEmptyView(icon: "clock.arrow.circlepath", text: String(\.no_tokens_history))
+        EmptyListView(icon: "clock.arrow.circlepath", text: String(\.no_tokens_history))
     }
 
     @ViewBuilder
@@ -236,7 +206,7 @@ private struct HistoryTokensListView: View {
                     Group {
                         switch onEnum(of: item) {
                         case let .dateHeader(header):
-                            DateHeaderView(date: header.date)
+                            HistoryDateHeaderView(date: header.date)
                         case let .item(token):
                             HistoryTokenItemRow(
                                 item: token.data,
@@ -290,10 +260,12 @@ private struct HistoryNewsItemRow: View {
                     Text(item.title)
                         .font(.headline)
                         .lineLimit(2)
+
                     Text(item.source)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
+                .lineLimit(1)
 
                 Spacer()
             }
@@ -348,53 +320,5 @@ private struct HistoryTokenItemRow: View {
                 Label("Delete", systemImage: "trash")
             }
         }
-    }
-}
-
-private struct HistoryEmptyView: View {
-    let icon: String
-    let text: String
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.system(size: 60))
-                .foregroundColor(.secondary)
-            Text(text)
-                .font(.title3)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxHeight: .infinity)
-    }
-}
-
-private struct DateHeaderView: View {
-    let date: LocalDate
-
-    var body: some View {
-        Text(formatDate(date))
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .foregroundColor(.secondary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func formatDate(_ localDate: LocalDate) -> String {
-        guard let date = Calendar.current.date(
-            from: DateComponents(
-                year: Int(localDate.year),
-                month: Int(localDate.month.ordinal + 1),
-                day: Int(localDate.day)
-            )
-        ) else {
-            return localDate.description()
-        }
-
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: date)
     }
 }

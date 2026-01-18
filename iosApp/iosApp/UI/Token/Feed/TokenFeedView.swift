@@ -25,7 +25,7 @@ struct TokenFeedView: View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
-                loadingView
+                LargeCircularProgressView()
             case .notLoading:
                 feedView
             case .error:
@@ -33,14 +33,6 @@ struct TokenFeedView: View {
             }
         }
         .animation(.default, value: loadStates?.refresh)
-    }
-
-    @ViewBuilder
-    private var loadingView: some View {
-        ProgressView()
-            .scaleEffect(1.5)
-            .containerRelativeFrame([.vertical, .horizontal])
-            .transition(.opacity)
     }
 
     @ViewBuilder
@@ -59,7 +51,6 @@ struct TokenFeedView: View {
             .ignoresSafeArea(.container, edges: .all)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
-            .transition(.opacity)
             .overlay(alignment: .bottom) {
                 let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
                 IndeterminateLinearProgressView(isVisible: progressVisible)

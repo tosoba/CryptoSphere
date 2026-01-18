@@ -14,7 +14,7 @@ struct NewsFeedItemView: View {
         ) { phase in
             switch phase {
             case .empty:
-                ProgressView().scaleEffect(1.5).tint(.white)
+                LargeCircularProgressView().tint(.white).frame(maxHeight: .infinity)
             case let .success(image):
                 image.resizable().scaledToFill()
             case .failure:

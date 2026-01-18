@@ -33,12 +33,9 @@ struct NewsFeedView: View {
 
     @ViewBuilder
     private var loadingView: some View {
-        ProgressView()
-            .scaleEffect(1.5)
-            .containerRelativeFrame([.vertical, .horizontal])
+        LargeCircularProgressView()
             .background(.black)
             .tint(.white)
-            .transition(.opacity)
     }
 
     @ViewBuilder
@@ -58,7 +55,6 @@ struct NewsFeedView: View {
             .ignoresSafeArea(.container, edges: .all)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
-            .transition(.opacity)
             .overlay(alignment: .bottom) {
                 let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
                 IndeterminateLinearProgressView(isVisible: progressVisible)
@@ -100,13 +96,9 @@ struct NewsFeedView: View {
 
     @ViewBuilder
     private var errorView: some View {
-        VStack(alignment: .center, spacing: 8) {
-            Text(String(\.error_occurred))
-            Button(
-                action: { component.viewModel.newsPagingState.retry() },
-                label: { Text(String(\.retry)) }
-            )
-        }
-        .transition(.opacity)
+        ErrorListView(
+            text: String(\.error_occurred),
+            onRetryClick: { component.viewModel.newsPagingState.retry() }
+        )
     }
 }
