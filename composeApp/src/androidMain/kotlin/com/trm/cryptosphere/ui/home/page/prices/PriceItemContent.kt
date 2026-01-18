@@ -36,7 +36,12 @@ import com.trm.cryptosphere.domain.model.logoUrl
 import kotlin.math.sign
 
 @Composable
-fun PriceItem(token: TokenItem, shape: Shape, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun PriceItemContent(
+  token: TokenItem,
+  shape: Shape,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+) {
   Card(
     modifier = modifier,
     shape = shape,
@@ -128,10 +133,10 @@ private fun PriceItemTokenQuoteColumn(token: TokenItem) {
   }
 }
 
-@Preview(name = "Price Item Preview", showBackground = true)
+@Preview(showBackground = true)
 @Composable
-private fun PriceItemPreview() {
-  PriceItem(
+private fun PriceItemContentPreview() {
+  PriceItemContent(
     token =
       TokenItem(
         id = 1,

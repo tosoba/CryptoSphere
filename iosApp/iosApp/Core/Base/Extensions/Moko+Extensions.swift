@@ -2,11 +2,16 @@ import Shared
 import SwiftUI
 
 extension String {
+    init(_ resource: StringResource) {
+        self.init(ResourcesKt.getString(stringResource: resource).localized())
+    }
+
     init(_ resourceKey: KeyPath<MR.strings, StringResource>) {
         self.init(
             ResourcesKt.getString(
                 stringResource: MR.strings()[keyPath: resourceKey]
-            ).localized()
+            )
+            .localized()
         )
     }
 
@@ -15,7 +20,8 @@ extension String {
             ResourcesKt.getString(
                 stringResource: MR.strings()[keyPath: resourceKey],
                 parameter: parameter
-            ).localized()
+            )
+            .localized()
         )
     }
 }

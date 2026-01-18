@@ -70,7 +70,7 @@ fun PricesContent(component: PricesComponent) {
       contentPadding = PaddingValues(vertical = if (tokens.itemCount == 0) 0.dp else 8.dp),
     ) {
       if (tokens.loadState.refresh is LoadState.NotLoading && tokens.itemCount == 0) {
-        item { PricesEmptyItem(modifier = Modifier.fillParentMaxSize().animateItem()) }
+        item { PricesEmptyItemContent(modifier = Modifier.fillParentMaxSize().animateItem()) }
       }
 
       if (tokens.loadState.refresh is LoadState.Loading) {
@@ -81,7 +81,7 @@ fun PricesContent(component: PricesComponent) {
 
       items(count = tokens.itemCount, key = tokens.itemKey(TokenItem::id)) { index ->
         tokens[index]?.let { token ->
-          PriceItem(
+          PriceItemContent(
             token = token,
             shape =
               cardListItemRoundedCornerShape(
@@ -99,7 +99,7 @@ fun PricesContent(component: PricesComponent) {
 }
 
 @Composable
-private fun PricesEmptyItem(modifier: Modifier = Modifier) {
+private fun PricesEmptyItemContent(modifier: Modifier = Modifier) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center,

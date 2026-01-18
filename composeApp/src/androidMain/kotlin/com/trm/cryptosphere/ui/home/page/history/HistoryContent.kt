@@ -202,7 +202,7 @@ private fun HistoryNewsPage(
   ) {
     if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
       item {
-        HistoryEmptyItem(
+        HistoryEmptyItemContent(
           text = MR.strings.no_news_history.resolve(),
           modifier = Modifier.fillParentMaxSize().animateItem(),
         )
@@ -230,7 +230,7 @@ private fun HistoryNewsPage(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
             content = {
-              HistoryNewsItem(
+              HistoryNewsItemContent(
                 item = currentItem.data,
                 shape = shape,
                 onClick = { onClick(currentItem.data) },
@@ -261,7 +261,7 @@ private fun HistoryTokensPage(
   ) {
     if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
       item {
-        HistoryEmptyItem(
+        HistoryEmptyItemContent(
           text = MR.strings.no_tokens_history.resolve(),
           modifier = Modifier.fillParentMaxSize().animateItem(),
         )
@@ -289,7 +289,7 @@ private fun HistoryTokensPage(
             state = dismissState,
             backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
             content = {
-              HistoryTokenItem(
+              HistoryTokenItemContent(
                 item = currentItem.data,
                 shape = shape,
                 onClick = { onClick(currentItem.data.token) },
@@ -347,7 +347,11 @@ private fun LazyItemScope.DateHeader(date: LocalDate) {
 }
 
 @Composable
-private fun HistoryNewsItem(item: NewsHistoryItem, shape: RoundedCornerShape, onClick: () -> Unit) {
+private fun HistoryNewsItemContent(
+  item: NewsHistoryItem,
+  shape: RoundedCornerShape,
+  onClick: () -> Unit,
+) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
@@ -394,7 +398,7 @@ private fun HistoryNewsItem(item: NewsHistoryItem, shape: RoundedCornerShape, on
 }
 
 @Composable
-private fun HistoryTokenItem(
+private fun HistoryTokenItemContent(
   item: TokenHistoryItem,
   shape: RoundedCornerShape,
   onClick: () -> Unit,
@@ -445,7 +449,7 @@ private fun HistoryTokenItem(
 }
 
 @Composable
-private fun HistoryEmptyItem(text: String, modifier: Modifier = Modifier) {
+private fun HistoryEmptyItemContent(text: String, modifier: Modifier = Modifier) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center,

@@ -85,13 +85,9 @@ struct TokenFeedView: View {
 
     @ViewBuilder
     private func itemView(_ item: TokenItem, at _: Int, in geometry: GeometryProxy) -> some View {
-        let mainTokenTagNames = Set(feedItems.first?.tagNames ?? [])
-        let isCompactHeight = geometry.size.height < 600
-
         TokenFeedPagerItem(
             token: item,
-            mainTokenTagNames: mainTokenTagNames,
-            isCompactHeight: isCompactHeight,
+            mainTokenTagNames: Set(feedItems.first?.tagNames ?? []),
             availableHeight: geometry.size.height,
             safeAreaInsets: geometry.safeAreaInsets
         )
@@ -104,13 +100,12 @@ struct TokenFeedView: View {
 struct TokenFeedPagerItem: View {
     let token: TokenItem
     let mainTokenTagNames: Set<String>
-    let isCompactHeight: Bool
     let availableHeight: CGFloat
     let safeAreaInsets: EdgeInsets
 
     var body: some View {
         Group {
-            if isCompactHeight {
+            if availableHeight < 600 {
                 compactLayout
             } else {
                 regularLayout
@@ -136,7 +131,7 @@ struct TokenFeedPagerItem: View {
 
             VStack {
                 Spacer()
-                tokenParameters
+                tokenFeedParameters
                 Spacer()
             }
             .frame(maxWidth: .infinity)
@@ -155,7 +150,7 @@ struct TokenFeedPagerItem: View {
                     .padding(.top, 8)
             }
 
-            tokenParameters
+            tokenFeedParameters
                 .padding(.top, 16)
 
             Spacer()
@@ -220,67 +215,10 @@ struct TokenFeedPagerItem: View {
     }
 
     @ViewBuilder
-    private var tokenParameters: some View {
-        let parameters = buildParameters()
+    private var tokenFeedParameters: some View {
+        let parameters = TokenFeedParameterKt.tokenFeedParameters(token: token)
         let maxCards = Int(availableHeight / 70) // Approximate card height
-        let displayedParameters = Array(parameters.prefix(maxCards))
-
-        TokenParameterCardsColumn(parameters: displayedParameters)
-    }
-
-    private func buildParameters() -> [TokenParameter] {
-        let valueChangeFormat: (Double?) -> String = { value in
-            guard let value = value else { return "" }
-            let formatted = String(format: " %.2f%% ", value)
-            return value >= 0 ? "+\(formatted)" : formatted
-        }
-
-        var params: [TokenParameter] = [
-            TokenParameter(
-                label: "Price",
-                value: token.quote.price,
-                valueFormat: { "$\(formatNumber($0))" },
-                valueChange: token.quote.percentChange24h,
-                valueChangeFormat: valueChangeFormat
-            ),
-            TokenParameter(
-                label: "Volume 24h",
-                value: token.quote.volume24h,
-                valueChange: token.quote.volumeChange24h,
-                valueChangeFormat: valueChangeFormat
-            ),
-            TokenParameter(
-                label: "Market Cap",
-                value: token.quote.marketCap
-            ),
-            TokenParameter(
-                label: "Circulating Supply",
-                value: token.circulatingSupply
-            ),
-            TokenParameter(
-                label: "Total Supply",
-                value: token.totalSupply
-            ),
-        ]
-
-        if let maxSupply = token.maxSupply {
-            params.append(
-                TokenParameter(
-                    label: "Max Supply",
-                    value: Double(truncating: maxSupply)
-                )
-            )
-        }
-
-        return params
-    }
-
-    private func formatNumber(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+        TokenFeedParameterCardsColumn(parameters: Array(parameters.prefix(maxCards)))
     }
 }
 
@@ -310,13 +248,13 @@ struct TagChip: View {
 
 // MARK: - Token Parameter Cards
 
-struct TokenParameterCardsColumn: View {
-    let parameters: [TokenParameter]
+struct TokenFeedParameterCardsColumn: View {
+    let parameters: [TokenFeedParameter]
 
     var body: some View {
         VStack(spacing: 2) {
             ForEach(Array(parameters.enumerated()), id: \.offset) { index, parameter in
-                TokenParameterCard(
+                TokenFeedParameterCard(
                     parameter: parameter,
                     cornerRadius: cornerRadius(for: index)
                 )
@@ -337,13 +275,13 @@ struct TokenParameterCardsColumn: View {
     }
 }
 
-struct TokenParameterCard: View {
-    let parameter: TokenParameter
+struct TokenFeedParameterCard: View {
+    let parameter: TokenFeedParameter
     let cornerRadius: (top: CGFloat, bottom: CGFloat)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(parameter.label)
+            Text(String(parameter.label))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -354,19 +292,19 @@ struct TokenParameterCard: View {
                     .fontWeight(.medium)
                     .lineLimit(1)
 
-                if let valueChange = parameter.valueChange,
+                if let valueChange = parameter.valueChange as? Double,
                    let valueChangeFormat = parameter.valueChangeFormat
                 {
                     let changeText = valueChangeFormat(valueChange)
                     if !changeText.isEmpty {
                         Text(changeText)
                             .font(.caption)
-                            .fontWeight(valueChange >= 0 ? .regular : .medium)
-                            .foregroundColor(valueChange >= 0 ? .black : .white)
+                            .fontWeight(valueChange >= 0.0 ? .regular : .medium)
+                            .foregroundColor(valueChange >= 0.0 ? .black : .white)
                             .padding(.horizontal, 4)
                             .background(
                                 RoundedRectangle(cornerRadius: 4)
-                                    .fill(valueChange >= 0 ? Color.green : Color.red)
+                                    .fill(valueChange >= 0.0 ? Color.green : Color.red)
                             )
                     }
                 }
@@ -384,35 +322,5 @@ struct TokenParameterCard: View {
             )
             .fill(Color(uiColor: .secondarySystemBackground))
         )
-    }
-}
-
-// MARK: - Token Parameter Model
-
-struct TokenParameter {
-    let label: String
-    let value: Double
-    let valueFormat: (Double) -> String
-    let valueChange: Double?
-    let valueChangeFormat: ((Double?) -> String)?
-
-    init(
-        label: String,
-        value: Double,
-        valueFormat: @escaping (Double) -> String = { value in
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 0
-            let formatted = formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
-            return "$\(formatted)"
-        },
-        valueChange: Double? = nil,
-        valueChangeFormat: ((Double?) -> String)? = nil
-    ) {
-        self.label = label
-        self.value = value
-        self.valueFormat = valueFormat
-        self.valueChange = valueChange
-        self.valueChangeFormat = valueChangeFormat
     }
 }
