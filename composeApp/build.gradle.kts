@@ -19,31 +19,29 @@ kotlin {
       implementation(libs.androidx.paging.compose)
       implementation(libs.androidx.startup.runtime)
 
-      implementation(libs.compose.material.icons.extended)
-      implementation(libs.compose.ui.tooling.preview)
+      implementation(libs.android.kotlinx.coroutines.android)
 
-      implementation(libs.decompose.extensions.compose)
-      implementation(libs.decompose.extensions.compose.experimental)
-
-      implementation(libs.kotlinx.coroutines.android)
-
-      implementation(libs.material.kolor)
+      implementation(libs.common.compose.material.icons.extended)
+      implementation(libs.common.compose.ui.tooling.preview)
+      implementation(libs.common.decompose.extensions.compose)
+      implementation(libs.common.decompose.extensions.compose.experimental)
+      implementation(libs.common.material.kolor)
     }
 
     commonMain.dependencies {
       implementation(projects.shared)
 
-      implementation(libs.androidx.lifecycle.runtimeCompose)
+      implementation(libs.common.compose.components.resources)
+      implementation(libs.common.compose.foundation)
+      implementation(libs.common.compose.material.icons.core)
+      implementation(libs.common.compose.material3)
+      implementation(libs.common.compose.runtime)
+      implementation(libs.common.compose.ui)
 
-      implementation(libs.compose.components.resources)
-      implementation(libs.compose.foundation)
-      implementation(libs.compose.material.icons.core)
-      implementation(libs.compose.material3)
-      implementation(libs.compose.runtime)
-      implementation(libs.compose.ui)
+      implementation(libs.common.lifecycle.runtimeCompose)
     }
 
-    commonTest.dependencies { implementation(libs.kotlin.test) }
+    commonTest.dependencies { implementation(libs.common.kotlin.test) }
   }
 }
 
@@ -68,4 +66,4 @@ android {
   }
 }
 
-dependencies { debugImplementation(libs.compose.ui.tooling) }
+dependencies { debugImplementation(libs.common.compose.ui.tooling) }

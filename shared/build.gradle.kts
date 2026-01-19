@@ -31,12 +31,12 @@ kotlin {
       baseName = "Shared"
       isStatic = true
 
-      export(libs.decompose)
-      export(libs.essenty.backHandler)
-      export(libs.essenty.lifecycle)
-      export(libs.essenty.stateKeeper)
-      export(libs.moko.resources)
-      export(libs.kermit)
+      export(libs.common.decompose)
+      export(libs.common.essenty.backHandler)
+      export(libs.common.essenty.lifecycle)
+      export(libs.common.essenty.stateKeeper)
+      export(libs.common.moko.resources)
+      export(libs.common.kermit)
     }
   }
 
@@ -53,54 +53,55 @@ kotlin {
       implementation(libs.androidx.core.ktx)
       implementation(libs.androidx.browser)
 
-      api(libs.moko.resources.compose)
+      implementation(libs.android.ktor.client.android)
 
-      implementation(libs.ktor.client.android)
+      api(libs.common.moko.resources.compose)
     }
 
     commonMain.dependencies {
-      implementation(libs.androidx.paging.common)
-      implementation(libs.androidx.room.paging)
-      implementation(libs.androidx.room.runtime)
-      implementation(libs.androidx.sqlite.bundled)
+      implementation(libs.common.compose.components.resources)
+      implementation(libs.common.compose.foundation)
+      implementation(libs.common.compose.material.icons.core)
+      implementation(libs.common.compose.material3)
+      implementation(libs.common.compose.runtime)
+      implementation(libs.common.compose.ui)
 
-      implementation(libs.compose.components.resources)
-      implementation(libs.compose.foundation)
-      implementation(libs.compose.material.icons.core)
-      implementation(libs.compose.material3)
-      implementation(libs.compose.runtime)
-      implementation(libs.compose.ui)
+      api(libs.common.coil.compose)
+      implementation(libs.common.coil.network.ktor3)
 
-      api(libs.coil.compose)
-      implementation(libs.coil.network.ktor3)
+      api(libs.common.decompose)
+      api(libs.common.essenty.lifecycle)
+      api(libs.common.essenty.lifecycle.coroutines)
+      api(libs.common.essenty.stateKeeper)
+      api(libs.common.essenty.backHandler)
 
-      api(libs.decompose)
-      api(libs.essenty.lifecycle)
-      api(libs.essenty.lifecycle.coroutines)
-      api(libs.essenty.stateKeeper)
-      api(libs.essenty.backHandler)
+      api(libs.common.kermit)
 
-      api(libs.kermit)
+      api(libs.common.kotlinx.coroutines.core)
+      api(libs.common.kotlinx.datetime)
+      api(libs.common.kotlinx.serialization.json)
 
-      api(libs.kotlinx.coroutines.core)
-      api(libs.kotlinx.datetime)
-      api(libs.kotlinx.serialization.json)
+      implementation(libs.common.ktor.client.core)
+      implementation(libs.common.ktor.client.contentNegotiation)
+      implementation(libs.common.ktor.client.logging)
+      implementation(libs.common.ktor.serialization.kotlinx.json)
+      implementation(libs.common.ktorfit)
 
-      implementation(libs.ktor.client.core)
-      implementation(libs.ktor.client.contentNegotiation)
-      implementation(libs.ktor.client.logging)
-      implementation(libs.ktor.serialization.kotlinx.json)
-      implementation(libs.ktorfit)
+      api(libs.common.moko.resources)
 
-      api(libs.moko.resources)
+      implementation(libs.common.paging.common)
+
+      implementation(libs.common.room.paging)
+      implementation(libs.common.room.runtime)
+      implementation(libs.common.sqlite.bundled)
     }
 
     commonTest.dependencies {
-      implementation(libs.kotlin.test)
-      implementation(libs.kotlinx.coroutines.test)
+      implementation(libs.common.kotlin.test)
+      implementation(libs.common.kotlinx.coroutines.test)
     }
 
-    iosMain.dependencies { implementation(libs.ktor.client.darwin) }
+    iosMain.dependencies { implementation(libs.ios.ktor.client.darwin) }
   }
 }
 
