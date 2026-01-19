@@ -100,9 +100,7 @@ kotlin {
       implementation(libs.kotlinx.coroutines.test)
     }
 
-    iosMain.dependencies {
-      implementation(libs.ktor.client.darwin)
-    }
+    iosMain.dependencies { implementation(libs.ktor.client.darwin) }
   }
 }
 
@@ -167,5 +165,7 @@ skie {
     }
   }
 }
+
+ktorfit { compilerPluginVersion.set("2.3.3") }
 
 multiplatformResources { resourcesPackage.set("com.trm.cryptosphere.shared") }
