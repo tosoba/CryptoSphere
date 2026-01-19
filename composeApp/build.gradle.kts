@@ -12,35 +12,35 @@ kotlin {
 
   sourceSets {
     androidMain.dependencies {
-      implementation(compose.preview)
-
       implementation(libs.androidx.activity.compose)
-      implementation(libs.androidx.material3)
       implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
       implementation(libs.androidx.constraintLayout.compose)
       implementation(libs.androidx.lifecycle.process)
       implementation(libs.androidx.paging.compose)
       implementation(libs.androidx.startup.runtime)
 
+      implementation(libs.compose.material.icons.extended)
+      implementation(libs.compose.ui.tooling.preview)
+
       implementation(libs.decompose.extensions.compose)
       implementation(libs.decompose.extensions.compose.experimental)
 
       implementation(libs.kotlinx.coroutines.android)
-      implementation(libs.materialKolor)
+
+      implementation(libs.material.kolor)
     }
 
     commonMain.dependencies {
       implementation(projects.shared)
 
-      implementation(compose.components.resources)
-      implementation(compose.components.uiToolingPreview)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.materialIconsExtended)
-      implementation(compose.runtime)
-      implementation(compose.ui)
-
       implementation(libs.androidx.lifecycle.runtimeCompose)
+
+      implementation(libs.compose.components.resources)
+      implementation(libs.compose.foundation)
+      implementation(libs.compose.material.icons.core)
+      implementation(libs.compose.material3)
+      implementation(libs.compose.runtime)
+      implementation(libs.compose.ui)
     }
 
     commonTest.dependencies { implementation(libs.kotlin.test) }
@@ -68,4 +68,4 @@ android {
   }
 }
 
-dependencies { debugImplementation(compose.uiTooling) }
+dependencies { debugImplementation(libs.compose.ui.tooling) }

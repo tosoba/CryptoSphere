@@ -59,17 +59,17 @@ kotlin {
     }
 
     commonMain.dependencies {
-      implementation(compose.components.resources)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.materialIconsExtended)
-      implementation(compose.runtime)
-      implementation(compose.ui)
-
       implementation(libs.androidx.paging.common)
       implementation(libs.androidx.room.paging)
       implementation(libs.androidx.room.runtime)
       implementation(libs.androidx.sqlite.bundled)
+
+      implementation(libs.compose.components.resources)
+      implementation(libs.compose.foundation)
+      implementation(libs.compose.material.icons.core)
+      implementation(libs.compose.material3)
+      implementation(libs.compose.runtime)
+      implementation(libs.compose.ui)
 
       api(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
