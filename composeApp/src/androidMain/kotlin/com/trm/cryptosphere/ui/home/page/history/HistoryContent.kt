@@ -1,7 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.history
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,21 +52,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
+import com.trm.cryptosphere.core.ui.ListItemImage
+import com.trm.cryptosphere.core.ui.ListItemInfoColumn
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
-import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.NewsHistoryItem
 import com.trm.cryptosphere.domain.model.TokenHistoryItem
@@ -241,7 +239,7 @@ private fun HistoryNewsPage(
           )
         }
         is HistoryNewsListItem.DateHeader -> {
-          DateHeader(currentItem.date)
+          HistoryDateHeaderItemContent(currentItem.date)
         }
         null -> {}
       }
@@ -300,7 +298,7 @@ private fun HistoryTokensPage(
           )
         }
         is HistoryTokenListItem.DateHeader -> {
-          DateHeader(currentItem.date)
+          HistoryDateHeaderItemContent(currentItem.date)
         }
         null -> {}
       }
@@ -338,7 +336,7 @@ private fun DismissBackground(dismissState: SwipeToDismissBoxState, shape: Round
 }
 
 @Composable
-private fun LazyItemScope.DateHeader(date: LocalDate) {
+private fun LazyItemScope.HistoryDateHeaderItemContent(date: LocalDate) {
   Text(
     text = LocalDate.Formats.ISO.format(date),
     style = MaterialTheme.typography.labelLarge,
@@ -359,40 +357,15 @@ private fun HistoryNewsItemContent(
     onClick = onClick,
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-      AsyncImage(
-        model = rememberCrossfadeImageRequest(item.imgUrl),
-        contentDescription = null,
-        modifier = Modifier.size(48.dp).clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Crop,
-      )
+      ListItemImage(item.imgUrl)
 
       Spacer(modifier = Modifier.width(16.dp))
 
-      Column(modifier = Modifier.weight(1f)) {
-        Text(
-          text = item.title,
-          style = MaterialTheme.typography.bodyLarge,
-          color = MaterialTheme.colorScheme.onSurface,
-          maxLines = 1,
-          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-        )
-
-        Text(
-          text = item.source,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          maxLines = 1,
-          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-        )
-      }
+      ListItemInfoColumn(topText = item.title, bottomText = item.source)
 
       Spacer(modifier = Modifier.width(16.dp))
 
-      Text(
-        text = LocalTime.Formats.ISO.format(item.visitedAt.time),
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        style = MaterialTheme.typography.bodySmall,
-      )
+      VisitedAtTimeText(item.visitedAt.time)
     }
   }
 }
@@ -410,42 +383,26 @@ private fun HistoryTokenItemContent(
     onClick = onClick,
   ) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-      AsyncImage(
-        model = rememberCrossfadeImageRequest(item.token.logoUrl),
-        contentDescription = null,
-        modifier = Modifier.size(48.dp).clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Fit,
-      )
+      ListItemImage(item.token.logoUrl)
 
       Spacer(modifier = Modifier.width(16.dp))
 
-      Column(modifier = Modifier.weight(1f)) {
-        Text(
-          text = item.token.name,
-          style = MaterialTheme.typography.bodyLarge,
-          color = MaterialTheme.colorScheme.onSurface,
-          maxLines = 1,
-          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-        )
-
-        Text(
-          text = item.token.symbol,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          maxLines = 1,
-          modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
-        )
-      }
+      ListItemInfoColumn(topText = item.token.name, bottomText = item.token.symbol)
 
       Spacer(modifier = Modifier.width(16.dp))
 
-      Text(
-        text = LocalTime.Formats.ISO.format(item.visitedAt.time),
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        style = MaterialTheme.typography.bodySmall,
-      )
+      VisitedAtTimeText(item.visitedAt.time)
     }
   }
+}
+
+@Composable
+private fun VisitedAtTimeText(time: LocalTime) {
+  Text(
+    text = LocalTime.Formats.ISO.format(time),
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    style = MaterialTheme.typography.bodySmall,
+  )
 }
 
 @Composable
