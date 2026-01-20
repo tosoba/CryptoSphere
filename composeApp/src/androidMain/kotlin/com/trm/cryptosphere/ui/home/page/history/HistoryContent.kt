@@ -25,10 +25,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SwipeToDismissBox
@@ -37,12 +35,8 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,7 +58,6 @@ import com.trm.cryptosphere.core.ui.LargeCircularProgressIndicator
 import com.trm.cryptosphere.core.ui.ListItemImage
 import com.trm.cryptosphere.core.ui.ListItemInfoColumn
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
-import com.trm.cryptosphere.core.ui.TopSearchBar
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.clearFocusOnTap
 import com.trm.cryptosphere.core.util.resolve
@@ -120,32 +113,15 @@ fun HistoryContent(component: HistoryComponent) {
   Scaffold(
     modifier = Modifier.clearFocusOnTap(::collapseSearchBar),
     topBar = {
-      TopSearchBar(
+      HistoryTopSearchBar(
         searchBarState = searchBarState,
-        placeholder = MR.strings.search_history.resolve(),
         onQueryChange = viewModel::onQueryChange,
-        actions = {
-          TooltipBox(
-            positionProvider =
-              TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-            tooltip = { PlainTooltip { Text(MR.strings.delete_history.resolve()) } },
-            state = rememberTooltipState(),
-          ) {
-            FilledTonalIconButton(
-              onClick = { deleteAllDialogVisible = true },
-              enabled =
-                when (HistoryPage.fromIndex(pagerState.currentPage)) {
-                  HistoryPage.NEWS -> newsHistory
-                  HistoryPage.TOKENS -> tokenHistory
-                }.itemCount > 0,
-            ) {
-              Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = MR.strings.delete_history.resolve(),
-              )
-            }
-          }
-        },
+        onDeleteAllClick = { deleteAllDialogVisible = true },
+        isDeleteEnabled =
+          when (HistoryPage.fromIndex(pagerState.currentPage)) {
+            HistoryPage.NEWS -> newsHistory
+            HistoryPage.TOKENS -> tokenHistory
+          }.itemCount > 0,
       )
     },
   ) {
