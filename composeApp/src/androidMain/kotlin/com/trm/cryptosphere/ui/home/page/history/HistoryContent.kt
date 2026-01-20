@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +33,6 @@ import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -88,25 +86,11 @@ fun HistoryContent(component: HistoryComponent) {
   }
 
   if (deleteAllDialogVisible) {
-    AlertDialog(
+    HistoryDeleteAllDialog(
       onDismissRequest = { deleteAllDialogVisible = false },
-      confirmButton = {
-        TextButton(
-          onClick = {
-            deleteAllDialogVisible = false
-            viewModel.onDeleteHistoryClick(page = HistoryPage.fromIndex(pagerState.currentPage))
-          }
-        ) {
-          Text(MR.strings.confirm.resolve())
-        }
+      onConfirm = {
+        viewModel.onDeleteHistoryClick(page = HistoryPage.fromIndex(pagerState.currentPage))
       },
-      dismissButton = {
-        TextButton(onClick = { deleteAllDialogVisible = false }) {
-          Text(MR.strings.cancel.resolve())
-        }
-      },
-      title = { Text(MR.strings.delete_history.resolve()) },
-      text = { Text(MR.strings.delete_history_message.resolve()) },
     )
   }
 
