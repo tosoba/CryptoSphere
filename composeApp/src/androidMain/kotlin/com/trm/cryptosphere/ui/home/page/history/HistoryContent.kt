@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -350,23 +351,12 @@ private fun HistoryNewsItemContent(
   shape: RoundedCornerShape,
   onClick: () -> Unit,
 ) {
-  Card(
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
-    shape = shape,
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    onClick = onClick,
-  ) {
-    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-      ListItemImage(item.imgUrl)
-
-      Spacer(modifier = Modifier.width(16.dp))
-
-      ListItemInfoColumn(topText = item.title, bottomText = item.source)
-
-      Spacer(modifier = Modifier.width(16.dp))
-
-      VisitedAtTimeText(item.visitedAt.time)
-    }
+  HistoryItemContent(shape = shape, onClick = onClick) {
+    ListItemImage(item.imgUrl)
+    Spacer(modifier = Modifier.width(16.dp))
+    ListItemInfoColumn(topText = item.title, bottomText = item.source)
+    Spacer(modifier = Modifier.width(16.dp))
+    VisitedAtTimeText(item.visitedAt.time)
   }
 }
 
@@ -376,23 +366,32 @@ private fun HistoryTokenItemContent(
   shape: RoundedCornerShape,
   onClick: () -> Unit,
 ) {
+  HistoryItemContent(shape = shape, onClick = onClick) {
+    ListItemImage(item.token.logoUrl)
+    Spacer(modifier = Modifier.width(16.dp))
+    ListItemInfoColumn(topText = item.token.name, bottomText = item.token.symbol)
+    Spacer(modifier = Modifier.width(16.dp))
+    VisitedAtTimeText(item.visitedAt.time)
+  }
+}
+
+@Composable
+private fun HistoryItemContent(
+  shape: RoundedCornerShape,
+  onClick: () -> Unit,
+  content: @Composable RowScope.() -> Unit,
+) {
   Card(
     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
     shape = shape,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     onClick = onClick,
   ) {
-    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-      ListItemImage(item.token.logoUrl)
-
-      Spacer(modifier = Modifier.width(16.dp))
-
-      ListItemInfoColumn(topText = item.token.name, bottomText = item.token.symbol)
-
-      Spacer(modifier = Modifier.width(16.dp))
-
-      VisitedAtTimeText(item.visitedAt.time)
-    }
+    Row(
+      modifier = Modifier.padding(16.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      content = content,
+    )
   }
 }
 
