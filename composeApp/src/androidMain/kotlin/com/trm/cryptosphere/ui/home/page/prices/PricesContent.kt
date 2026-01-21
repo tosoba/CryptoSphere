@@ -1,7 +1,9 @@
 package com.trm.cryptosphere.ui.home.page.prices
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -62,37 +65,48 @@ fun PricesContent(component: PricesComponent) {
       }
     },
   ) { paddingValues ->
-    LazyColumn(
+    Box(
       modifier =
         Modifier.fillMaxSize()
           .padding(paddingValues)
-          .background(MaterialTheme.colorScheme.surfaceContainer),
-      contentPadding = PaddingValues(vertical = if (tokens.itemCount == 0) 0.dp else 8.dp),
+          .background(MaterialTheme.colorScheme.surfaceContainer)
     ) {
-      if (tokens.loadState.refresh is LoadState.NotLoading && tokens.itemCount == 0) {
-        item { PricesEmptyItemContent(modifier = Modifier.fillParentMaxSize().animateItem()) }
-      }
+      LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = if (tokens.itemCount == 0) 0.dp else 8.dp),
+      ) {
+        if (tokens.loadState.refresh is LoadState.NotLoading && tokens.itemCount == 0) {
+          item { PricesEmptyItemContent(modifier = Modifier.fillParentMaxSize().animateItem()) }
+        }
 
-      if (tokens.loadState.refresh is LoadState.Loading) {
-        item {
-          LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem())
+        if (tokens.loadState.refresh is LoadState.Loading) {
+          item {
+            LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem())
+          }
+        }
+
+        items(count = tokens.itemCount, key = tokens.itemKey(TokenItem::id)) { index ->
+          tokens[index]?.let { token ->
+            PriceItemContent(
+              token = token,
+              shape =
+                cardListItemRoundedCornerShape(
+                  isTopRounded = index == 0,
+                  isBottomRounded = index == tokens.itemCount - 1,
+                ),
+              modifier =
+                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp).animateItem(),
+              onClick = { component.onTokenClick(token.id, TokenCarouselConfig(null)) },
+            )
+          }
         }
       }
 
-      items(count = tokens.itemCount, key = tokens.itemKey(TokenItem::id)) { index ->
-        tokens[index]?.let { token ->
-          PriceItemContent(
-            token = token,
-            shape =
-              cardListItemRoundedCornerShape(
-                isTopRounded = index == 0,
-                isBottomRounded = index == tokens.itemCount - 1,
-              ),
-            modifier =
-              Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp).animateItem(),
-            onClick = { component.onTokenClick(token.id, TokenCarouselConfig(null)) },
-          )
-        }
+      AnimatedVisibility(
+        visible = tokens.loadState.append is LoadState.Loading,
+        modifier = Modifier.align(Alignment.BottomCenter),
+      ) {
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
       }
     }
   }

@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.ui.home.page.history
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -155,55 +157,68 @@ private fun HistoryNewsPage(
   onClick: (NewsHistoryItem) -> Unit,
   onDelete: (Long) -> Unit,
 ) {
-  LazyColumn(
-    modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
-  ) {
-    if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
-      item {
-        HistoryEmptyItemContent(
-          text = MR.strings.no_news_history.resolve(),
-          modifier = Modifier.fillParentMaxSize().animateItem(),
-        )
-      }
-    }
-
-    if (items.loadState.refresh is LoadState.Loading) {
-      item { LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem()) }
-    }
-
-    items(count = items.itemCount, key = items.itemKey(HistoryNewsListItem::key)) { index ->
-      val previousItem = if (index > 0) items[index - 1] else null
-      val currentItem = items[index]
-      val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
-
-      when (currentItem) {
-        is HistoryNewsListItem.Item -> {
-          val dismissState = rememberSwipeToDismissBoxState()
-          val shape =
-            cardListItemRoundedCornerShape(
-              isTopRounded = previousItem is HistoryNewsListItem.DateHeader,
-              isBottomRounded = nextItem is HistoryNewsListItem.DateHeader || nextItem == null,
-            )
-          SwipeToDismissBox(
-            state = dismissState,
-            backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
-            content = {
-              HistoryNewsItemContent(
-                item = currentItem.data,
-                shape = shape,
-                onClick = { onClick(currentItem.data) },
-              )
-            },
-            onDismiss = { if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id) },
-            modifier = Modifier.animateItem(),
+  Box {
+    LazyColumn(
+      modifier = Modifier.fillMaxSize(),
+      contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
+    ) {
+      if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
+        item {
+          HistoryEmptyItemContent(
+            text = MR.strings.no_news_history.resolve(),
+            modifier = Modifier.fillParentMaxSize().animateItem(),
           )
         }
-        is HistoryNewsListItem.DateHeader -> {
-          HistoryDateHeaderItemContent(currentItem.date)
-        }
-        null -> {}
       }
+
+      if (items.loadState.refresh is LoadState.Loading) {
+        item {
+          LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem())
+        }
+      }
+
+      items(count = items.itemCount, key = items.itemKey(HistoryNewsListItem::key)) { index ->
+        val previousItem = if (index > 0) items[index - 1] else null
+        val currentItem = items[index]
+        val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
+
+        when (currentItem) {
+          is HistoryNewsListItem.Item -> {
+            val dismissState = rememberSwipeToDismissBoxState()
+            val shape =
+              cardListItemRoundedCornerShape(
+                isTopRounded = previousItem is HistoryNewsListItem.DateHeader,
+                isBottomRounded = nextItem is HistoryNewsListItem.DateHeader || nextItem == null,
+              )
+            SwipeToDismissBox(
+              state = dismissState,
+              backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
+              content = {
+                HistoryNewsItemContent(
+                  item = currentItem.data,
+                  shape = shape,
+                  onClick = { onClick(currentItem.data) },
+                )
+              },
+              onDismiss = {
+                if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id)
+              },
+              modifier = Modifier.animateItem(),
+            )
+          }
+          is HistoryNewsListItem.DateHeader -> {
+            HistoryDateHeaderItemContent(currentItem.date)
+          }
+          null -> {}
+        }
+      }
+    }
+
+    AnimatedVisibility(
+      visible = items.loadState.append is LoadState.Loading,
+      modifier = Modifier.align(Alignment.BottomCenter),
+    ) {
+      LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     }
   }
 }
@@ -214,55 +229,68 @@ private fun HistoryTokensPage(
   onClick: (TokenItem) -> Unit,
   onDelete: (Long) -> Unit,
 ) {
-  LazyColumn(
-    modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
-  ) {
-    if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
-      item {
-        HistoryEmptyItemContent(
-          text = MR.strings.no_tokens_history.resolve(),
-          modifier = Modifier.fillParentMaxSize().animateItem(),
-        )
-      }
-    }
-
-    if (items.loadState.refresh is LoadState.Loading) {
-      item { LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem()) }
-    }
-
-    items(count = items.itemCount, key = items.itemKey(HistoryTokenListItem::key)) { index ->
-      val previousItem = if (index > 0) items[index - 1] else null
-      val currentItem = items[index]
-      val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
-
-      when (currentItem) {
-        is HistoryTokenListItem.Item -> {
-          val dismissState = rememberSwipeToDismissBoxState()
-          val shape =
-            cardListItemRoundedCornerShape(
-              isTopRounded = previousItem is HistoryTokenListItem.DateHeader,
-              isBottomRounded = nextItem is HistoryTokenListItem.DateHeader || nextItem == null,
-            )
-          SwipeToDismissBox(
-            state = dismissState,
-            backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
-            content = {
-              HistoryTokenItemContent(
-                item = currentItem.data,
-                shape = shape,
-                onClick = { onClick(currentItem.data.token) },
-              )
-            },
-            onDismiss = { if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id) },
-            modifier = Modifier.animateItem(),
+  Box {
+    LazyColumn(
+      modifier = Modifier.fillMaxSize(),
+      contentPadding = PaddingValues(top = if (items.itemCount == 0) 0.dp else 4.dp),
+    ) {
+      if (items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0) {
+        item {
+          HistoryEmptyItemContent(
+            text = MR.strings.no_tokens_history.resolve(),
+            modifier = Modifier.fillParentMaxSize().animateItem(),
           )
         }
-        is HistoryTokenListItem.DateHeader -> {
-          HistoryDateHeaderItemContent(currentItem.date)
-        }
-        null -> {}
       }
+
+      if (items.loadState.refresh is LoadState.Loading) {
+        item {
+          LargeCircularProgressIndicator(modifier = Modifier.fillParentMaxSize().animateItem())
+        }
+      }
+
+      items(count = items.itemCount, key = items.itemKey(HistoryTokenListItem::key)) { index ->
+        val previousItem = if (index > 0) items[index - 1] else null
+        val currentItem = items[index]
+        val nextItem = if (index < items.itemCount - 1) items[index + 1] else null
+
+        when (currentItem) {
+          is HistoryTokenListItem.Item -> {
+            val dismissState = rememberSwipeToDismissBoxState()
+            val shape =
+              cardListItemRoundedCornerShape(
+                isTopRounded = previousItem is HistoryTokenListItem.DateHeader,
+                isBottomRounded = nextItem is HistoryTokenListItem.DateHeader || nextItem == null,
+              )
+            SwipeToDismissBox(
+              state = dismissState,
+              backgroundContent = { DismissBackground(dismissState = dismissState, shape = shape) },
+              content = {
+                HistoryTokenItemContent(
+                  item = currentItem.data,
+                  shape = shape,
+                  onClick = { onClick(currentItem.data.token) },
+                )
+              },
+              onDismiss = {
+                if (it != SwipeToDismissBoxValue.Settled) onDelete(currentItem.data.id)
+              },
+              modifier = Modifier.animateItem(),
+            )
+          }
+          is HistoryTokenListItem.DateHeader -> {
+            HistoryDateHeaderItemContent(currentItem.date)
+          }
+          null -> {}
+        }
+      }
+    }
+
+    AnimatedVisibility(
+      visible = items.loadState.append is LoadState.Loading,
+      modifier = Modifier.align(Alignment.BottomCenter),
+    ) {
+      LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     }
   }
 }
