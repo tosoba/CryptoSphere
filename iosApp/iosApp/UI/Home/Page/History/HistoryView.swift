@@ -118,16 +118,13 @@ private struct HistoryNewsListView: View {
     private var newsList: some View {
         ScrollView {
             LazyVStack(spacing: 8) {
-                ForEach(
-                    Array(items.enumerated()),
-                    id: \.element.key
-                ) { index, item in
+                ForEach(Array(items.enumerated()), id: \.element.key) { index, item in
                     Group {
                         switch onEnum(of: item) {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(news):
-                            HistoryNewsItemRow(
+                            HistoryNewsItemView(
                                 item: news.data,
                                 onClick: { onItemClick(news.data) },
                                 onDelete: { onDelete(news.data.id) }
@@ -199,16 +196,13 @@ private struct HistoryTokensListView: View {
     private var tokensList: some View {
         ScrollView {
             LazyVStack(spacing: 8) {
-                ForEach(
-                    Array(items.enumerated()),
-                    id: \.element.key
-                ) { index, item in
+                ForEach(Array(items.enumerated()), id: \.element.key) { index, item in
                     Group {
                         switch onEnum(of: item) {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(token):
-                            HistoryTokenItemRow(
+                            HistoryTokenItemView(
                                 item: token.data,
                                 onClick: { onItemClick(token.data.token) },
                                 onDelete: { onDelete(token.data.id) }
@@ -240,85 +234,36 @@ private struct HistoryTokensListView: View {
     }
 }
 
-private struct HistoryNewsItemRow: View {
+private struct HistoryNewsItemView: View {
     let item: NewsHistoryItem
     let onClick: () -> Void
     let onDelete: () -> Void
 
     var body: some View {
-        Button(action: onClick) {
-            HStack(spacing: 16) {
-                AsyncImage(url: URL(string: item.imgUrl ?? "")) { image in
-                    image.resizable().aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Color(.systemGray4)
-                }
-                .frame(width: 80, height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(item.title)
-                        .font(.headline)
-                        .lineLimit(2)
-
-                    Text(item.source)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .lineLimit(1)
-
-                Spacer()
-            }
-            .padding(16)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .contextMenu {
-            Button(role: .destructive, action: onDelete) {
-                Label("Delete", systemImage: "trash")
-            }
-        }
+        HistoryItemView(
+            imageUrl: item.imgUrl,
+            title: item.title,
+            subtitle: item.source,
+            visitedAt: item.visitedAt.time,
+            onClick: onClick,
+            onDelete: onDelete
+        )
     }
 }
 
-private struct HistoryTokenItemRow: View {
+private struct HistoryTokenItemView: View {
     let item: TokenHistoryItem
     let onClick: () -> Void
     let onDelete: () -> Void
 
     var body: some View {
-        Button(action: onClick) {
-            HStack(spacing: 12) {
-                AsyncImage(url: URL(string: item.token.logoUrl)) { image in
-                    image.resizable().aspectRatio(contentMode: .fit)
-                } placeholder: {
-                    Color(.systemGray4)
-                }
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-
-                VStack(alignment: .leading) {
-                    Text(item.token.name)
-                        .font(.headline)
-
-                    Text(item.token.symbol)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .lineLimit(1)
-
-                Spacer()
-            }
-            .padding(16)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .contextMenu {
-            Button(role: .destructive, action: onDelete) {
-                Label("Delete", systemImage: "trash")
-            }
-        }
+        HistoryItemView(
+            imageUrl: item.token.logoUrl,
+            title: item.token.name,
+            subtitle: item.token.symbol,
+            visitedAt: item.visitedAt.time,
+            onClick: onClick,
+            onDelete: onDelete
+        )
     }
 }

@@ -20,6 +20,7 @@
     <string name="tokens">Tokens</string>
     <string name="search_history">Search history</string>
     <string name="clear">Clear</string>
+    <string name="delete">Delete</string>
     <string name="delete_history">Delete history</string>
     <string name="delete_history_message">Are you sure you want to delete all history?</string>
     <string name="confirm">Confirm</string>
