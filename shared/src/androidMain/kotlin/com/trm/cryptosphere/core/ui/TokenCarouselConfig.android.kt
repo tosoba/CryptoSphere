@@ -2,5 +2,4 @@ package com.trm.cryptosphere.core.ui
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-actual class TokenCarouselConfig(val parentSharedElementId: String?)
+@Serializable actual class TokenCarouselConfig(val parentSharedElementId: String?)

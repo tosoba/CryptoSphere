@@ -1,7 +1,7 @@
 package com.trm.cryptosphere.data.api.coinmarketcap
 
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 internal class CoinMarketCapApiTest {
   @Test fun getTokens() = runTest { CoinMarketCapApi().getTokens(100) }

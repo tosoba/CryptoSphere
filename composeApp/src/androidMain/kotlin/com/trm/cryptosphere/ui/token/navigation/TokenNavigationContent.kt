@@ -169,9 +169,7 @@ fun TokenNavigationContent(
             bottom.linkTo(parent.bottom, margin = 16.dp)
             end.linkTo(parent.end, margin = 16.dp)
           },
-          onClick = {
-              currentPresentedFeedToken?.shareUrl?.let(context::openUrl)
-          }
+        onClick = { currentPresentedFeedToken?.shareUrl?.let(context::openUrl) },
       )
 
       if (navigationSuiteType == NavigationSuiteType.NavigationRail) {
