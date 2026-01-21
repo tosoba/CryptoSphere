@@ -71,15 +71,6 @@ struct PricesView: View {
         .scrollDismissesKeyboard(.interactively)
         .background(Color(.systemGroupedBackground))
         .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
-        .overlay(alignment: .top) {
-            let errorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
-            ErrorOccurredCard(
-                isVisible: errorVisible,
-                onRetryClick: { component.viewModel.tokensPagingState.retry() }
-            )
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-        }
     }
 
     @ViewBuilder
