@@ -143,10 +143,7 @@ private struct HistoryNewsListView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Color(.systemGroupedBackground))
-        .overlay(alignment: .bottom) {
-            let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
-            IndeterminateLinearProgressView(isVisible: progressVisible)
-        }
+        .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
         .overlay(alignment: .top) {
             let errorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
             ErrorOccurredCard(isVisible: errorVisible, onRetryClick: retry)
@@ -221,10 +218,7 @@ private struct HistoryTokensListView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Color(.systemGroupedBackground))
-        .overlay(alignment: .bottom) {
-            let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
-            IndeterminateLinearProgressView(isVisible: progressVisible)
-        }
+        .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
         .overlay(alignment: .top) {
             let errorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
             ErrorOccurredCard(isVisible: errorVisible, onRetryClick: retry)

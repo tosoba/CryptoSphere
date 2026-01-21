@@ -1,3 +1,4 @@
+import Shared
 import SwiftUI
 
 struct IndeterminateLinearProgressView: View {
@@ -57,5 +58,26 @@ private struct ReadWidthModifier: ViewModifier {
 private extension View {
     func readWidth() -> some View {
         modifier(ReadWidthModifier())
+    }
+}
+
+struct IndeterminateLinearProgressViewOverlayModifier: ViewModifier {
+    let loadState: LoadState?
+    let alignment: Alignment
+
+    func body(content: Content) -> some View {
+        content.overlay(alignment: alignment) {
+            let isVisible = if case .loading = onEnum(of: loadState) { true } else { false }
+            IndeterminateLinearProgressView(isVisible: isVisible)
+        }
+    }
+}
+
+extension View {
+    func indeterminateLinearProgressViewOverlay(
+        loadState: LoadState?,
+        alignment: Alignment = .bottom
+    ) -> some View {
+        modifier(IndeterminateLinearProgressViewOverlayModifier(loadState: loadState, alignment: alignment))
     }
 }

@@ -55,10 +55,7 @@ struct NewsFeedView: View {
             .ignoresSafeArea(.container, edges: .all)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
-            .overlay(alignment: .bottom) {
-                let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
-                IndeterminateLinearProgressView(isVisible: progressVisible)
-            }
+            .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
             .overlay(alignment: .top) {
                 let errorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
                 ErrorOccurredCard(

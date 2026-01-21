@@ -51,10 +51,7 @@ struct TokenFeedView: View {
             .ignoresSafeArea(.container, edges: .all)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
-            .overlay(alignment: .bottom) {
-                let progressVisible = if case .loading = onEnum(of: loadStates?.append) { true } else { false }
-                IndeterminateLinearProgressView(isVisible: progressVisible)
-            }
+            .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
         }
         .navigationTitle(navigationToken?.symbol ?? "")
         .toolbar {
