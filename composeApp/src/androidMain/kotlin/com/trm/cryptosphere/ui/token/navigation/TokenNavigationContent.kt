@@ -13,18 +13,19 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.OpenInBrowser
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalFloatingToolbar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -75,6 +76,7 @@ fun TokenNavigationContent(
   val currentNavigationTokenId by
     component.viewModel.currentNavigationTokenId.collectAsStateWithLifecycle(null)
   val currentPresentedFeedToken by component.currentPresentedFeedToken.collectAsStateWithLifecycle()
+  val forwardNavigationButtonEnabled = tokens.lastOrNull()?.id != currentPresentedFeedToken?.id
 
   Scaffold(
     modifier = Modifier.fillMaxSize(),
@@ -90,7 +92,7 @@ fun TokenNavigationContent(
               backText =
                 tokens.getOrNull(tokens.lastIndex - 1)?.symbol ?: MR.strings.home.resolve(),
               forwardText = currentPresentedFeedToken?.symbol.orEmpty(),
-              forwardEnabled = tokens.lastOrNull()?.id != currentPresentedFeedToken?.id,
+              forwardEnabled = forwardNavigationButtonEnabled,
               onBackClick = component::onBackClicked,
               onHomeClick = component.navigateHome,
               onForwardClick = component::navigateToTokenFeed,
@@ -185,6 +187,7 @@ fun TokenNavigationContent(
             },
         ) {
           VerticalToolbarButtons(
+            forwardEnabled = forwardNavigationButtonEnabled,
             onBackClick = component::onBackClicked,
             onHomeClick = component.navigateHome,
             onForwardClick = component::navigateToTokenFeed,
@@ -218,17 +221,21 @@ private fun BottomAppBarButtons(
   onHomeClick: () -> Unit,
   onForwardClick: () -> Unit,
 ) {
-  TextButton(onClick = onBackClick) {
+  Button(onClick = onBackClick, colors = ButtonDefaults.filledTonalButtonColors()) {
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
     Spacer(modifier = Modifier.width(2.dp))
     Text(backText)
   }
 
-  FilledTonalIconButton(onClick = onHomeClick) {
+  FilledIconButton(onClick = onHomeClick) {
     Icon(imageVector = Icons.Filled.Home, contentDescription = null)
   }
 
-  TextButton(onClick = onForwardClick, enabled = forwardEnabled) {
+  Button(
+    onClick = onForwardClick,
+    enabled = forwardEnabled,
+    colors = ButtonDefaults.filledTonalButtonColors(),
+  ) {
     Text(forwardText)
     Spacer(modifier = Modifier.width(2.dp))
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
@@ -237,19 +244,20 @@ private fun BottomAppBarButtons(
 
 @Composable
 private fun VerticalToolbarButtons(
+  forwardEnabled: Boolean,
   onBackClick: () -> Unit,
   onHomeClick: () -> Unit,
   onForwardClick: () -> Unit,
 ) {
-  IconButton(onClick = onBackClick) {
+  FilledTonalIconButton(onClick = onBackClick) {
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
   }
 
-  FilledTonalIconButton(onClick = onHomeClick) {
+  FilledIconButton(onClick = onHomeClick) {
     Icon(imageVector = Icons.Filled.Home, contentDescription = null)
   }
 
-  IconButton(onClick = onForwardClick) {
+  FilledTonalIconButton(onClick = onForwardClick, enabled = forwardEnabled) {
     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
   }
 }
