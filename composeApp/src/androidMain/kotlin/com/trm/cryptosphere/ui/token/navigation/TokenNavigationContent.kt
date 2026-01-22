@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.ui.token.navigation
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -35,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -221,10 +224,21 @@ private fun BottomAppBarButtons(
   onHomeClick: () -> Unit,
   onForwardClick: () -> Unit,
 ) {
-  Button(onClick = onBackClick, colors = ButtonDefaults.filledTonalButtonColors()) {
-    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+  Button(
+    onClick = onBackClick,
+    colors = ButtonDefaults.filledTonalButtonColors(),
+    contentPadding = PaddingValues(horizontal = 8.dp),
+    modifier = Modifier.width(96.dp),
+  ) {
+    Icon(
+      imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+      contentDescription = null,
+      modifier = Modifier.size(24.dp),
+    )
+
     Spacer(modifier = Modifier.width(2.dp))
-    Text(backText)
+
+    Text(text = backText, modifier = Modifier.weight(1f).basicMarquee(iterations = Int.MAX_VALUE))
   }
 
   FilledIconButton(onClick = onHomeClick) {
@@ -235,10 +249,22 @@ private fun BottomAppBarButtons(
     onClick = onForwardClick,
     enabled = forwardEnabled,
     colors = ButtonDefaults.filledTonalButtonColors(),
+    contentPadding = PaddingValues(horizontal = 8.dp),
+    modifier = Modifier.width(96.dp),
   ) {
-    Text(forwardText)
+    Text(
+      text = forwardText,
+      textAlign = TextAlign.End,
+      modifier = Modifier.weight(1f).basicMarquee(iterations = Int.MAX_VALUE),
+    )
+
     Spacer(modifier = Modifier.width(2.dp))
-    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+
+    Icon(
+      imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+      contentDescription = null,
+      modifier = Modifier.size(24.dp),
+    )
   }
 }
 
