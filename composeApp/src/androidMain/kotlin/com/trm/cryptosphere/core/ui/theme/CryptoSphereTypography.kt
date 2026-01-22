@@ -13,29 +13,176 @@ private val provider =
     certificates = R.array.com_google_android_gms_fonts_certs,
   )
 
-private val bodyFontFamily =
-  FontFamily(Font(googleFont = GoogleFont("Roboto"), fontProvider = provider))
-
-private val displayFontFamily =
-  FontFamily(Font(googleFont = GoogleFont("Roboto Serif"), fontProvider = provider))
+private val robotoSerif = GoogleFont("Roboto Serif")
+private val roboto = GoogleFont("Roboto")
 
 private val baseline = Typography()
 
 val CryptoSphereTypography =
   Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
-    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
+    displayLarge =
+      baseline.displayLarge.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.displayLarge.fontWeight!!,
+            )
+          )
+      ),
+    displayMedium =
+      baseline.displayMedium.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.displayMedium.fontWeight!!,
+            )
+          )
+      ),
+    displaySmall =
+      baseline.displaySmall.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.displaySmall.fontWeight!!,
+            )
+          )
+      ),
+    headlineLarge =
+      baseline.headlineLarge.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.headlineLarge.fontWeight!!,
+            )
+          )
+      ),
+    headlineMedium =
+      baseline.headlineMedium.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.headlineMedium.fontWeight!!,
+            )
+          )
+      ),
+    headlineSmall =
+      baseline.headlineSmall.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.headlineSmall.fontWeight!!,
+            )
+          )
+      ),
+    titleLarge =
+      baseline.titleLarge.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.titleLarge.fontWeight!!,
+            )
+          )
+      ),
+    titleMedium =
+      baseline.titleMedium.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.titleMedium.fontWeight!!,
+            )
+          )
+      ),
+    titleSmall =
+      baseline.titleSmall.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = robotoSerif,
+              fontProvider = provider,
+              weight = baseline.titleSmall.fontWeight!!,
+            )
+          )
+      ),
+    bodyLarge =
+      baseline.bodyLarge.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.bodyLarge.fontWeight!!,
+            )
+          )
+      ),
+    bodyMedium =
+      baseline.bodyMedium.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.bodyMedium.fontWeight!!,
+            )
+          )
+      ),
+    bodySmall =
+      baseline.bodySmall.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.bodySmall.fontWeight!!,
+            )
+          )
+      ),
+    labelLarge =
+      baseline.labelLarge.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.labelLarge.fontWeight!!,
+            )
+          )
+      ),
+    labelMedium =
+      baseline.labelMedium.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.labelMedium.fontWeight!!,
+            )
+          )
+      ),
+    labelSmall =
+      baseline.labelSmall.copy(
+        fontFamily =
+          FontFamily(
+            Font(
+              googleFont = roboto,
+              fontProvider = provider,
+              weight = baseline.labelSmall.fontWeight!!,
+            )
+          )
+      ),
   )
