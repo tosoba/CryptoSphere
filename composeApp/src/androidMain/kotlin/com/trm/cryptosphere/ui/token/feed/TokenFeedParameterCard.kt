@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +36,11 @@ fun TokenFeedParameterCard(
   shape: Shape,
   modifier: Modifier = Modifier,
 ) {
-  Card(modifier = modifier, shape = shape) {
+  Card(
+    modifier = modifier,
+    shape = shape,
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+  ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
       Text(
         text = parameter.label.resolve(),

@@ -60,14 +60,14 @@ fun TokenCarousel(
               BorderStroke(
                 width = 1.dp,
                 color =
-                  MaterialTheme.colorScheme.outline.copy(
+                  MaterialTheme.colorScheme.outlineVariant.copy(
                     alpha = if (token.id == highlightedTokenId) 1f else .5f
                   ),
               ),
             shape = MaterialTheme.shapes.medium,
           ),
       color =
-        MaterialTheme.colorScheme.surfaceContainer.run {
+        MaterialTheme.colorScheme.surface.run {
           if (token.id == highlightedTokenId) this else copy(alpha = alpha * .25f)
         },
       enabled = token.id != highlightedTokenId,

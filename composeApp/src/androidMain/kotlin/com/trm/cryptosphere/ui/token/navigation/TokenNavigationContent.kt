@@ -20,6 +20,7 @@ import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -77,6 +78,7 @@ fun TokenNavigationContent(
 
   Scaffold(
     modifier = Modifier.fillMaxSize(),
+    containerColor = MaterialTheme.colorScheme.surfaceContainer,
     bottomBar = {
       if (navigationSuiteType == NavigationSuiteType.NavigationBar) {
         FlexibleBottomAppBar(modifier = Modifier.fillMaxWidth()) {
