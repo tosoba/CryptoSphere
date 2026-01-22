@@ -18,10 +18,11 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
-import com.trm.cryptosphere.core.ui.ColorExtractor
-import com.trm.cryptosphere.core.ui.DynamicTheme
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
+import com.trm.cryptosphere.core.ui.theme.ColorExtractor
+import com.trm.cryptosphere.core.ui.theme.CryptoSphereTheme
+import com.trm.cryptosphere.core.ui.theme.DynamicTheme
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
@@ -30,42 +31,47 @@ import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
   var themeImageUrl: String? by rememberSaveable { mutableStateOf(null) }
 
-  DynamicTheme(imageUrl = themeImageUrl, colorExtractor = colorExtractor) {
-    SharedTransitionLayout {
-      ChildStack(
-        stack = component.stack,
-        modifier = Modifier.fillMaxSize(),
-        animation =
-          stackAnimation(
-            animator = fade() + scale(),
-            predictiveBackParams = {
-              PredictiveBackParams(
-                backHandler = component.backHandler,
-                onBack = component::onBackClicked,
-                animatable = ::materialPredictiveBackAnimatable,
+  CryptoSphereTheme(dynamicColor = false) {
+    DynamicTheme(imageUrl = themeImageUrl, colorExtractor = colorExtractor) {
+      SharedTransitionLayout {
+        ChildStack(
+          stack = component.stack,
+          modifier = Modifier.fillMaxSize(),
+          animation =
+            stackAnimation(
+              animator = fade() + scale(),
+              predictiveBackParams = {
+                PredictiveBackParams(
+                  backHandler = component.backHandler,
+                  onBack = component::onBackClicked,
+                  animatable = ::materialPredictiveBackAnimatable,
+                )
+              },
+            ),
+        ) { child ->
+          CompositionLocalProvider(
+            LocalSharedTransition provides
+              SharedTransition(
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this@ChildStack,
               )
-            },
-          ),
-      ) { child ->
-        CompositionLocalProvider(
-          LocalSharedTransition provides
-            SharedTransition(
-              sharedTransitionScope = this@SharedTransitionLayout,
-              animatedVisibilityScope = this@ChildStack,
-            )
-        ) {
-          when (val instance = child.instance) {
-            is RootComponent.Child.Home -> {
-              HomeContent(component = instance.component, onImageUrlChange = { themeImageUrl = it })
-            }
-            is RootComponent.Child.TokenNavigation -> {
-              TokenNavigationContent(
-                component = instance.component,
-                onImageUrlChange = { themeImageUrl = it },
-              )
-            }
-            is RootComponent.Child.TokenFeed -> {
-              // used only on iOS
+          ) {
+            when (val instance = child.instance) {
+              is RootComponent.Child.Home -> {
+                HomeContent(
+                  component = instance.component,
+                  onImageUrlChange = { themeImageUrl = it },
+                )
+              }
+              is RootComponent.Child.TokenNavigation -> {
+                TokenNavigationContent(
+                  component = instance.component,
+                  onImageUrlChange = { themeImageUrl = it },
+                )
+              }
+              is RootComponent.Child.TokenFeed -> {
+                // used only on iOS
+              }
             }
           }
         }

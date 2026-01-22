@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.core.ui
+package com.trm.cryptosphere.core.ui.theme
 
 import android.content.Context
 import androidx.collection.lruCache
@@ -19,6 +19,8 @@ import coil3.toBitmap
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.ktx.themeColors
 import com.trm.cryptosphere.core.base.cancellableRunCatching
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
+import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine

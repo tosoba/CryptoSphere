@@ -187,7 +187,7 @@ private fun TokenFeedRankAndSymbol(token: TokenItem, modifier: Modifier = Modifi
                 Modifier.fillMaxSize()
                   .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp),
+                    shape = RoundedCornerShape(4.dp),
                   ),
             ) {
               Text(
