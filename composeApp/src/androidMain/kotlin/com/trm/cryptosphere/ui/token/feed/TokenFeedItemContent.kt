@@ -1,7 +1,6 @@
 package com.trm.cryptosphere.ui.token.feed
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -11,13 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -40,7 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.atMost
 import coil3.compose.AsyncImage
-import com.trm.cryptosphere.core.ui.NoRippleInteractionSource
+import com.trm.cryptosphere.core.ui.TokenTagsGrid
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.util.isCompactHeight
@@ -96,7 +91,7 @@ fun TokenFeedItemContent(
           },
           token.tagNames.size,
         )
-      TokenFeedTagsGrid(
+      TokenTagsGrid(
         token = token,
         mainTokenTagNames = mainTokenTagNames,
         rowCount = rowCount,
@@ -200,30 +195,6 @@ private fun TokenFeedRankAndSymbol(token: TokenItem, modifier: Modifier = Modifi
       ),
     modifier = modifier,
   )
-}
-
-@Composable
-private fun TokenFeedTagsGrid(
-  token: TokenItem,
-  mainTokenTagNames: Set<String>,
-  rowCount: Int,
-  modifier: Modifier = Modifier,
-) {
-  LazyHorizontalStaggeredGrid(
-    rows = StaggeredGridCells.Fixed(rowCount),
-    modifier = modifier,
-    horizontalItemSpacing = 4.dp,
-    verticalArrangement = Arrangement.spacedBy(4.dp),
-  ) {
-    items(token.tagNames) { name ->
-      FilterChip(
-        onClick = {},
-        label = { Text(name) },
-        selected = name in mainTokenTagNames,
-        interactionSource = NoRippleInteractionSource(),
-      )
-    }
-  }
 }
 
 @Composable
