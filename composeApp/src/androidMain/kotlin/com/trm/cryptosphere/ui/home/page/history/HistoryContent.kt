@@ -1,6 +1,7 @@
 package com.trm.cryptosphere.ui.home.page.history
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,6 +71,7 @@ import com.trm.cryptosphere.shared.MR
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.DayOfWeekNames
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -311,9 +313,18 @@ private fun DismissBackground(dismissState: SwipeToDismissBoxState, shape: Round
 @Composable
 private fun LazyItemScope.HistoryDateHeaderItemContent(date: LocalDate) {
   Text(
-    text = LocalDate.Formats.ISO.format(date),
+    text =
+      LocalDate.Format {
+          date(LocalDate.Formats.ISO)
+          chars(", ")
+          dayOfWeek(DayOfWeekNames.ENGLISH_FULL)
+        }
+        .format(date),
     style = MaterialTheme.typography.labelLarge,
-    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).animateItem(),
+    modifier =
+      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        .basicMarquee(iterations = Int.MAX_VALUE)
+        .animateItem(),
   )
 }
 
