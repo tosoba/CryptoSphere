@@ -5,7 +5,10 @@ struct NewsFeedItemView: View {
     let item: NewsFeedItem
     let insets: EdgeInsets
     @Binding var tokenCarouselMeasuredHeight: CGFloat
-    let onTokenCarouselItemClick: (Int32, TokenCarouselConfig) -> Void
+
+    let onTokenCarouselItemClick: (TokenItem) -> Void
+    let onShareClick: () -> Void
+    let onOpenClick: () -> Void
 
     var body: some View {
         AsyncImage(
@@ -73,9 +76,7 @@ struct NewsFeedItemView: View {
             if !item.relatedTokens.isEmpty {
                 TokenCarouselViewController(
                     tokens: item.relatedTokens,
-                    onItemClick: { token in
-                        onTokenCarouselItemClick(token.id, TokenCarouselConfig())
-                    },
+                    onItemClick: onTokenCarouselItemClick,
                     measuredHeight: $tokenCarouselMeasuredHeight
                 )
                 .frame(height: $tokenCarouselMeasuredHeight.wrappedValue)
@@ -91,7 +92,7 @@ struct NewsFeedItemView: View {
     @ViewBuilder
     private var actionsView: some View {
         VStack(alignment: .trailing) {
-            Button(action: { PlatformContext.shared.shareUrl(url: item.news.link) }) {
+            Button(action: onShareClick) {
                 Image(systemName: "paperplane")
                     .font(.title2)
             }
@@ -99,7 +100,7 @@ struct NewsFeedItemView: View {
             .feedShadow()
             .clipShape(.circle)
 
-            Button(action: { PlatformContext.shared.openUrl(url: item.news.link) }) {
+            Button(action: onOpenClick) {
                 Image(systemName: "safari")
                     .font(.largeTitle)
             }

@@ -74,8 +74,13 @@ struct NewsFeedView: View {
             item: item,
             insets: insets,
             tokenCarouselMeasuredHeight: $tokenCarouselMeasuredHeight,
-            onTokenCarouselItemClick: { id, config in
-                component.onTokenCarouselItemClick(KotlinInt(value: id), config)
+            onTokenCarouselItemClick: { token in
+                component.onTokenCarouselItemClick(KotlinInt(value: token.id), TokenCarouselConfig())
+            },
+            onShareClick: { PlatformContext.shared.shareUrl(url: item.news.link) },
+            onOpenClick: {
+                PlatformContext.shared.openUrl(url: item.news.link)
+                component.viewModel.onLinkClick(news: item.news)
             }
         )
         .scrollTransition(.animated, axis: .vertical) { content, phase in
