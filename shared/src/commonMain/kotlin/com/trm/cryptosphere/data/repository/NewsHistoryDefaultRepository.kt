@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.trm.cryptosphere.core.base.nowDateTime
+import com.trm.cryptosphere.core.base.nowInstant
 import com.trm.cryptosphere.data.db.dao.NewsHistoryDao
 import com.trm.cryptosphere.data.db.entity.NewsHistoryEntity
 import com.trm.cryptosphere.data.db.mapper.toDomain
@@ -22,7 +22,7 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
         source = news.source,
         url = news.link,
         imgUrl = news.imgUrl,
-        visitedAt = nowDateTime(),
+        visitedAt = nowInstant(),
       )
     )
   }
@@ -34,7 +34,7 @@ class NewsHistoryDefaultRepository(private val dao: NewsHistoryDao) : NewsHistor
         source = news.source,
         url = news.url,
         imgUrl = news.imgUrl,
-        visitedAt = nowDateTime(),
+        visitedAt = nowInstant(),
       )
     )
   }

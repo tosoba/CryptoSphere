@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.LocalDateTime
+import kotlin.time.Instant
 
 @Entity(tableName = "news_history", indices = [Index(value = ["url"], unique = true)])
 data class NewsHistoryEntity(
@@ -13,5 +13,5 @@ data class NewsHistoryEntity(
   @ColumnInfo(name = "source") val source: String,
   @ColumnInfo(name = "url") val url: String,
   @ColumnInfo(name = "img_url") val imgUrl: String?,
-  @ColumnInfo(name = "visited_at") val visitedAt: LocalDateTime,
+  @ColumnInfo(name = "visited_at") val visitedAt: Instant,
 )

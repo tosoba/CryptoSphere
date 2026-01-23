@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.LocalDateTime
+import kotlin.time.Instant
 
 @Entity(
   tableName = "token_history",
@@ -16,5 +16,5 @@ import kotlinx.datetime.LocalDateTime
 data class TokenHistoryEntity(
   @PrimaryKey(autoGenerate = true) val id: Long = 0L,
   @ColumnInfo(name = "token_id") val tokenId: Int,
-  @ColumnInfo(name = "visited_at") val visitedAt: LocalDateTime,
+  @ColumnInfo(name = "visited_at") val visitedAt: Instant,
 )

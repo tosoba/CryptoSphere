@@ -1,5 +1,6 @@
 package com.trm.cryptosphere.domain.model
 
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 
 data class NewsItem(
@@ -12,5 +13,5 @@ data class NewsItem(
   val imgUrl: String?,
   val relatedCoins: List<String>,
   val link: String,
-  val fetchedDate: LocalDateTime,
+  val fetchedAt: Instant,
 )

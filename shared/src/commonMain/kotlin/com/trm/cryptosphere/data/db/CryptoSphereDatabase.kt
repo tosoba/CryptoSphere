@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
-import com.trm.cryptosphere.data.db.converter.LocalDateTimeConverter
+import com.trm.cryptosphere.data.db.converter.InstantConverter
 import com.trm.cryptosphere.data.db.converter.StringListConverter
 import com.trm.cryptosphere.data.db.dao.NewsHistoryDao
 import com.trm.cryptosphere.data.db.dao.TokenDao
@@ -28,7 +28,7 @@ import com.trm.cryptosphere.data.db.entity.TokenTagEntity
   version = 1,
 )
 @ConstructedBy(CryptoSphereDatabaseConstructor::class)
-@TypeConverters(StringListConverter::class, LocalDateTimeConverter::class)
+@TypeConverters(StringListConverter::class, InstantConverter::class)
 abstract class CryptoSphereDatabase : RoomDatabase() {
   abstract fun tokenDao(): TokenDao
 

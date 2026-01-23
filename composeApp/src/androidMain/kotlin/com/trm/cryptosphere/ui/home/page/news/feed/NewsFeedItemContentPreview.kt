@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
 import com.trm.cryptosphere.core.base.nowDateTime
+import com.trm.cryptosphere.core.base.nowInstant
 import com.trm.cryptosphere.core.ui.SharedTransitionPreview
 import com.trm.cryptosphere.domain.model.NewsFeedItem
 import com.trm.cryptosphere.domain.model.NewsItem
@@ -32,7 +33,7 @@ private fun NewsFeedItemContentPreview(
               relatedCoins = emptyList(),
               link =
                 "https://u.today/dogecoin-account-drops-casual-sup-tweet-whats-behind-it?utm_medium=referral&utm_source=coinstats",
-              fetchedDate = nowDateTime(),
+              fetchedAt = nowInstant(),
             ),
           relatedTokens = relatedTokens,
         ),
