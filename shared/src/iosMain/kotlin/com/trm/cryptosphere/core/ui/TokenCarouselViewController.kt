@@ -15,12 +15,12 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.trm.cryptosphere.domain.model.TokenItem
 import platform.UIKit.UIViewController
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 fun TokenCarouselViewController(
   tokens: List<TokenItem>,
   onItemClick: (TokenItem) -> Unit,
   heightChanged: (Int) -> Unit,
 ): UIViewController =
+  @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
   ComposeUIViewController(configure = { opaque = false }) {
     MaterialTheme {
       TokenCarousel(
