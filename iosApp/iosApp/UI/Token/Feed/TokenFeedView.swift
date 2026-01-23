@@ -14,6 +14,8 @@ struct TokenFeedView: View {
         scrolledItemId != nil && navigationToken?.id != scrolledItemId
     }
 
+    @State private var tokenTagsGridMeasuredHeight: CGFloat = 120
+
     init(_ component: TokenFeedComponent) {
         self.component = component
 
@@ -86,7 +88,8 @@ struct TokenFeedView: View {
             token: item,
             mainTokenTagNames: Set(feedItems.first?.tagNames ?? []),
             availableHeight: geometry.size.height,
-            safeAreaInsets: geometry.safeAreaInsets
+            safeAreaInsets: geometry.safeAreaInsets,
+            tokenTagsGridMeasuredHeight: $tokenTagsGridMeasuredHeight
         )
         .containerRelativeFrame([.vertical, .horizontal])
     }
@@ -99,6 +102,7 @@ struct TokenFeedPagerItem: View {
     let mainTokenTagNames: Set<String>
     let availableHeight: CGFloat
     let safeAreaInsets: EdgeInsets
+    @Binding var tokenTagsGridMeasuredHeight: CGFloat
 
     var body: some View {
         Group {
@@ -120,7 +124,13 @@ struct TokenFeedPagerItem: View {
                 tokenLogo
                 symbolWithRank
                 if !token.tagNames.isEmpty {
-                    tagGrid(rowCount: 2)
+                    TokenTagsGridViewController(
+                        token: token,
+                        mainTokenTagNames: mainTokenTagNames,
+                        rowCount: 3,
+                        measuredHeight: $tokenTagsGridMeasuredHeight
+                    )
+                    .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
                 }
                 Spacer()
             }
@@ -142,9 +152,13 @@ struct TokenFeedPagerItem: View {
             symbolWithRank
 
             if !token.tagNames.isEmpty {
-                let rowCount = min(token.tagNames.count, availableHeight > 900 ? 5 : 3)
-                tagGrid(rowCount: rowCount)
-                    .padding(.top, 8)
+                TokenTagsGridViewController(
+                    token: token,
+                    mainTokenTagNames: mainTokenTagNames,
+                    rowCount: Int32(min(token.tagNames.count, availableHeight > 900 ? 5 : 3)),
+                    measuredHeight: $tokenTagsGridMeasuredHeight
+                )
+                .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
             }
 
             tokenFeedParameters
@@ -192,54 +206,10 @@ struct TokenFeedPagerItem: View {
     }
 
     @ViewBuilder
-    private func tagGrid(rowCount: Int) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHGrid(
-                rows: Array(repeating: GridItem(.fixed(32), spacing: 4), count: rowCount),
-                alignment: .top,
-                spacing: 4
-            ) {
-                ForEach(token.tagNames, id: \.self) { tagName in
-                    TagChip(
-                        name: tagName,
-                        isSelected: mainTokenTagNames.contains(tagName)
-                    )
-                }
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: CGFloat(rowCount * 32 + (rowCount - 1) * 4))
-    }
-
-    @ViewBuilder
     private var tokenFeedParameters: some View {
         let parameters = TokenFeedParameterKt.tokenFeedParameters(token: token)
         let maxCards = Int(availableHeight / 70) // Approximate card height
         TokenFeedParameterCardsColumn(parameters: Array(parameters.prefix(maxCards)))
-    }
-}
-
-// MARK: - Tag Chip
-
-struct TagChip: View {
-    let name: String
-    let isSelected: Bool
-
-    var body: some View {
-        Text(name)
-            .font(.caption)
-            .lineLimit(1)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .frame(height: 32)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(isSelected ? Color.accentColor.opacity(0.2) : Color.secondary.opacity(0.1))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1)
-            )
     }
 }
 

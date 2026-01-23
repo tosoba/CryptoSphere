@@ -21,7 +21,7 @@ private val displayFontFamily =
 
 private val baseline = Typography()
 
-val CryptoSphereTypography =
+val Typography =
   Typography(
     displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),

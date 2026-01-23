@@ -31,7 +31,7 @@ import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
   var themeImageUrl: String? by rememberSaveable { mutableStateOf(null) }
 
-  CryptoSphereTheme(dynamicColor = false) {
+  CryptoSphereTheme {
     DynamicTheme(imageUrl = themeImageUrl, colorExtractor = colorExtractor) {
       SharedTransitionLayout {
         ChildStack(
