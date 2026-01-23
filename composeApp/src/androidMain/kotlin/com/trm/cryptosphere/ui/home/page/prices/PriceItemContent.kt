@@ -74,7 +74,7 @@ private fun PriceItemTokenQuoteColumn(token: TokenItem) {
   Column(horizontalAlignment = Alignment.End) {
     Text(
       text = "$${token.quote.price.fullDecimalFormat()}",
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.titleMedium,
       color = MaterialTheme.colorScheme.onSurface,
     )
 
@@ -92,7 +92,7 @@ private fun PriceItemTokenQuoteColumn(token: TokenItem) {
       Text(
         text = "${percentChange24h.fullDecimalFormat(significantDecimals = 2, signed = true)}%",
         style =
-          MaterialTheme.typography.bodyMedium.copy(
+          MaterialTheme.typography.titleSmall.copy(
             fontWeight = FontWeight.Medium,
             color = if (valueChangePositive) Color.Unspecified else Color.White,
           ),

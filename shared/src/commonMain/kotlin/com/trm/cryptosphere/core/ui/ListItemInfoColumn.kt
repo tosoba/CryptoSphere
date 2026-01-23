@@ -14,7 +14,7 @@ fun RowScope.ListItemInfoColumn(topText: String, bottomText: String) {
   Column(modifier = Modifier.weight(1f)) {
     Text(
       text = topText,
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.titleMedium,
       color = MaterialTheme.colorScheme.onSurface,
       maxLines = 1,
       modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),
@@ -22,7 +22,7 @@ fun RowScope.ListItemInfoColumn(topText: String, bottomText: String) {
 
     Text(
       text = bottomText,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.titleSmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = 1,
       modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE),

@@ -165,7 +165,7 @@ private fun TokenFeedRankAndSymbol(token: TokenItem, modifier: Modifier = Modifi
       buildAnnotatedString {
         appendInlineContent(rankId)
         withStyle(
-          MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Medium).toSpanStyle()
+          MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold).toSpanStyle()
         ) {
           append(' ')
           append(token.symbol)
@@ -209,7 +209,6 @@ private fun TokenFeedTagsGrid(
   rowCount: Int,
   modifier: Modifier = Modifier,
 ) {
-
   LazyHorizontalStaggeredGrid(
     rows = StaggeredGridCells.Fixed(rowCount),
     modifier = modifier,
