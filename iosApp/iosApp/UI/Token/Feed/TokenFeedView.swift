@@ -84,7 +84,7 @@ struct TokenFeedView: View {
     }
 
     @ViewBuilder
-    private func itemView(_ item: TokenItem, at _: Int, in geometry: GeometryProxy) -> some View {
+    private func itemView(_ item: TokenItem, at index: Int, in geometry: GeometryProxy) -> some View {
         TokenFeedPagerItem(
             token: item,
             mainTokenTagNames: Set(feedItems.first?.tagNames ?? []),
@@ -92,6 +92,11 @@ struct TokenFeedView: View {
             tokenTagsGridMeasuredHeight: $tokenTagsGridMeasuredHeight
         )
         .containerRelativeFrame([.vertical, .horizontal])
+        .onAppear {
+            if loadStates.canLoadMoreItems() && feedItems.count - index == TokenFeedViewModel.companion.PREFETCH_DISTANCE {
+                component.viewModel.tokensPagingState.loadMore()
+            }
+        }
     }
 }
 
