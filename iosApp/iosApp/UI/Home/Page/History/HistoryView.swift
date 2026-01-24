@@ -13,6 +13,10 @@ struct HistoryView: View {
 
     @State private var selectedPage: HistoryPage = .news
     @State private var showDeleteAllConfirmation = false
+    private var deleteAllDisabled: Bool {
+        (newsItems.isEmpty && selectedPage == .news)
+            || (tokenItems.isEmpty && selectedPage == .tokens)
+    }
 
     init(component: HistoryComponent) {
         self.component = component
@@ -27,18 +31,30 @@ struct HistoryView: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            SearchBarView(
-                placeholder: String(\.search_history),
-                query: Binding(
-                    get: { query },
-                    set: { newQuery in viewModel.onQueryChange(newQuery: newQuery) }
+            HStack(spacing: 8) {
+                SearchBarView(
+                    placeholder: String(\.search_history),
+                    query: Binding(
+                        get: { query },
+                        set: { newQuery in viewModel.onQueryChange(newQuery: newQuery) }
+                    )
                 )
-            )
+
+                Button(action: { showDeleteAllConfirmation = true }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(deleteAllDisabled ? .gray : .red)
+                        .frame(width: 44, height: 44)
+                }
+                .disabled(deleteAllDisabled)
+            }
             .padding(.horizontal)
 
             Picker("History Page", selection: $selectedPage.animation(.default)) {
-                Text(String(\.news)).tag(HistoryPage.news)
-                Text(String(\.tokens)).tag(HistoryPage.tokens)
+                Text(String(\.news))
+                    .tag(HistoryPage.news)
+
+                Text(String(\.tokens))
+                    .tag(HistoryPage.tokens)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
@@ -75,6 +91,20 @@ struct HistoryView: View {
                 }
             }
             .animation(.default, value: selectedPage)
+        }
+        .alert(
+            String(\.delete_history),
+            isPresented: $showDeleteAllConfirmation
+        ) {
+            Button(String(\.cancel), role: .cancel) {
+                showDeleteAllConfirmation = false
+            }
+
+            Button(String(\.confirm), role: .destructive) {
+                viewModel.onDeleteHistoryClick(page: selectedPage)
+            }
+        } message: {
+            Text(String(\.delete_history_message))
         }
     }
 }
