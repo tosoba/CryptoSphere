@@ -50,7 +50,7 @@ struct PriceItemView: View {
                 .foregroundColor(.primary)
 
             let percentChange24h = token.quote.percentChange24h
-            Text("\(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))%")
+            Text(" \(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))% ")
                 .valueChangeBox(isPositive: percentChange24h >= 0)
         }
     }

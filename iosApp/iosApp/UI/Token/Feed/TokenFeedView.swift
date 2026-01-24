@@ -189,11 +189,11 @@ struct TokenFeedPagerItem: View {
     @ViewBuilder
     private var symbolWithRank: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text("#\(token.cmcRank)")
+            Text(" #\(token.cmcRank) ")
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .padding(.horizontal, 4)
-                .background(.secondary.opacity(0.2))
+                .padding(.horizontal, 2)
+                .background(Color(.systemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Text(token.symbol)
