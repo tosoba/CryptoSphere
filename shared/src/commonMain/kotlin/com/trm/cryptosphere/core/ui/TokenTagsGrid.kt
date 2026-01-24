@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ fun TokenTagsGrid(
   rowCount: Int,
   modifier: Modifier = Modifier,
   gridState: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
+  chipColors: SelectableChipColors = FilterChipDefaults.filterChipColors(),
 ) {
   LazyHorizontalStaggeredGrid(
     rows = StaggeredGridCells.Fixed(rowCount),
@@ -33,6 +36,7 @@ fun TokenTagsGrid(
         onClick = {},
         label = { Text(name) },
         selected = name in mainTokenTagNames,
+        colors = chipColors,
         interactionSource = NoRippleInteractionSource(),
       )
     }

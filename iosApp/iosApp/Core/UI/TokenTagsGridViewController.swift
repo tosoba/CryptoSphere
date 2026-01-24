@@ -14,6 +14,7 @@ struct TokenTagsGridViewController: UIViewControllerRepresentable {
             token: token,
             mainTokenTagNames: mainTokenTagNames,
             rowCount: rowCount,
+            selectedChipContainerColor: .tertiarySystemBackground,
             heightChanged: { height in
                 measuredHeight = CGFloat(truncating: height) / UIScreen.main.scale
             },
