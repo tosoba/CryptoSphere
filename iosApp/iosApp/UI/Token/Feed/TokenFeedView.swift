@@ -51,6 +51,7 @@ struct TokenFeedView: View {
             }
             .scrollPosition(id: $scrolledItemId, anchor: .top)
             .ignoresSafeArea(.container, edges: .all)
+            .background(Color(.systemGroupedBackground))
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
             .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
@@ -295,7 +296,7 @@ struct TokenFeedParameterCard: View {
                 bottomTrailingRadius: cornerRadius.bottom,
                 topTrailingRadius: cornerRadius.top
             )
-            .fill(Color(uiColor: .secondarySystemBackground))
+            .fill(Color(uiColor: .systemBackground))
         )
     }
 }
