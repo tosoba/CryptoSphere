@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ErrorOccurredCard: View {
+struct ErrorOccurredCardView: View {
     let isVisible: Bool
     let onRetryClick: () -> Void
 
@@ -21,9 +21,9 @@ struct ErrorOccurredCard: View {
                 .buttonStyle(.plain)
                 .padding(.trailing, 16)
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, 16)
             .background(.errorContainer)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .frame(
                 maxWidth: horizontalSizeClass == .regular ? .infinity : nil
             )

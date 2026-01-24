@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SearchBar: View {
+struct SearchBarView: View {
     let placeholder: String
     @Binding var query: String
 

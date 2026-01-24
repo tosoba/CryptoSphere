@@ -5,29 +5,16 @@ struct HistoryItemView: View {
     let title: String
     let subtitle: String
     let visitedAt: LocalTime
+
     let onClick: () -> Void
     let onDelete: () -> Void
 
     var body: some View {
         Button(action: onClick) {
             HStack(spacing: 16) {
-                AsyncImage(url: URL(string: imageUrl ?? "")) { image in
-                    image.resizable().aspectRatio(contentMode: .fit)
-                } placeholder: {
-                    Color(.systemGray4)
-                }
-                .frame(width: 48, height: 48)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                ListItemImageView(imageUrl: imageUrl)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .lineLimit(1)
+                ListItemInfoView(title: title, subtitle: subtitle)
 
                 Spacer()
 
@@ -35,9 +22,9 @@ struct HistoryItemView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            .padding(16)
+            .padding()
             .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
         .contextMenu {

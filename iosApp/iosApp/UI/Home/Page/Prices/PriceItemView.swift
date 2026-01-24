@@ -3,43 +3,28 @@ import SwiftUI
 
 struct PriceItemView: View {
     let token: TokenItem
+    let onClick: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
-            Text("\(token.cmcRank)")
-                .font(.title2)
-                .foregroundColor(.primary)
+        Button(action: onClick) {
+            HStack(spacing: 16) {
+                Text("\(token.cmcRank)")
+                    .font(.title2)
+                    .foregroundColor(.primary)
 
-            AsyncImage(
-                url: URL(string: token.logoUrl),
-                content: { image in image.resizable().aspectRatio(contentMode: .fit) },
-                placeholder: { ProgressView() }
-            )
-            .frame(width: 48, height: 48)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+                ListItemImageView(imageUrl: token.logoUrl)
 
-            tokenInfo
+                ListItemInfoView(title: token.name, subtitle: token.symbol)
 
-            Spacer()
+                Spacer()
 
-            priceInfo
+                priceInfo
+            }
+            .padding()
+            .background(Color(.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var tokenInfo: some View {
-        VStack(alignment: .leading) {
-            Text(token.name)
-                .font(.headline)
-                .foregroundColor(.primary)
-
-            Text(token.symbol)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-        .lineLimit(1)
+        .buttonStyle(.plain)
     }
 
     private var priceInfo: some View {
@@ -51,7 +36,7 @@ struct PriceItemView: View {
 
             let percentChange24h = token.quote.percentChange24h
             Text(" \(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))% ")
-                .valueChangeBox(isPositive: percentChange24h >= 0)
+                .valueChangeText(isPositive: percentChange24h >= 0)
         }
     }
 }

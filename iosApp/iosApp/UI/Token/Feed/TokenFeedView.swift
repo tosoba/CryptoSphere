@@ -36,7 +36,7 @@ struct TokenFeedView: View {
         }
         .animation(.default, value: loadStates?.refresh)
     }
-    
+
     var feedView: some View {
         GeometryReader { geometry in
             ScrollView(.vertical) {
@@ -65,7 +65,7 @@ struct TokenFeedView: View {
         }
         .animation(.default, value: navigateToTokenFeedToolbarItemVisible)
     }
-    
+
     @ViewBuilder
     private var navigateToTokenFeedButton: some View {
         Button(

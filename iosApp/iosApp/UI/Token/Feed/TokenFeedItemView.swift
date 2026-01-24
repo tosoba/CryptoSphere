@@ -27,6 +27,7 @@ struct TokenFeedItemView: View {
         HStack(spacing: 16) {
             VStack(alignment: .center, spacing: 16) {
                 tokenLogo
+
                 symbolWithRank
 
                 if !token.tagNames.isEmpty {
@@ -50,6 +51,7 @@ struct TokenFeedItemView: View {
     private var regularLayout: some View {
         VStack(spacing: 16) {
             tokenLogo
+
             symbolWithRank
 
             if !token.tagNames.isEmpty {
@@ -73,16 +75,21 @@ struct TokenFeedItemView: View {
 
     @ViewBuilder
     private var tokenLogo: some View {
-        AsyncImage(url: URL(string: token.logoUrl)) { phase in
+        AsyncImage(
+            url: URL(string: token.logoUrl),
+            transaction: Transaction(animation: .default)
+        ) { phase in
             switch phase {
+            case .empty:
+                ProgressView()
             case let .success(image):
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-            case .failure, .empty:
-                Color.gray.opacity(0.2)
-            @unknown default:
-                Color.gray.opacity(0.2)
+                    .scaledToFill()
+            default:
+                Image(systemName: "bitcoinsign")
+                    .resizable()
+                    .scaledToFit()
             }
         }
         .frame(maxWidth: 108, maxHeight: 108)

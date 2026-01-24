@@ -17,13 +17,15 @@ struct NewsFeedItemView: View {
         ) { phase in
             switch phase {
             case .empty:
-                LargeCircularProgressView().tint(.white).frame(maxHeight: .infinity)
+                LargeCircularProgressView()
+                    .tint(.white)
+                    .frame(maxHeight: .infinity)
             case let .success(image):
-                image.resizable().scaledToFill()
-            case .failure:
+                image
+                    .resizable()
+                    .scaledToFill()
+            default:
                 placeholderImageView
-            @unknown default:
-                EmptyView()
             }
         }
         .containerRelativeFrame([.vertical, .horizontal])

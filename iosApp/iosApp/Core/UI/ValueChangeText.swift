@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension Text {
-    func valueChangeBox(isPositive: Bool) -> some View {
+    func valueChangeText(isPositive: Bool) -> some View {
         font(.subheadline)
             .padding(.horizontal, 2)
             .foregroundColor(isPositive ? .primary : .white)

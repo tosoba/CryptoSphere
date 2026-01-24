@@ -27,7 +27,7 @@ struct HistoryView: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            SearchBar(
+            SearchBarView(
                 placeholder: String(\.search_history),
                 query: Binding(
                     get: { query },

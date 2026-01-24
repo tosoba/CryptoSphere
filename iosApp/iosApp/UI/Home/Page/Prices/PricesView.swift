@@ -19,7 +19,7 @@ struct PricesView: View {
     @ViewBuilder
     var body: some View {
         VStack {
-            SearchBar(
+            SearchBarView(
                 placeholder: String(\.search_tokens),
                 query: Binding(
                     get: { query },
@@ -51,17 +51,14 @@ struct PricesView: View {
         ScrollView {
             LazyVStack(spacing: 8) {
                 ForEach(Array(tokens.enumerated()), id: \.element.id) { index, token in
-                    Button(
-                        action: {
-                            component.onTokenClick(KotlinInt(value: token.id), TokenCarouselConfig())
+                    PriceItemView(
+                        token: token,
+                        onClick: { component.onTokenClick(KotlinInt(value: token.id), TokenCarouselConfig()) }
+                    )
+                    .onAppear {
+                        if loadStates.canLoadMoreItems() && tokens.count - index == PricesViewModel.companion.PAGE_SIZE {
+                            component.viewModel.tokensPagingState.loadMore()
                         }
-                    ) {
-                        PriceItemView(token: token)
-                            .onAppear {
-                                if loadStates.canLoadMoreItems() && tokens.count - index == PricesViewModel.companion.PAGE_SIZE {
-                                    component.viewModel.tokensPagingState.loadMore()
-                                }
-                            }
                     }
                 }
             }

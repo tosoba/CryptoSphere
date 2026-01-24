@@ -58,7 +58,7 @@ struct NewsFeedView: View {
             .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
             .overlay(alignment: .top) {
                 let errorVisible = if case .error = onEnum(of: loadStates?.append) { true } else { false }
-                ErrorOccurredCard(
+                ErrorOccurredCardView(
                     isVisible: errorVisible,
                     onRetryClick: { component.viewModel.newsPagingState.retry() }
                 )

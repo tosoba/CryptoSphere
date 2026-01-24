@@ -21,7 +21,7 @@ struct TokenFeedParameterCardView: View {
                     let changeText = valueChangeFormat(valueChange)
                     if !changeText.isEmpty {
                         Text(changeText)
-                            .valueChangeBox(isPositive: valueChange >= 0)
+                            .valueChangeText(isPositive: valueChange >= 0)
                     }
                 }
             }
