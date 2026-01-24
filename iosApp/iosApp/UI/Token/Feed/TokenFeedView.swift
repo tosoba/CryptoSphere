@@ -180,7 +180,7 @@ struct TokenFeedPagerItem: View {
                 Color.gray.opacity(0.2)
             }
         }
-        .frame(maxWidth: 108)
+        .frame(maxWidth: 108, maxHeight: 108)
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
