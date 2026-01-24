@@ -5,7 +5,7 @@ struct ListItemImageView: View {
 
     var body: some View {
         AsyncImage(
-            url: URL(string: imageUrl ?? ""),
+            url: imageUrl.flatMap { URL(string: $0) },
             transaction: Transaction(animation: .default)
         ) { phase in
             switch phase {

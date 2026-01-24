@@ -12,7 +12,7 @@ struct NewsFeedItemView: View {
 
     var body: some View {
         AsyncImage(
-            url: URL(string: item.news.imgUrl ?? ""),
+            url: item.news.imgUrl.flatMap { URL(string: $0) },
             transaction: Transaction(animation: .default)
         ) { phase in
             switch phase {
