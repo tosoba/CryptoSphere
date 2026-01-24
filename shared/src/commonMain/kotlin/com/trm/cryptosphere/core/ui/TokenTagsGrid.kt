@@ -2,8 +2,10 @@ package com.trm.cryptosphere.core.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,9 +19,11 @@ fun TokenTagsGrid(
   mainTokenTagNames: Set<String>,
   rowCount: Int,
   modifier: Modifier = Modifier,
+  gridState: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
 ) {
   LazyHorizontalStaggeredGrid(
     rows = StaggeredGridCells.Fixed(rowCount),
+    state = gridState,
     modifier = modifier,
     horizontalItemSpacing = 4.dp,
     verticalArrangement = Arrangement.spacedBy(4.dp),
