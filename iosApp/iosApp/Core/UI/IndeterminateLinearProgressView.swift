@@ -13,7 +13,7 @@ struct IndeterminateLinearProgressView: View {
             .readWidth()
             .overlay(
                 Rectangle()
-                    .foregroundColor(Color.accentColor)
+                    .foregroundColor(.accentColor)
                     .frame(width: width * 0.26, height: 6)
                     .clipShape(Capsule())
                     .offset(x: -width * 0.6, y: 0)

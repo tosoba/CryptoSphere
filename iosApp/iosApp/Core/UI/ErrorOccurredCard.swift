@@ -22,7 +22,7 @@ struct ErrorOccurredCard: View {
                 .padding(.trailing, 16)
             }
             .padding(.vertical, 12)
-            .background(Color.errorContainer)
+            .background(.errorContainer)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .frame(
                 maxWidth: horizontalSizeClass == .regular ? .infinity : nil

@@ -104,7 +104,7 @@ struct TokenFeedPagerItem: View {
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    
+
     var body: some View {
         Group {
             if verticalSizeClass == .compact {
@@ -123,7 +123,7 @@ struct TokenFeedPagerItem: View {
             VStack(alignment: .center, spacing: 16) {
                 tokenLogo
                 symbolWithRank
-                
+
                 if !token.tagNames.isEmpty {
                     TokenTagsGridViewController(
                         token: token,
@@ -180,22 +180,20 @@ struct TokenFeedPagerItem: View {
                 Color.gray.opacity(0.2)
             }
         }
-        .frame(maxWidth: 120, maxHeight: 120)
+        .frame(maxWidth: 108)
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
     @ViewBuilder
     private var symbolWithRank: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 4) {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text("#\(token.cmcRank)")
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .padding(.horizontal, 4)
-                .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.secondary.opacity(0.2))
-                )
+                .background(.secondary.opacity(0.2))
+                .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Text(token.symbol)
                 .font(.largeTitle)
@@ -206,29 +204,29 @@ struct TokenFeedPagerItem: View {
     @ViewBuilder
     private var tokenFeedParameters: some View {
         GeometryReader { geometry in
-            TokenFeedParameterCardsColumn(
-                parameters: Array(
-                    TokenFeedParameterKt.tokenFeedParameters(token: token)
-                        .prefix(Int(geometry.size.height / calculateTokenParameterCardHeight()))
-                )
+            let totalHeight = geometry.size.height
+            let cardHeight = calculateTokenParameterCardHeight()
+            let parameters = Array(
+                TokenFeedParameterKt.tokenFeedParameters(token: token)
+                    .prefix(Int(totalHeight / cardHeight))
             )
+            TokenFeedParameterCardsColumn(parameters: parameters)
         }
     }
-    
+
     private func calculateTokenParameterCardHeight() -> CGFloat {
         let verticalPadding: CGFloat = 8 * 2
         let vStackSpacing: CGFloat = 4
-        
-        let footnoteHeight = "A".size(
-            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .footnote)]
+
+        let valueTextHeight = "A".size(
+            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .headline)]
         ).height
-        let title3Height = "A".size(
-            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .title3)]
+        let valueChangeTextHeight = "A".size(
+            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .subheadline)]
         ).height
-        
-        let hStackHeight = max(title3Height, footnoteHeight)
-        
-        return footnoteHeight + vStackSpacing + hStackHeight + verticalPadding
+        let hStackHeight = max(valueChangeTextHeight, valueTextHeight)
+
+        return valueTextHeight + vStackSpacing + hStackHeight + verticalPadding
     }
 }
 
@@ -273,8 +271,7 @@ struct TokenFeedParameterCard: View {
 
             HStack(spacing: 8) {
                 Text(parameter.valueFormat(parameter.value))
-                    .font(.title3)
-                    .fontWeight(.medium)
+                    .font(.headline)
 
                 if let valueChange = parameter.valueChange as? Double,
                    let valueChangeFormat = parameter.valueChangeFormat
@@ -282,13 +279,7 @@ struct TokenFeedParameterCard: View {
                     let changeText = valueChangeFormat(valueChange)
                     if !changeText.isEmpty {
                         Text(changeText)
-                            .font(.footnote)
-                            .foregroundColor(valueChange >= 0.0 ? .black : .white)
-                            .padding(.horizontal, 4)
-                            .background(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(valueChange >= 0.0 ? .green : .red)
-                            )
+                            .valueChangeBox(isPositive: valueChange >= 0)
                     }
                 }
             }
