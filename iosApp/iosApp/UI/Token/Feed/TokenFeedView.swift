@@ -87,7 +87,6 @@ struct TokenFeedView: View {
         TokenFeedPagerItem(
             token: item,
             mainTokenTagNames: Set(feedItems.first?.tagNames ?? []),
-            availableHeight: geometry.size.height,
             safeAreaInsets: geometry.safeAreaInsets,
             tokenTagsGridMeasuredHeight: $tokenTagsGridMeasuredHeight
         )
@@ -100,29 +99,31 @@ struct TokenFeedView: View {
 struct TokenFeedPagerItem: View {
     let token: TokenItem
     let mainTokenTagNames: Set<String>
-    let availableHeight: CGFloat
     let safeAreaInsets: EdgeInsets
     @Binding var tokenTagsGridMeasuredHeight: CGFloat
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    
     var body: some View {
         Group {
-            if availableHeight < 600 {
+            if verticalSizeClass == .compact {
                 compactLayout
             } else {
                 regularLayout
             }
         }
-        .padding(.horizontal)
-        .padding(.top, max(safeAreaInsets.top, 16))
-        .padding(.bottom, max(safeAreaInsets.bottom, 16))
+        .padding(safeAreaInsets)
+        .padding()
     }
 
     @ViewBuilder
     private var compactLayout: some View {
-        HStack(spacing: 32) {
-            VStack(alignment: .center, spacing: 8) {
+        HStack(spacing: 16) {
+            VStack(alignment: .center, spacing: 16) {
                 tokenLogo
                 symbolWithRank
+                
                 if !token.tagNames.isEmpty {
                     TokenTagsGridViewController(
                         token: token,
@@ -132,22 +133,17 @@ struct TokenFeedPagerItem: View {
                     )
                     .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
                 }
-                Spacer()
             }
             .frame(maxWidth: .infinity)
 
-            VStack {
-                Spacer()
-                tokenFeedParameters
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
+            tokenFeedParameters
+                .frame(maxWidth: .infinity)
         }
     }
 
     @ViewBuilder
     private var regularLayout: some View {
-        VStack(alignment: .center, spacing: 8) {
+        VStack(spacing: 16) {
             tokenLogo
             symbolWithRank
 
@@ -155,16 +151,18 @@ struct TokenFeedPagerItem: View {
                 TokenTagsGridViewController(
                     token: token,
                     mainTokenTagNames: mainTokenTagNames,
-                    rowCount: Int32(min(token.tagNames.count, availableHeight > 900 ? 5 : 3)),
+                    rowCount: Int32(
+                        min(
+                            token.tagNames.count,
+                            verticalSizeClass == .regular && horizontalSizeClass == .regular ? 5 : 3
+                        )
+                    ),
                     measuredHeight: $tokenTagsGridMeasuredHeight
                 )
                 .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
             }
 
             tokenFeedParameters
-                .padding(.top, 16)
-
-            Spacer()
         }
     }
 
@@ -182,7 +180,7 @@ struct TokenFeedPagerItem: View {
                 Color.gray.opacity(0.2)
             }
         }
-        .frame(maxWidth: 96, maxHeight: 96)
+        .frame(maxWidth: 120, maxHeight: 120)
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
@@ -207,9 +205,30 @@ struct TokenFeedPagerItem: View {
 
     @ViewBuilder
     private var tokenFeedParameters: some View {
-        let parameters = TokenFeedParameterKt.tokenFeedParameters(token: token)
-        let maxCards = Int(availableHeight / 70) // Approximate card height
-        TokenFeedParameterCardsColumn(parameters: Array(parameters.prefix(maxCards)))
+        GeometryReader { geometry in
+            TokenFeedParameterCardsColumn(
+                parameters: Array(
+                    TokenFeedParameterKt.tokenFeedParameters(token: token)
+                        .prefix(Int(geometry.size.height / calculateTokenParameterCardHeight()))
+                )
+            )
+        }
+    }
+    
+    private func calculateTokenParameterCardHeight() -> CGFloat {
+        let verticalPadding: CGFloat = 8 * 2
+        let vStackSpacing: CGFloat = 4
+        
+        let footnoteHeight = "A".size(
+            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .footnote)]
+        ).height
+        let title3Height = "A".size(
+            withAttributes: [.font: UIFont.preferredFont(forTextStyle: .title3)]
+        ).height
+        
+        let hStackHeight = max(title3Height, footnoteHeight)
+        
+        return footnoteHeight + vStackSpacing + hStackHeight + verticalPadding
     }
 }
 
@@ -251,13 +270,11 @@ struct TokenFeedParameterCard: View {
             Text(String(parameter.label))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .lineLimit(1)
 
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
+            HStack(spacing: 8) {
                 Text(parameter.valueFormat(parameter.value))
                     .font(.title3)
                     .fontWeight(.medium)
-                    .lineLimit(1)
 
                 if let valueChange = parameter.valueChange as? Double,
                    let valueChangeFormat = parameter.valueChangeFormat
@@ -265,18 +282,18 @@ struct TokenFeedParameterCard: View {
                     let changeText = valueChangeFormat(valueChange)
                     if !changeText.isEmpty {
                         Text(changeText)
-                            .font(.caption)
-                            .fontWeight(valueChange >= 0.0 ? .regular : .medium)
+                            .font(.footnote)
                             .foregroundColor(valueChange >= 0.0 ? .black : .white)
                             .padding(.horizontal, 4)
                             .background(
                                 RoundedRectangle(cornerRadius: 4)
-                                    .fill(valueChange >= 0.0 ? Color.green : Color.red)
+                                    .fill(valueChange >= 0.0 ? .green : .red)
                             )
                     }
                 }
             }
         }
+        .lineLimit(1)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
