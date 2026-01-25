@@ -87,6 +87,7 @@ kotlin {
       implementation(libs.common.ktor.serialization.kotlinx.json)
       implementation(libs.common.ktorfit)
 
+      implementation(libs.common.material.kolor)
       api(libs.common.moko.resources)
 
       implementation(libs.common.paging.common)
