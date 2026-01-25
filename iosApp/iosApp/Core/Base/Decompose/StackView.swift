@@ -68,9 +68,11 @@ private struct StackViewUIKit<T: AnyObject, Content: View>: UIViewControllerRepr
     func makeUIViewController(context: Context) -> UINavigationController {
         context.coordinator.syncChanges(self)
 
-        let navigationController = UINavigationController(rootViewController: context.coordinator.viewControllers.first!)
+        let navigationController = UINavigationController(
+            rootViewController: context.coordinator.viewControllers.first!
+        )
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
+        appearance.configureWithDefaultBackground()
         navigationController.navigationBar.standardAppearance = appearance
         navigationController.navigationBar.scrollEdgeAppearance = appearance
         return navigationController
