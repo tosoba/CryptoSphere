@@ -48,7 +48,7 @@ import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
-import com.trm.cryptosphere.core.util.isCompactHeight
+import com.trm.cryptosphere.core.ui.isCompactHeight
 import com.trm.cryptosphere.domain.model.NewsFeedItem
 import com.trm.cryptosphere.domain.model.NewsItem
 

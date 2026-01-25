@@ -54,9 +54,9 @@ import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
 import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
-import com.trm.cryptosphere.core.util.isCompactHeight
+import com.trm.cryptosphere.core.ui.isCompactHeight
 import com.trm.cryptosphere.core.util.resolve
-import com.trm.cryptosphere.core.util.toNavigationSuiteType
+import com.trm.cryptosphere.core.ui.toNavigationSuiteType
 import com.trm.cryptosphere.domain.model.shareUrl
 import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent

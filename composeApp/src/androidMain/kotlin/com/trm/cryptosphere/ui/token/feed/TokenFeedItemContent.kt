@@ -38,8 +38,8 @@ import coil3.compose.AsyncImage
 import com.trm.cryptosphere.core.ui.TokenTagsGrid
 import com.trm.cryptosphere.core.ui.cardListItemRoundedCornerShape
 import com.trm.cryptosphere.core.ui.rememberCrossfadeImageRequest
-import com.trm.cryptosphere.core.util.isCompactHeight
-import com.trm.cryptosphere.core.util.isExpandedHeight
+import com.trm.cryptosphere.core.ui.isCompactHeight
+import com.trm.cryptosphere.core.ui.isExpandedHeight
 import com.trm.cryptosphere.domain.model.TokenItem
 import com.trm.cryptosphere.domain.model.logoUrl
 

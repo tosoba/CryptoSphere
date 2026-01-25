@@ -14,7 +14,7 @@ import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.trm.cryptosphere.core.util.resolve
-import com.trm.cryptosphere.core.util.toNavigationSuiteType
+import com.trm.cryptosphere.core.ui.toNavigationSuiteType
 import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent

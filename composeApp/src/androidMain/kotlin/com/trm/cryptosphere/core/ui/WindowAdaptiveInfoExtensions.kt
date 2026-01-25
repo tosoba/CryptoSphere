@@ -1,4 +1,4 @@
-package com.trm.cryptosphere.core.util
+package com.trm.cryptosphere.core.ui
 
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
