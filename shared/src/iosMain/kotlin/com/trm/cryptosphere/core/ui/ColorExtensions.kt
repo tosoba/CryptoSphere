@@ -25,3 +25,12 @@ fun UIColor.toComposeColor(): Color = memScoped {
     alpha = alpha.value.toFloat(),
   )
 }
+
+@Suppress("unused") // Used in Swift
+fun Color.toUIColor(): UIColor =
+  UIColor(
+    red = red.toDouble(),
+    green = green.toDouble(),
+    blue = blue.toDouble(),
+    alpha = alpha.toDouble(),
+  )

@@ -4,6 +4,8 @@ import SwiftUI
 struct RootView: View {
     private let component: RootComponent
 
+    @Environment(\.colorScheme) private var colorScheme
+
     init(_ component: RootComponent) {
         self.component = component
     }
@@ -22,5 +24,6 @@ struct RootView: View {
                 TokenFeedView(tokenFeedChild.component)
             }
         }
+        .environment(\.cryptoSphereTheme, CryptoSphereTheme(colorScheme: colorScheme))
     }
 }
