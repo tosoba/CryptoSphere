@@ -14,6 +14,5 @@ struct EmptyListView: View {
                 .font(.title3)
                 .foregroundColor(.secondary)
         }
-        .frame(maxHeight: .infinity)
     }
 }

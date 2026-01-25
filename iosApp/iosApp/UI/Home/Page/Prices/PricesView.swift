@@ -9,6 +9,8 @@ struct PricesView: View {
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
     @StateObject @KotlinStateFlow private var query: String
 
+    @Environment(\.cryptoSphereTheme) private var theme
+
     init(component: PricesComponent) {
         self.component = component
         viewModel = component.viewModel
@@ -58,6 +60,8 @@ struct PricesView: View {
             }
         }
         .animation(.default, value: onEnum(of: loadStates?.refresh))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(theme.color(\.surfaceContainer))
     }
 
     @ViewBuilder
@@ -87,7 +91,6 @@ struct PricesView: View {
             .padding(.horizontal, 16)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(Color(.systemGroupedBackground))
         .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
     }
 

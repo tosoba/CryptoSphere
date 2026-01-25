@@ -5,12 +5,14 @@ struct PriceItemView: View {
     let token: TokenItem
     let onClick: () -> Void
 
+    @Environment(\.cryptoSphereTheme) private var theme
+
     var body: some View {
         Button(action: onClick) {
             HStack(spacing: 16) {
                 Text("\(token.cmcRank)")
                     .font(.title2)
-                    .foregroundColor(.primary)
+                    .foregroundColor(theme.color(\.onSurfaceVariant))
 
                 ListItemImageView(imageUrl: token.logoUrl)
 
@@ -21,7 +23,7 @@ struct PriceItemView: View {
                 priceInfo
             }
             .padding()
-            .background(Color(.systemBackground))
+            .background(theme.color(\.surface))
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
@@ -32,7 +34,7 @@ struct PriceItemView: View {
             Text("$\(token.quote.price.fullDecimalFormat(significantDecimals: 3, signed: false))")
                 .font(.headline)
                 .fontWeight(.medium)
-                .foregroundColor(.primary)
+                .foregroundColor(theme.color(\.onSurface))
 
             let percentChange24h = token.quote.percentChange24h
             Text(" \(percentChange24h.fullDecimalFormat(significantDecimals: 2, signed: true))% ")

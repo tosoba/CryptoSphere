@@ -19,6 +19,5 @@ struct ErrorListView: View {
                 label: { Text(String(\.retry)) }
             )
         }
-        .frame(maxHeight: .infinity)
     }
 }

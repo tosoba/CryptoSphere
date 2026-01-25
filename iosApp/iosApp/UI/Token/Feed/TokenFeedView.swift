@@ -26,15 +26,14 @@ struct TokenFeedView: View {
     var body: some View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
-            case .loading, .none:
-                LargeCircularProgressView()
             case .notLoading:
                 feedView
-            case .error:
-                EmptyView()
+            default:
+                LargeCircularProgressView()
             }
         }
         .animation(.default, value: loadStates?.refresh)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     var feedView: some View {

@@ -29,6 +29,7 @@ struct NewsFeedView: View {
             }
         }
         .animation(.default, value: loadStates?.refresh)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder

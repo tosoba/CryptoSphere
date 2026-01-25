@@ -25,6 +25,7 @@ struct HistoryTokensListView: View {
             }
         }
         .animation(.default, value: onEnum(of: loadStates?.refresh))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder
