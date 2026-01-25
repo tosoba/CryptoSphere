@@ -3,6 +3,7 @@ import SwiftUI
 
 struct PricesView: View {
     private let component: PricesComponent
+    private let viewModel: PricesViewModel
 
     @StateObject @KotlinStateFlow private var tokens: [TokenItem]
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
@@ -10,60 +11,80 @@ struct PricesView: View {
 
     init(component: PricesComponent) {
         self.component = component
+        viewModel = component.viewModel
 
-        _tokens = .init(component.viewModel.tokensPagingState.itemsSnapshotList)
-        _loadStates = .init(component.viewModel.tokensPagingState.loadStates)
-        _query = .init(component.viewModel.query)
+        _tokens = .init(viewModel.tokensPagingState.itemsSnapshotList)
+        _loadStates = .init(viewModel.tokensPagingState.loadStates)
+        _query = .init(viewModel.query)
     }
 
-    @ViewBuilder
     var body: some View {
-        VStack {
-            SearchBarView(
-                placeholder: String(\.search_tokens),
-                query: Binding(
-                    get: { query },
-                    set: { newQuery in component.viewModel.onQueryChange(newQuery: newQuery) }
-                )
-            )
-            .padding(.horizontal)
-
+        GeometryReader { geometry in
             ZStack {
-                switch onEnum(of: loadStates?.refresh) {
-                case .loading, .none:
-                    LargeCircularProgressView()
-                case .error:
-                    errorView
-                case .notLoading:
-                    if tokens.isEmpty {
-                        EmptyListView(icon: "magnifyingglass", text: String(\.no_tokens_found))
-                    } else {
-                        tokensList
-                    }
-                }
+                tokensLoadStatesView(
+                    topPadding: geometry.safeAreaInsets.top + SearchBarView.height
+                )
+
+                ListTopSearchBarView(
+                    placeholder: String(\.search_tokens),
+                    query: Binding(
+                        get: { query },
+                        set: { newQuery in viewModel.onQueryChange(newQuery: newQuery) }
+                    ),
+                    insets: geometry.safeAreaInsets
+                )
             }
-            .animation(.default, value: onEnum(of: loadStates?.refresh))
+            .ignoresSafeArea(.container, edges: .top)
         }
     }
 
     @ViewBuilder
-    private var tokensList: some View {
+    private func tokensLoadStatesView(topPadding: CGFloat) -> some View {
+        ZStack {
+            switch onEnum(of: loadStates?.refresh) {
+            case .loading, .none:
+                LargeCircularProgressView()
+                    .padding(.top, topPadding)
+            case .error:
+                errorView
+                    .padding(.top, topPadding)
+            case .notLoading:
+                if tokens.isEmpty {
+                    EmptyListView(icon: "magnifyingglass", text: String(\.no_tokens_found))
+                        .padding(.top, topPadding)
+                } else {
+                    tokensScrollView(topPadding: topPadding)
+                }
+            }
+        }
+        .animation(.default, value: onEnum(of: loadStates?.refresh))
+    }
+
+    @ViewBuilder
+    private func tokensScrollView(topPadding: CGFloat) -> some View {
         ScrollView {
             LazyVStack(spacing: 8) {
+                Spacer()
+                    .frame(height: topPadding)
+
                 ForEach(Array(tokens.enumerated()), id: \.element.id) { index, token in
                     PriceItemView(
                         token: token,
-                        onClick: { component.onTokenClick(KotlinInt(value: token.id), TokenCarouselConfig()) }
+                        onClick: {
+                            component.onTokenClick(
+                                KotlinInt(value: token.id),
+                                TokenCarouselConfig()
+                            )
+                        }
                     )
                     .onAppear {
                         if loadStates.canLoadMoreItems() && tokens.count - index == PricesViewModel.companion.PAGE_SIZE {
-                            component.viewModel.tokensPagingState.loadMore()
+                            viewModel.tokensPagingState.loadMore()
                         }
                     }
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 8)
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Color(.systemGroupedBackground))
@@ -74,7 +95,7 @@ struct PricesView: View {
     private var errorView: some View {
         ErrorListView(
             text: String(\.error_occurred),
-            onRetryClick: { component.viewModel.tokensPagingState.retry() }
+            onRetryClick: { viewModel.tokensPagingState.retry() }
         )
     }
 }
