@@ -22,6 +22,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer(
         backgroundJobsManager: backgroundJobsManager
     )
+    
+    lazy var iosDependencyContainer = IosDependencyContainer(context: PlatformContext.shared)
 
     fileprivate lazy var root: RootComponent = dependencyContainer.createRootComponent(
         DefaultComponentContext(
