@@ -12,7 +12,9 @@ class MainActivity : ComponentActivity() {
     enableEdgeToEdge()
     super.onCreate(savedInstanceState)
     val app = application as CryptoSphereApplication
-    val component = app.dependencyContainer.createRootComponent(defaultComponentContext())
-    setContent { RootContent(component, app.androidDependencyContainer.colorExtractor) }
+    val colorExtractor = app.androidDependencyContainer.colorExtractor
+    val component =
+      app.dependencyContainer.rootComponentFactory(defaultComponentContext(), colorExtractor)
+    setContent { RootContent(component, colorExtractor) }
   }
 }

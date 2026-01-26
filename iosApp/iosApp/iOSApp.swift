@@ -8,7 +8,7 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView(appDelegate.root)
+            RootView(component: appDelegate.rootComponent)
         }
     }
 }
@@ -17,24 +17,37 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private static let TAG = "AppDelegate"
 
     private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
-    private lazy var backgroundJobsManager: IosBackgroundJobsManager = .init()
+    private lazy var backgroundJobsManager = IosBackgroundJobsManager()
 
     lazy var dependencyContainer = DependencyContainerBuilderKt.buildDependencyContainer(
         backgroundJobsManager: backgroundJobsManager
     )
-    
+
     lazy var iosDependencyContainer = IosDependencyContainer(context: PlatformContext.shared)
 
-    fileprivate lazy var root: RootComponent = dependencyContainer.createRootComponent(
-        DefaultComponentContext(
-            lifecycle: ApplicationLifecycle(),
-            stateKeeper: stateKeeper,
-            instanceKeeper: nil,
-            backHandler: nil
-        )
-    )
+    fileprivate lazy var rootComponent: RootComponent =
+        dependencyContainer
+            .rootComponentFactory
+            .invoke(
+                componentContext: DefaultComponentContext(
+                    lifecycle: ApplicationLifecycle(),
+                    stateKeeper: stateKeeper,
+                    instanceKeeper: nil,
+                    backHandler: nil
+                ),
+                colorExtractor: ColorExtractor(
+                    imageLoader: ImageLoaderKt.imageLoader(
+                        context: CoilPlatformContext.shared,
+                        cacheDir: PlatformContext.shared.cachePath,
+                        interceptors: Set()
+                    ),
+                    context: CoilPlatformContext.shared
+                )
+            )
 
-    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    func application(
+        _: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
         backgroundJobsManager.registerPeriodicTokensSync()
         enqueuePeriodicTokensSync()
         return true
@@ -46,7 +59,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
-        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: StateKeeperUtilsKt.restore(coder: coder))
+        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(
+            savedState: StateKeeperUtilsKt.restore(coder: coder)
+        )
         return true
     }
 
@@ -55,7 +70,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             do {
                 try await enqueuePeriodicTokensSyncUseCase(container: dependencyContainer)
             } catch {
-                LoggerKt.kermit.e(messageString: error.localizedDescription, throwable: nil, tag: AppDelegate.TAG)
+                LoggerKt.kermit.e(
+                    messageString: error.localizedDescription,
+                    throwable: nil,
+                    tag: AppDelegate.TAG
+                )
             }
         }
     }

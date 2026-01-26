@@ -1,6 +1,5 @@
 package com.trm.cryptosphere.di
 
-import com.arkivanov.decompose.ComponentContext
 import com.trm.cryptosphere.core.PlatformContext
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.cache.disk.createDiskCacheStorage
@@ -140,14 +139,16 @@ class DependencyContainer(
         navigateHome = navigateHome,
       )
     },
-  val createRootComponent: (ComponentContext) -> RootComponent = { componentContext ->
-    RootDefaultComponent(
-      componentContext = componentContext,
-      homeComponentFactory = homeComponentFactory,
-      tokenNavigationComponentFactory = tokenNavigationComponentFactory,
-      tokenFeedComponentFactory = tokenFeedComponentFactory,
-      tokenHistoryRepository = tokenHistoryRepository.value,
-      dispatchers = appCoroutineDispatchers,
-    )
-  },
+  val rootComponentFactory: RootComponent.Factory =
+    RootComponent.Factory { componentContext, colorExtractor ->
+      RootDefaultComponent(
+        componentContext = componentContext,
+        homeComponentFactory = homeComponentFactory,
+        tokenNavigationComponentFactory = tokenNavigationComponentFactory,
+        tokenFeedComponentFactory = tokenFeedComponentFactory,
+        tokenHistoryRepository = tokenHistoryRepository.value,
+        dispatchers = appCoroutineDispatchers,
+        colorExtractor = colorExtractor,
+      )
+    },
 )

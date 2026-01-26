@@ -5,3 +5,9 @@ extension PlatformContext {
         companion.INSTANCE
     }
 }
+
+extension CoilPlatformContext {
+    static var shared: CoilPlatformContext {
+        companion.INSTANCE
+    }
+}

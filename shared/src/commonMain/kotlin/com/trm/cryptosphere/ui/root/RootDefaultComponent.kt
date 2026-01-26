@@ -8,8 +8,11 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.retainedInstance
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
+import com.trm.cryptosphere.core.base.cancellableRunCatching
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
+import com.trm.cryptosphere.core.ui.theme.ColorExtractor
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
@@ -17,6 +20,12 @@ import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenFeed
 import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenNavigation
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 
 class RootDefaultComponent(
@@ -26,6 +35,7 @@ class RootDefaultComponent(
   private val tokenFeedComponentFactory: TokenFeedComponent.Factory,
   private val tokenHistoryRepository: TokenHistoryRepository,
   private val dispatchers: AppCoroutineDispatchers,
+  private val colorExtractor: ColorExtractor,
 ) : RootComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<ChildConfig>()
 
@@ -41,6 +51,20 @@ class RootDefaultComponent(
       handleBackButton = true,
       childFactory = ::createChild,
     )
+
+  private val _seedImageUrl =
+    MutableStateFlow(
+      "https://coinnews.com/wp-content/uploads/2026/01/Amp-feature-image-1536x803.jpg"
+    )
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override val colorExtractorResult: StateFlow<ColorExtractor.Result?> =
+    _seedImageUrl
+      .mapLatest { cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull() }
+      .stateIn(
+        scope = componentContext.coroutineScope(),
+        started = SharingStarted.Lazily,
+        initialValue = null,
+      )
 
   override fun onBackClicked() {
     navigation.pop()

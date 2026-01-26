@@ -4,10 +4,14 @@ import SwiftUI
 struct RootView: View {
     private let component: RootComponent
 
+    @StateObject @KotlinOptionalStateFlow private var colorExtractorResult: ColorExtractor.Result?
+
     @Environment(\.colorScheme) private var colorScheme
 
-    init(_ component: RootComponent) {
+    init(component: RootComponent) {
         self.component = component
+
+        _colorExtractorResult = .init(component.colorExtractorResult)
     }
 
     var body: some View {
@@ -24,6 +28,9 @@ struct RootView: View {
                 TokenFeedView(tokenFeedChild.component)
             }
         }
-        .environment(\.cryptoSphereTheme, CryptoSphereTheme(colorScheme: colorScheme))
+        .environment(
+            \.cryptoSphereTheme,
+            CryptoSphereTheme(colorScheme: colorScheme, colorExtractorResult: colorExtractorResult)
+        )
     }
 }

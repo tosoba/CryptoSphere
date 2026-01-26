@@ -3,9 +3,13 @@ import SwiftUI
 
 struct CryptoSphereTheme {
     let colorScheme: ColorScheme
+    let colorExtractorResult: ColorExtractor.Result?
 
     private var colorSet: Material3ColorScheme {
-        colorScheme == .dark ? DarkColorSchemeKt.darkColorScheme : LightColorSchemeKt.lightColorScheme
+        guard let scheme = colorExtractorResult?.color.toColorScheme(isDark: colorScheme == .dark) else {
+            return colorScheme == .dark ? DarkColorSchemeKt.darkColorScheme : LightColorSchemeKt.lightColorScheme
+        }
+        return scheme
     }
 
     func uiColor(_ keyPath: KeyPath<Material3ColorScheme, UInt64>) -> UIColor {
@@ -18,7 +22,7 @@ struct CryptoSphereTheme {
 }
 
 struct CryptoSphereThemeKey: EnvironmentKey {
-    static let defaultValue = CryptoSphereTheme(colorScheme: .light)
+    static let defaultValue = CryptoSphereTheme(colorScheme: .light, colorExtractorResult: nil)
 }
 
 extension EnvironmentValues {

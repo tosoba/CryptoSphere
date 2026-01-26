@@ -1,6 +1,10 @@
 package com.trm.cryptosphere.core.ui
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
+import com.materialkolor.PaletteStyle
+import com.materialkolor.ktx.toDynamicScheme
+import com.materialkolor.toColorScheme
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -34,3 +38,7 @@ fun Color.toUIColor(): UIColor =
     blue = blue.toDouble(),
     alpha = alpha.toDouble(),
   )
+
+@Suppress("unused") // Used in Swift
+fun Color.toColorScheme(isDark: Boolean): ColorScheme =
+  toDynamicScheme(isDark = isDark, style = PaletteStyle.TonalSpot).toColorScheme()
