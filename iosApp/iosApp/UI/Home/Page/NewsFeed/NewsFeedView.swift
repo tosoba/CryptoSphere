@@ -91,6 +91,8 @@ struct NewsFeedView: View {
                 .scaleEffect(1.0 - (abs(phase.value) * 0.05))
         }
         .onAppear {
+            component.onSeedImageUrlChange(item.news.imgUrl)
+
             if loadStates.canLoadMoreItems() && feedItems.count - index == NewsFeedViewModel.companion.PREFETCH_DISTANCE {
                 component.viewModel.newsPagingState.loadMore()
             }

@@ -96,6 +96,8 @@ struct TokenFeedView: View {
         )
         .containerRelativeFrame([.vertical, .horizontal])
         .onAppear {
+            component.onSeedImageUrlChange(item.logoUrl)
+
             if loadStates.canLoadMoreItems() && feedItems.count - index == TokenFeedViewModel.companion.PREFETCH_DISTANCE {
                 component.viewModel.tokensPagingState.loadMore()
             }

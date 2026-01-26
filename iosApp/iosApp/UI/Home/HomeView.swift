@@ -44,7 +44,7 @@ struct HomeView: View {
     private func tab(at index: Int) -> Tab<Int, PageView, DefaultTabLabel> {
         let page = page(at: index)
         return Tab(page.title, systemImage: page.systemImage, value: index) {
-            PageView(page: page)
+            PageView(page: page, onSeedImageUrlChange: component.onSeedImageUrlChange)
         }
     }
 
@@ -73,12 +73,18 @@ private extension HomeComponentPage {
 
 private struct PageView: View {
     let page: HomeComponentPage
+    let onSeedImageUrlChange: (String?) -> Void
 
     var body: some View {
         switch onEnum(of: page) {
-        case let .newsFeed(newsFeedPage): NewsFeedView(component: newsFeedPage.component)
-        case let .prices(pricesPage): PricesView(component: pricesPage.component)
-        case let .history(historyPage): HistoryView(component: historyPage.component)
+        case let .newsFeed(newsFeedPage):
+            NewsFeedView(component: newsFeedPage.component)
+        case let .prices(pricesPage):
+            PricesView(component: pricesPage.component)
+                .onAppear { onSeedImageUrlChange(nil) }
+        case let .history(historyPage):
+            HistoryView(component: historyPage.component)
+                .onAppear { onSeedImageUrlChange(nil) }
         }
     }
 }
