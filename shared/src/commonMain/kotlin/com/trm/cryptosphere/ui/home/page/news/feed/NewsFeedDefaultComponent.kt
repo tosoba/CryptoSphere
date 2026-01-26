@@ -13,6 +13,7 @@ class NewsFeedDefaultComponent(
   private val getNewsFeedUseCase: GetNewsFeedUseCase,
   private val newsHistoryRepository: NewsHistoryRepository,
   private val dispatchers: AppCoroutineDispatchers,
+  override val onSeedImageUrlChange: (String?) -> Unit,
 ) : NewsFeedComponent, ComponentContext by componentContext {
   override val viewModel: NewsFeedViewModel = retainedInstance {
     NewsFeedViewModel(getNewsFeedUseCase, newsHistoryRepository, dispatchers)

@@ -30,6 +30,7 @@ class TokenNavigationDefaultComponent(
   private val tokenHistoryRepository: TokenHistoryRepository,
   dispatchers: AppCoroutineDispatchers,
   override val navigateHome: () -> Unit,
+  private val onSeedImageUrlChange: (String?) -> Unit,
 ) : TokenNavigationComponent, ComponentContext by componentContext {
   private val navigation = StackNavigation<TokenFeedConfig>()
 
@@ -75,6 +76,7 @@ class TokenNavigationDefaultComponent(
         tokenId = config.tokenId,
         onCurrentPresentedFeedTokenChange = { _currentPresentedFeedToken.value = it },
         navigateToTokenFeed = {},
+        onSeedImageUrlChange = onSeedImageUrlChange,
       )
     )
 

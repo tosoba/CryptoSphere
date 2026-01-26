@@ -19,11 +19,7 @@ import com.trm.cryptosphere.domain.model.logoUrl
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TokenFeedContent(
-  component: TokenFeedComponent,
-  modifier: Modifier = Modifier,
-  onImageUrlChange: (String?) -> Unit,
-) {
+fun TokenFeedContent(component: TokenFeedComponent, modifier: Modifier = Modifier) {
   val tokens = component.viewModel.tokensPagingState.flow.collectAsLazyPagingItems()
 
   val pagerState = rememberPagerState(pageCount = tokens::itemCount)
@@ -55,7 +51,7 @@ fun TokenFeedContent(
               if (pagerState.currentPage < tokens.itemCount) {
                 val currentToken = currentToken()
                 component.onCurrentPresentedFeedTokenChange(currentToken)
-                onImageUrlChange(currentToken?.logoUrl)
+                component.onSeedImageUrlChange(currentToken?.logoUrl)
               }
             }
           }

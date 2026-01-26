@@ -11,6 +11,8 @@ import com.trm.cryptosphere.ui.home.page.prices.PricesComponent
 interface HomeComponent : ComponentContext {
   val pages: Value<ChildPages<*, Page>>
 
+  val onSeedImageUrlChange: (String?) -> Unit
+
   fun selectPage(index: Int)
 
   sealed interface Page {
@@ -25,6 +27,7 @@ interface HomeComponent : ComponentContext {
     operator fun invoke(
       componentContext: ComponentContext,
       onTokenClick: (Int, TokenCarouselConfig) -> Unit,
+      onSeedImageUrlChange: (String?) -> Unit,
     ): HomeComponent
   }
 }

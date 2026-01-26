@@ -19,6 +19,7 @@ class HomeDefaultComponent(
   private val newsFeedComponentFactory: NewsFeedComponent.Factory,
   private val pricesComponentFactory: PricesComponent.Factory,
   private val historyComponentFactory: HistoryComponent.Factory,
+  override val onSeedImageUrlChange: (String?) -> Unit,
 ) : HomeComponent, ComponentContext by componentContext {
   private val navigation = PagesNavigation<HomePageConfig>()
 
@@ -48,6 +49,7 @@ class HomeDefaultComponent(
           newsFeedComponentFactory(
             componentContext = componentContext,
             onTokenCarouselItemClick = onTokenClick,
+            onSeedImageUrlChange = onSeedImageUrlChange,
           )
         )
       }

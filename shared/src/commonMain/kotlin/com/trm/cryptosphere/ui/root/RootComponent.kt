@@ -19,6 +19,8 @@ interface RootComponent : BackHandlerOwner {
 
   fun onBackClicked(toIndex: Int)
 
+  fun onSeedImageUrlChange(url: String?)
+
   sealed interface Child {
     class Home(val component: HomeComponent) : Child
 

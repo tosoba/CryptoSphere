@@ -8,12 +8,15 @@ interface TokenFeedComponent : ComponentContext {
   val onCurrentPresentedFeedTokenChange: (TokenItem?) -> Unit // Used only on android.
   val navigateToTokenFeed: (TokenItem) -> Unit // Used only on iOS.
 
+  val onSeedImageUrlChange: (String?) -> Unit
+
   fun interface Factory {
     operator fun invoke(
       componentContext: ComponentContext,
       tokenId: Int,
       onCurrentPresentedFeedTokenChange: (TokenItem?) -> Unit,
       navigateToTokenFeed: (TokenItem) -> Unit,
+      onSeedImageUrlChange: (String?) -> Unit,
     ): TokenFeedComponent
   }
 }

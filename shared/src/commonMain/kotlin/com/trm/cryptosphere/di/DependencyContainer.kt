@@ -72,13 +72,14 @@ class DependencyContainer(
     )
   },
   private val newsFeedComponentFactory: NewsFeedComponent.Factory =
-    NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick ->
+    NewsFeedComponent.Factory { componentContext, onTokenCarouselItemClick, onSeedImageUrlChange ->
       NewsFeedDefaultComponent(
         componentContext = componentContext,
         onTokenCarouselItemClick = onTokenCarouselItemClick,
         getNewsFeedUseCase = getNewsFeedUseCase.value,
         newsHistoryRepository = newsHistoryRepository.value,
         dispatchers = appCoroutineDispatchers,
+        onSeedImageUrlChange = onSeedImageUrlChange,
       )
     },
   private val pricesComponentFactory: PricesComponent.Factory =
@@ -101,13 +102,14 @@ class DependencyContainer(
       )
     },
   val homeComponentFactory: HomeComponent.Factory =
-    HomeComponent.Factory { componentContext, onTokenClick ->
+    HomeComponent.Factory { componentContext, onTokenClick, onSeedImageUrlChange ->
       HomeDefaultComponent(
         componentContext = componentContext,
         onTokenClick = onTokenClick,
         newsFeedComponentFactory = newsFeedComponentFactory,
         pricesComponentFactory = pricesComponentFactory,
         historyComponentFactory = historyComponentFactory,
+        onSeedImageUrlChange = onSeedImageUrlChange,
       )
     },
   val tokenFeedComponentFactory: TokenFeedComponent.Factory =
@@ -115,7 +117,8 @@ class DependencyContainer(
       componentContext,
       tokenId,
       onCurrentPresentedFeedTokenChange,
-      navigateToTokenFeed ->
+      navigateToTokenFeed,
+      onSeedImageUrlChange ->
       TokenFeedDefaultComponent(
         componentContext = componentContext,
         tokenId = tokenId,
@@ -123,11 +126,16 @@ class DependencyContainer(
         dispatchers = appCoroutineDispatchers,
         onCurrentPresentedFeedTokenChange = onCurrentPresentedFeedTokenChange,
         navigateToTokenFeed = navigateToTokenFeed,
+        onSeedImageUrlChange = onSeedImageUrlChange,
       )
     },
   val tokenNavigationComponentFactory: TokenNavigationComponent.Factory =
-    TokenNavigationComponent.Factory { componentContext, tokenId, tokenCarouselConfig, navigateHome
-      ->
+    TokenNavigationComponent.Factory {
+      componentContext,
+      tokenId,
+      tokenCarouselConfig,
+      navigateHome,
+      onSeedImageUrlChange ->
       TokenNavigationDefaultComponent(
         componentContext = componentContext,
         tokenId = tokenId,
@@ -137,6 +145,7 @@ class DependencyContainer(
         tokenHistoryRepository = tokenHistoryRepository.value,
         dispatchers = appCoroutineDispatchers,
         navigateHome = navigateHome,
+        onSeedImageUrlChange = onSeedImageUrlChange,
       )
     },
   val rootComponentFactory: RootComponent.Factory =

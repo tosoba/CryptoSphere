@@ -13,15 +13,15 @@ import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.core.ui.toNavigationSuiteType
+import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.home.page.history.HistoryContent
 import com.trm.cryptosphere.ui.home.page.news.feed.NewsFeedContent
 import com.trm.cryptosphere.ui.home.page.prices.PricesContent
 
 @Composable
-fun HomeContent(component: HomeComponent, onImageUrlChange: (String?) -> Unit) {
+fun HomeContent(component: HomeComponent) {
   val pages by component.pages.subscribeAsState()
 
   NavigationSuiteScaffold(
@@ -58,7 +58,7 @@ fun HomeContent(component: HomeComponent, onImageUrlChange: (String?) -> Unit) {
           object : Lifecycle.Callbacks {
             override fun onResume() {
               if (page !is HomeComponent.Page.NewsFeed) {
-                onImageUrlChange(null)
+                component.onSeedImageUrlChange(null)
               }
             }
           }
@@ -66,15 +66,9 @@ fun HomeContent(component: HomeComponent, onImageUrlChange: (String?) -> Unit) {
         onDispose { component.lifecycle.unsubscribe(callbacks) }
       }
       when (page) {
-        is HomeComponent.Page.NewsFeed -> {
-          NewsFeedContent(component = page.component, onImageUrlChange = onImageUrlChange)
-        }
-        is HomeComponent.Page.Prices -> {
-          PricesContent(component = page.component)
-        }
-        is HomeComponent.Page.History -> {
-          HistoryContent(component = page.component)
-        }
+        is HomeComponent.Page.NewsFeed -> NewsFeedContent(component = page.component)
+        is HomeComponent.Page.Prices -> PricesContent(component = page.component)
+        is HomeComponent.Page.History -> HistoryContent(component = page.component)
       }
     }
   }

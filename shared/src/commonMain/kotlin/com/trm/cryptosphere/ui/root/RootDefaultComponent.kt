@@ -52,14 +52,17 @@ class RootDefaultComponent(
       childFactory = ::createChild,
     )
 
-  private val _seedImageUrl =
-    MutableStateFlow(
-      "https://coinnews.com/wp-content/uploads/2026/01/Amp-feature-image-1536x803.jpg"
-    )
+  private val _seedImageUrl = MutableStateFlow<String?>(null)
   @OptIn(ExperimentalCoroutinesApi::class)
   override val colorExtractorResult: StateFlow<ColorExtractor.Result?> =
     _seedImageUrl
-      .mapLatest { cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull() }
+      .mapLatest {
+        if (it != null) {
+          cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull()
+        } else {
+          null
+        }
+      }
       .stateIn(
         scope = componentContext.coroutineScope(),
         started = SharingStarted.Lazily,
@@ -74,6 +77,10 @@ class RootDefaultComponent(
     navigation.popTo(toIndex)
   }
 
+  override fun onSeedImageUrlChange(url: String?) {
+    _seedImageUrl.value = url
+  }
+
   private fun createChild(
     config: ChildConfig,
     componentContext: ComponentContext,
@@ -84,6 +91,7 @@ class RootDefaultComponent(
           homeComponentFactory(
             componentContext = componentContext,
             onTokenClick = ::navigateToTokenFeed,
+            onSeedImageUrlChange = ::onSeedImageUrlChange,
           )
         )
       }
@@ -94,6 +102,7 @@ class RootDefaultComponent(
             tokenId = config.tokenId,
             tokenCarouselConfig = config.tokenCarouselConfig,
             navigateHome = { onBackClicked(0) },
+            onSeedImageUrlChange = ::onSeedImageUrlChange,
           )
         )
       }
@@ -104,6 +113,7 @@ class RootDefaultComponent(
             tokenId = config.tokenId,
             onCurrentPresentedFeedTokenChange = {},
             navigateToTokenFeed = { token -> navigateToTokenFeed(token.id, null) },
+            onSeedImageUrlChange = ::onSeedImageUrlChange,
           )
         )
       }

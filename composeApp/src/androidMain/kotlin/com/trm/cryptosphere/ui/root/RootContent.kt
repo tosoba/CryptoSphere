@@ -5,11 +5,8 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
@@ -20,7 +17,6 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
-import com.trm.cryptosphere.core.ui.theme.ColorExtractor
 import com.trm.cryptosphere.core.ui.theme.CryptoSphereTheme
 import com.trm.cryptosphere.core.ui.theme.DynamicTheme
 import com.trm.cryptosphere.ui.home.HomeContent
@@ -28,11 +24,11 @@ import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable
-fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
-  var themeImageUrl: String? by rememberSaveable { mutableStateOf(null) }
-
+fun RootContent(component: RootComponent) {
   CryptoSphereTheme {
-    DynamicTheme(imageUrl = themeImageUrl, colorExtractor = colorExtractor) {
+    DynamicTheme(
+      colorExtractorResult = component.colorExtractorResult.collectAsStateWithLifecycle().value
+    ) {
       SharedTransitionLayout {
         ChildStack(
           stack = component.stack,
@@ -58,16 +54,10 @@ fun RootContent(component: RootComponent, colorExtractor: ColorExtractor) {
           ) {
             when (val instance = child.instance) {
               is RootComponent.Child.Home -> {
-                HomeContent(
-                  component = instance.component,
-                  onImageUrlChange = { themeImageUrl = it },
-                )
+                HomeContent(component = instance.component)
               }
               is RootComponent.Child.TokenNavigation -> {
-                TokenNavigationContent(
-                  component = instance.component,
-                  onImageUrlChange = { themeImageUrl = it },
-                )
+                TokenNavigationContent(component = instance.component)
               }
               is RootComponent.Child.TokenFeed -> {
                 // used only on iOS

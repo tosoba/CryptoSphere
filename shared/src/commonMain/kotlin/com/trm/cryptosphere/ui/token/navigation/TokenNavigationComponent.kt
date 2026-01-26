@@ -30,6 +30,7 @@ interface TokenNavigationComponent : BackHandlerOwner {
       tokenId: Int,
       tokenCarouselConfig: TokenCarouselConfig,
       navigateHome: () -> Unit,
+      onSeedImageUrlChange: (String?) -> Unit,
     ): TokenNavigationComponent
   }
 }

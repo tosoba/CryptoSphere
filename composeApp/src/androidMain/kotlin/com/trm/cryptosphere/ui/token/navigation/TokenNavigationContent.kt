@@ -52,11 +52,11 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
 import com.trm.cryptosphere.core.base.openUrl
 import com.trm.cryptosphere.core.ui.TokenCarousel
-import com.trm.cryptosphere.core.ui.localSharedElement
-import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
 import com.trm.cryptosphere.core.ui.isCompactHeight
-import com.trm.cryptosphere.core.util.resolve
+import com.trm.cryptosphere.core.ui.localSharedElement
 import com.trm.cryptosphere.core.ui.toNavigationSuiteType
+import com.trm.cryptosphere.core.ui.tokenCarouselSharedTransitionKey
+import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.domain.model.shareUrl
 import com.trm.cryptosphere.shared.MR
 import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
@@ -67,10 +67,7 @@ import com.trm.cryptosphere.ui.token.feed.TokenFeedContent
   ExperimentalMaterial3Api::class,
 )
 @Composable
-fun TokenNavigationContent(
-  component: TokenNavigationComponent,
-  onImageUrlChange: (String?) -> Unit,
-) {
+fun TokenNavigationContent(component: TokenNavigationComponent) {
   val context = LocalContext.current
   val adaptiveInfo = currentWindowAdaptiveInfo()
   val navigationSuiteType = adaptiveInfo.toNavigationSuiteType()
@@ -136,11 +133,7 @@ fun TokenNavigationContent(
             },
           ),
       ) { child ->
-        TokenFeedContent(
-          component = child.instance.component,
-          modifier = Modifier.fillMaxSize(),
-          onImageUrlChange = onImageUrlChange,
-        )
+        TokenFeedContent(component = child.instance.component, modifier = Modifier.fillMaxSize())
       }
 
       val carouselState = rememberCarouselState(itemCount = tokens::size)

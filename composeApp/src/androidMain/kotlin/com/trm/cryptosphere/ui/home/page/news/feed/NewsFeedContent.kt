@@ -37,7 +37,7 @@ import com.trm.cryptosphere.core.util.resolve
 import com.trm.cryptosphere.shared.MR
 
 @Composable
-fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) -> Unit) {
+fun NewsFeedContent(component: NewsFeedComponent) {
   val newsItems = component.viewModel.newsPagingState.flow.collectAsLazyPagingItems()
 
   val pagerState = rememberPagerState(pageCount = newsItems::itemCount)
@@ -53,7 +53,7 @@ fun NewsFeedContent(component: NewsFeedComponent, onImageUrlChange: (String?) ->
           val callbacks =
             object : Lifecycle.Callbacks {
               override fun onResume() {
-                onImageUrlChange(newsItems[pagerState.currentPage]?.news?.imgUrl)
+                component.onSeedImageUrlChange(newsItems[pagerState.currentPage]?.news?.imgUrl)
               }
             }
           component.lifecycle.subscribe(callbacks)
