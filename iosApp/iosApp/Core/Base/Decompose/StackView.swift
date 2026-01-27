@@ -46,8 +46,10 @@ private struct StackViewUIKit<T: AnyObject, Content: View>: UIViewControllerRepr
         )
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
+        appearance.shadowColor = .clear
         navigationController.navigationBar.standardAppearance = appearance
         navigationController.navigationBar.scrollEdgeAppearance = appearance
+        navigationController.navigationBar.compactAppearance = appearance
         return navigationController
     }
 

@@ -15,6 +15,13 @@ struct HomeView: View {
         page(at: selectedPageIndex)
     }
 
+    private var navigationBarHidden: Bool {
+        if case .newsFeed = onEnum(of: selectedPage) {
+            return true
+        }
+        return false
+    }
+
     init(_ component: HomeComponent) {
         self.component = component
         _pages = StateValue(component.pages)
@@ -32,6 +39,7 @@ struct HomeView: View {
             }
         }
         .navigationTitle(selectedPage.title)
+        .toolbarBackground(navigationBarHidden ? .hidden : .automatic, for: .navigationBar)
         .toolbar {
             if case .newsFeed = onEnum(of: selectedPage) {
                 ToolbarItem(placement: .principal) {
