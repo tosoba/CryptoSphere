@@ -21,9 +21,11 @@ import com.trm.cryptosphere.ui.root.RootComponent.Child.TokenNavigation
 import com.trm.cryptosphere.ui.token.feed.TokenFeedComponent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
@@ -53,9 +55,10 @@ class RootDefaultComponent(
     )
 
   private val _seedImageUrl = MutableStateFlow<String?>(null)
-  @OptIn(ExperimentalCoroutinesApi::class)
+  @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
   override val colorExtractorResult: StateFlow<ColorExtractor.Result?> =
     _seedImageUrl
+      .debounce(500L) // important to avoid navigation issues on iOS...
       .mapLatest {
         if (it != null) {
           cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull()
