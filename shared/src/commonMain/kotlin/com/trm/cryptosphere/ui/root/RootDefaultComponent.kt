@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.seconds
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
@@ -58,7 +59,7 @@ class RootDefaultComponent(
   @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
   override val colorExtractorResult: StateFlow<ColorExtractor.Result?> =
     _seedImageUrl
-      .debounce(500L) // important to avoid navigation issues on iOS...
+      .debounce(1.seconds) // important to avoid navigation issues on iOS...
       .mapLatest {
         if (it != null) {
           cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull()
