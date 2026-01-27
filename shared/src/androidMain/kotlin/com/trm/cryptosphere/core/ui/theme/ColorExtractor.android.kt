@@ -7,6 +7,10 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.allowRgb565
 import coil3.toBitmap
+import kotlin.time.Duration
+
+internal actual val ColorExtractor.Companion.calculationDebounceDuration: Duration
+  get() = Duration.ZERO
 
 internal actual fun ImageRequest.Builder.prepareForColorExtractor(): ImageRequest.Builder =
   allowHardware(false).allowRgb565(true)

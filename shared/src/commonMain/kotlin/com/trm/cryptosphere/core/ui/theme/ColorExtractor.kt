@@ -10,9 +10,10 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import coil3.size.SizeResolver
 import com.materialkolor.ktx.themeColors
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.time.Duration
 
 class ColorExtractor(private val imageLoader: ImageLoader, private val context: PlatformContext) {
   private val cache = lruCache<Any, Color>(100)
@@ -42,10 +43,12 @@ class ColorExtractor(private val imageLoader: ImageLoader, private val context: 
 
   data class Result(val color: Color, val cached: Boolean)
 
-  private companion object {
-    val DEFAULT_REQUEST_SIZE = SizeResolver(Size(96, 96))
+  companion object {
+    private val DEFAULT_REQUEST_SIZE = SizeResolver(Size(96, 96))
   }
 }
+
+internal expect val ColorExtractor.Companion.calculationDebounceDuration: Duration
 
 internal expect fun ImageRequest.Builder.prepareForColorExtractor(): ImageRequest.Builder
 

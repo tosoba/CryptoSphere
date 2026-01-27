@@ -13,6 +13,7 @@ import com.trm.cryptosphere.core.base.AppCoroutineDispatchers
 import com.trm.cryptosphere.core.base.cancellableRunCatching
 import com.trm.cryptosphere.core.ui.TokenCarouselConfig
 import com.trm.cryptosphere.core.ui.theme.ColorExtractor
+import com.trm.cryptosphere.core.ui.theme.calculationDebounceDuration
 import com.trm.cryptosphere.domain.repository.TokenHistoryRepository
 import com.trm.cryptosphere.ui.home.HomeComponent
 import com.trm.cryptosphere.ui.root.RootComponent.Child.Home
@@ -29,7 +30,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
-import kotlin.time.Duration.Companion.seconds
 
 class RootDefaultComponent(
   componentContext: ComponentContext,
@@ -59,7 +59,9 @@ class RootDefaultComponent(
   @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
   override val colorExtractorResult: StateFlow<ColorExtractor.Result?> =
     _seedImageUrl
-      .debounce(1.seconds) // important to avoid navigation issues on iOS...
+      .debounce(
+        ColorExtractor.calculationDebounceDuration // important to avoid navigation issues on iOS...
+      )
       .mapLatest {
         if (it != null) {
           cancellableRunCatching { colorExtractor.calculatePrimaryColor(it) }.getOrNull()
