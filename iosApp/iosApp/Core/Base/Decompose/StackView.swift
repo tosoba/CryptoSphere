@@ -20,39 +20,12 @@ struct StackView<T: AnyObject, Content: View>: View {
     private var stack: [Child<AnyObject, T>] { stackValue.items }
 
     var body: some View {
-        // Decompose's navigation.pushToFront is not working properly with SwiftUI-based StackView.
-        // If a given configuration is already in the backstack and pushToFront is called - it does not get pushed to front (nothing happens).
-        // Meanwhile UIKit version works as expected.
-        #if USE_SWIFTUI_STACK
-            stackViewSwiftUI
-        #else
-            stackViewUIKit
-        #endif
-    }
-
-    @ViewBuilder
-    private var stackViewUIKit: some View {
         StackViewUIKit(
             components: stack.map { $0.instance! },
             onBack: onBack,
             childContent: content
         )
         .ignoresSafeArea()
-    }
-
-    @ViewBuilder
-    private var stackViewSwiftUI: some View {
-        NavigationStack(
-            path: Binding(
-                get: { stack.dropFirst() },
-                set: { path in onBack(Int32(path.count)) }
-            )
-        ) {
-            content(stack.first!.instance!)
-                .navigationDestination(for: Child<AnyObject, T>.self) {
-                    content($0.instance!)
-                }
-        }
     }
 }
 
