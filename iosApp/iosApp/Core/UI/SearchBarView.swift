@@ -32,21 +32,3 @@ struct SearchBarView: View {
         )
     }
 }
-
-struct ListTopSearchBarView: View {
-    let placeholder: String
-    @Binding var query: String
-    let insets: EdgeInsets
-
-    var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: insets.top)
-
-            SearchBarView(placeholder: placeholder, query: $query)
-                .padding(.horizontal)
-
-            Spacer()
-        }
-    }
-}
