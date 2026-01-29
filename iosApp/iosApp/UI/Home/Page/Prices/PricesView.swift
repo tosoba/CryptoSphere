@@ -27,16 +27,28 @@ struct PricesView: View {
                     topPadding: geometry.safeAreaInsets.top + SearchBarView.height
                 )
 
-                ListTopSearchBarView(
-                    placeholder: String(\.search_tokens),
-                    query: Binding(
-                        get: { query },
-                        set: { newQuery in viewModel.onQueryChange(newQuery: newQuery) }
-                    ),
-                    insets: geometry.safeAreaInsets
-                )
+                topSearchBarView(insets: geometry.safeAreaInsets)
             }
             .ignoresSafeArea(.container, edges: .top)
+        }
+    }
+
+    @ViewBuilder
+    private func topSearchBarView(insets: EdgeInsets) -> some View {
+        VStack {
+            Spacer()
+                .frame(height: insets.top)
+
+            SearchBarView(
+                placeholder: String(\.search_tokens),
+                query: Binding(
+                    get: { query },
+                    set: { newQuery in viewModel.onQueryChange(newQuery: newQuery) }
+                )
+            )
+            .padding(.horizontal)
+
+            Spacer()
         }
     }
 

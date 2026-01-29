@@ -4,23 +4,29 @@ import SwiftUI
 struct HistoryTokensListView: View {
     let items: [HistoryTokenListItem]
     let loadStates: CombinedLoadStates?
+    let topPadding: CGFloat
     let onItemClick: (TokenItem) -> Void
     let onDelete: (Int64) -> Void
     let loadMore: () -> Void
     let retry: () -> Void
+
+    @Environment(\.cryptoSphereTheme) private var theme
 
     var body: some View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
             case .loading, .none:
                 LargeCircularProgressView()
+                    .padding(.top, topPadding)
             case .error:
                 errorView
+                    .padding(.top, topPadding)
             case .notLoading:
                 if items.isEmpty {
                     emptyView
+                        .padding(.top, topPadding)
                 } else {
-                    tokensList
+                    tokensList(topPadding: topPadding)
                 }
             }
         }
@@ -39,9 +45,12 @@ struct HistoryTokensListView: View {
     }
 
     @ViewBuilder
-    private var tokensList: some View {
+    private func tokensList(topPadding: CGFloat) -> some View {
         ScrollView {
             LazyVStack(spacing: 8) {
+                Spacer()
+                    .frame(height: topPadding)
+
                 ForEach(Array(items.enumerated()), id: \.element.key) { index, item in
                     Group {
                         switch onEnum(of: item) {
@@ -66,7 +75,7 @@ struct HistoryTokensListView: View {
             .padding(.vertical, 8)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(Color(.systemGroupedBackground))
+        .background(theme.color(\.surfaceContainer))
         .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
     }
 }

@@ -9,6 +9,8 @@ struct HistoryItemView: View {
     let onClick: () -> Void
     let onDelete: () -> Void
 
+    @Environment(\.cryptoSphereTheme) private var theme
+
     var body: some View {
         Button(action: onClick) {
             HStack(spacing: 16) {
@@ -23,7 +25,7 @@ struct HistoryItemView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .background(Color(.systemBackground))
+            .background(theme.color(\.surface))
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
