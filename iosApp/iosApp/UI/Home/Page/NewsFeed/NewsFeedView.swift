@@ -52,7 +52,6 @@ struct NewsFeedView: View {
             }
             .scrollPosition(id: $scrolledItemId)
             .animation(.easeInOut, value: geometry.size)
-            .background(.black)
             .ignoresSafeArea(.container, edges: .all)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
