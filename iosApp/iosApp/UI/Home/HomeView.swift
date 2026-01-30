@@ -21,6 +21,8 @@ struct HomeView: View {
         }
         return false
     }
+    
+    @Environment(\.cryptoSphereTheme) private var theme
 
     init(_ component: HomeComponent) {
         self.component = component
@@ -38,6 +40,7 @@ struct HomeView: View {
                 tab(at: index)
             }
         }
+        .tint(theme.color(\.primary))
         .navigationTitle(selectedPage.title)
         .toolbarBackground(navigationBarHidden ? .hidden : .automatic, for: .navigationBar)
         .toolbar {
