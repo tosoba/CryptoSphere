@@ -16,13 +16,11 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.p
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
-import com.trm.cryptosphere.R
 import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
 import com.trm.cryptosphere.core.ui.theme.CryptoSphereDynamicTheme
-import com.trm.cryptosphere.core.ui.theme.cryptoSphereTypography
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
@@ -30,8 +28,7 @@ import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 @Composable
 fun RootContent(component: RootComponent) {
   CryptoSphereDynamicTheme(
-    colorExtractorResult = component.colorExtractorResult.collectAsStateWithLifecycle().value,
-    typography = cryptoSphereTypography(R.array.com_google_android_gms_fonts_certs),
+    colorExtractorResult = component.colorExtractorResult.collectAsStateWithLifecycle().value
   ) {
     StatusBarContentAppearanceEffect(
       if (isSystemInDarkTheme()) StatusBarContentAppearance.LIGHT

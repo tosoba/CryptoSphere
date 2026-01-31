@@ -52,11 +52,8 @@ kotlin {
       api(libs.androidx.work.runtime.ktx)
       implementation(libs.androidx.core.ktx)
       implementation(libs.androidx.browser)
-      implementation(libs.androidx.compose.ui.googleFonts)
 
       implementation(libs.android.ktor.client.android)
-
-      api(libs.common.moko.resources.compose)
     }
 
     commonMain.dependencies {
@@ -90,6 +87,7 @@ kotlin {
 
       implementation(libs.common.material.kolor)
       api(libs.common.moko.resources)
+      api(libs.common.moko.resources.compose)
 
       implementation(libs.common.paging.common)
 

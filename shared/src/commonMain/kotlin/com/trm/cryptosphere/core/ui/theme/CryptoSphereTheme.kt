@@ -11,7 +11,7 @@ import com.materialkolor.DynamicMaterialTheme
 @Composable
 expect fun CryptoSphereTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  typography: Typography = MaterialTheme.typography,
+  typography: Typography = cryptoSphereTypography(),
   content: @Composable () -> Unit,
 )
 
@@ -20,7 +20,7 @@ fun CryptoSphereDynamicTheme(
   colorExtractorResult: ColorExtractor.Result?,
   fallback: Color = MaterialTheme.colorScheme.primary,
   useDarkTheme: Boolean = isSystemInDarkTheme(),
-  typography: Typography = MaterialTheme.typography,
+  typography: Typography = cryptoSphereTypography(),
   content: @Composable () -> Unit,
 ) {
   CryptoSphereTheme(darkTheme = useDarkTheme, typography = typography) {

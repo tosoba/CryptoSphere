@@ -1,25 +1,37 @@
 package com.trm.cryptosphere.core.ui.theme
 
-import androidx.annotation.ArrayRes
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
+import androidx.compose.ui.text.font.FontWeight
+import com.trm.cryptosphere.shared.MR
+import dev.icerock.moko.resources.compose.asFont
 
-fun cryptoSphereTypography(@ArrayRes certificates: Int): Typography =
+@Composable
+fun cryptoSphereTypography(): Typography =
   with(Typography()) {
-    val provider =
-      GoogleFont.Provider(
-        providerAuthority = "com.google.android.gms.fonts",
-        providerPackage = "com.google.android.gms",
-        certificates = certificates,
-      )
-
-    val bodyFontFamily =
-      FontFamily(Font(googleFont = GoogleFont("Manrope"), fontProvider = provider))
     val displayFontFamily =
-      FontFamily(Font(googleFont = GoogleFont("Space Grotesk"), fontProvider = provider))
-
+      FontFamily(
+        listOfNotNull(
+          MR.fonts.spacegrotesk_bold.asFont(weight = FontWeight.Bold),
+          MR.fonts.spacegrotesk_light.asFont(weight = FontWeight.Light),
+          MR.fonts.spacegrotesk_medium.asFont(weight = FontWeight.Medium),
+          MR.fonts.spacegrotesk_regular.asFont(weight = FontWeight.Normal),
+          MR.fonts.spacegrotesk_semibold.asFont(weight = FontWeight.SemiBold),
+        )
+      )
+    val bodyFontFamily =
+      FontFamily(
+        listOfNotNull(
+          MR.fonts.manrope_bold.asFont(weight = FontWeight.Bold),
+          MR.fonts.manrope_extrabold.asFont(weight = FontWeight.ExtraBold),
+          MR.fonts.manrope_extralight.asFont(weight = FontWeight.ExtraLight),
+          MR.fonts.manrope_light.asFont(weight = FontWeight.Light),
+          MR.fonts.manrope_medium.asFont(weight = FontWeight.Medium),
+          MR.fonts.manrope_regular.asFont(weight = FontWeight.Normal),
+          MR.fonts.manrope_semibold.asFont(weight = FontWeight.SemiBold),
+        )
+      )
     Typography(
       displayLarge = displayLarge.copy(fontFamily = displayFontFamily),
       displayMedium = displayMedium.copy(fontFamily = displayFontFamily),
