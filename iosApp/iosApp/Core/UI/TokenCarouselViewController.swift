@@ -5,7 +5,7 @@ struct TokenCarouselViewController: UIViewControllerRepresentable {
     let tokens: [TokenItem]
     let onItemClick: (TokenItem) -> Void
     @Binding var measuredHeight: CGFloat
-    
+
     @Environment(\.colorExtractorResultProvider) private var colorExtractorResultProvider
 
     func makeUIViewController(context _: Context) -> UIViewController {

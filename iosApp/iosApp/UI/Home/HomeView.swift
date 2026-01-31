@@ -21,7 +21,7 @@ struct HomeView: View {
         }
         return false
     }
-    
+
     @Environment(\.cryptoSphereTheme) private var theme
 
     init(_ component: HomeComponent) {

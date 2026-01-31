@@ -6,7 +6,7 @@ struct TokenTagsGridViewController: UIViewControllerRepresentable {
     let mainTokenTagNames: Set<String>
     let rowCount: Int32
     @Binding var measuredHeight: CGFloat
-    
+
     @Environment(\.colorExtractorResultProvider) private var colorExtractorResultProvider
 
     func makeUIViewController(context _: Context) -> ContainerViewController {

@@ -4,7 +4,7 @@ import SwiftUI
 struct TokenFeedParameterCardView: View {
     let parameter: TokenFeedParameter
     let cornerRadius: (top: CGFloat, bottom: CGFloat)
-    
+
     @Environment(\.cryptoSphereTheme) private var theme
 
     var body: some View {

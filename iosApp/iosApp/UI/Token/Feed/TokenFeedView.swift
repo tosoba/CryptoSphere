@@ -15,7 +15,7 @@ struct TokenFeedView: View {
     }
 
     @State private var tokenTagsGridMeasuredHeight: CGFloat = 120
-    
+
     @Environment(\.cryptoSphereTheme) private var theme
 
     init(_ component: TokenFeedComponent) {
