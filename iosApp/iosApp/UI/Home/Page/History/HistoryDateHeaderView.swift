@@ -8,8 +8,7 @@ struct HistoryDateHeaderView: View {
             .font(.subheadline)
             .fontWeight(.semibold)
             .foregroundColor(.secondary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(8)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

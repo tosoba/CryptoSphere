@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct HistoryItemView: View {
+struct HistoryItemView<S: Shape>: View {
     let imageUrl: String?
     let title: String
     let subtitle: String
     let visitedAt: LocalTime
-
+    let shape: S
     let onClick: () -> Void
     let onDelete: () -> Void
 
@@ -26,7 +26,7 @@ struct HistoryItemView: View {
             }
             .padding()
             .background(theme.color(\.surface))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(shape)
         }
         .buttonStyle(.plain)
         .contextMenu {

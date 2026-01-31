@@ -46,9 +46,9 @@ struct HistoryNewsListView: View {
 
     private func newsList(topPadding: CGFloat) -> some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 2) {
                 Spacer()
-                    .frame(height: topPadding)
+                    .frame(height: topPadding - 8)
 
                 ForEach(Array(items.enumerated()), id: \.element.key) { index, item in
                     Group {
@@ -56,8 +56,17 @@ struct HistoryNewsListView: View {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(news):
+                            let firstForDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
+                            let lastForDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
+                            
                             HistoryNewsItemView(
                                 item: news.data,
+                                shape: historyListItemShape(
+                                    index: index,
+                                    count: items.count,
+                                    firstForDate: firstForDate,
+                                    lastForDate: lastForDate
+                                ),
                                 onClick: { onItemClick(news.data) },
                                 onDelete: { onDelete(news.data.id) }
                             )
@@ -79,8 +88,9 @@ struct HistoryNewsListView: View {
     }
 }
 
-private struct HistoryNewsItemView: View {
+private struct HistoryNewsItemView<S: Shape>: View {
     let item: NewsHistoryItem
+    let shape: S
     let onClick: () -> Void
     let onDelete: () -> Void
 
@@ -90,6 +100,7 @@ private struct HistoryNewsItemView: View {
             title: item.title,
             subtitle: item.source,
             visitedAt: item.visitedAt.time,
+            shape: shape,
             onClick: onClick,
             onDelete: onDelete
         )

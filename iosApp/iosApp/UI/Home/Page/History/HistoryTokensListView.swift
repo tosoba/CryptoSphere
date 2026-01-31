@@ -47,9 +47,9 @@ struct HistoryTokensListView: View {
     @ViewBuilder
     private func tokensList(topPadding: CGFloat) -> some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 2) {
                 Spacer()
-                    .frame(height: topPadding)
+                    .frame(height: topPadding - 8)
 
                 ForEach(Array(items.enumerated()), id: \.element.key) { index, item in
                     Group {
@@ -57,8 +57,17 @@ struct HistoryTokensListView: View {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(token):
+                            let firstForDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
+                            let lastForDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
+                            
                             HistoryTokenItemView(
                                 item: token.data,
+                                shape: historyListItemShape(
+                                    index: index,
+                                    count: items.count,
+                                    firstForDate: firstForDate,
+                                    lastForDate: lastForDate
+                                ),
                                 onClick: { onItemClick(token.data.token) },
                                 onDelete: { onDelete(token.data.id) }
                             )
@@ -80,8 +89,9 @@ struct HistoryTokensListView: View {
     }
 }
 
-private struct HistoryTokenItemView: View {
+private struct HistoryTokenItemView<S: Shape>: View {
     let item: TokenHistoryItem
+    let shape: S
     let onClick: () -> Void
     let onDelete: () -> Void
 
@@ -91,6 +101,7 @@ private struct HistoryTokenItemView: View {
             title: item.token.name,
             subtitle: item.token.symbol,
             visitedAt: item.visitedAt.time,
+            shape: shape,
             onClick: onClick,
             onDelete: onDelete
         )

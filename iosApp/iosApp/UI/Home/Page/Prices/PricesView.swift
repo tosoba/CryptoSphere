@@ -79,13 +79,14 @@ struct PricesView: View {
     @ViewBuilder
     private func tokensScrollView(topPadding: CGFloat) -> some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 2) {
                 Spacer()
                     .frame(height: topPadding)
 
                 ForEach(Array(tokens.enumerated()), id: \.element.id) { index, token in
                     PriceItemView(
                         token: token,
+                        shape: listItemShape(for: index, outOf: tokens.count),
                         onClick: {
                             component.onTokenClick(
                                 KotlinInt(value: token.id),

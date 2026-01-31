@@ -1,9 +1,9 @@
 import Shared
 import SwiftUI
 
-struct TokenFeedParameterCardView: View {
+struct TokenFeedParameterCardView<S: Shape>: View {
     let parameter: TokenFeedParameter
-    let cornerRadius: (top: CGFloat, bottom: CGFloat)
+    let shape: S
 
     @Environment(\.cryptoSphereTheme) private var theme
 
@@ -33,14 +33,6 @@ struct TokenFeedParameterCardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(
-            UnevenRoundedRectangle(
-                topLeadingRadius: cornerRadius.top,
-                bottomLeadingRadius: cornerRadius.bottom,
-                bottomTrailingRadius: cornerRadius.bottom,
-                topTrailingRadius: cornerRadius.top
-            )
-            .fill(theme.color(\.surface))
-        )
+        .background(shape.fill(theme.color(\.surface)))
     }
 }

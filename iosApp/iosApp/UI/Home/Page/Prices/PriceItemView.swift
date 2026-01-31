@@ -1,8 +1,9 @@
 import Shared
 import SwiftUI
 
-struct PriceItemView: View {
+struct PriceItemView<S: Shape>: View {
     let token: TokenItem
+    let shape: S
     let onClick: () -> Void
 
     @Environment(\.cryptoSphereTheme) private var theme
@@ -24,7 +25,7 @@ struct PriceItemView: View {
             }
             .padding()
             .background(theme.color(\.surface))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(shape)
         }
         .buttonStyle(.plain)
     }
