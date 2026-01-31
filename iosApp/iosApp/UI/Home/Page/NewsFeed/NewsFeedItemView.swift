@@ -70,10 +70,17 @@ struct NewsFeedItemView: View {
     @ViewBuilder
     private var informationView: some View {
         VStack(alignment: .leading) {
-            textView(text: item.news.title, font: .title)
+            textView(
+                text: item.news.title,
+                font: Font(resource: \.spacegrotesk_medium, withSizeOf: .title1)
+            )
 
-            textView(text: item.news.source, font: .subheadline)
-                .padding(.top, 8)
+            Spacer().frame(height: 8)
+
+            textView(
+                text: item.news.source,
+                font: Font(resource: \.manrope_regular, withSizeOf: .subheadline)
+            )
 
             if !item.relatedTokens.isEmpty {
                 TokenCarouselViewController(
@@ -135,7 +142,6 @@ struct NewsFeedItemView: View {
     private func textView(text: String, font: Font) -> some View {
         Text(text)
             .font(font)
-            .fontWeight(.medium)
             .lineLimit(5)
             .multilineTextAlignment(.leading)
             .fixedSize(horizontal: false, vertical: true)
