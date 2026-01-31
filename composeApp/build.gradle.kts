@@ -14,7 +14,6 @@ kotlin {
     androidMain.dependencies {
       implementation(libs.androidx.activity.compose)
       implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
-      implementation(libs.androidx.compose.ui.googleFonts)
       implementation(libs.androidx.constraintLayout.compose)
       implementation(libs.androidx.lifecycle.process)
       implementation(libs.androidx.paging.compose)

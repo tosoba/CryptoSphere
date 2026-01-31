@@ -10,6 +10,7 @@ import coil3.request.ImageRequest
 import coil3.size.Size
 import coil3.size.SizeResolver
 import com.materialkolor.ktx.themeColors
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -53,3 +54,7 @@ internal expect val ColorExtractor.Companion.calculationDebounceDuration: Durati
 internal expect fun ImageRequest.Builder.prepareForColorExtractor(): ImageRequest.Builder
 
 internal expect fun Image.toComposeImageBitmap(): ImageBitmap
+
+interface ColorExtractorResultProvider {
+  val colorExtractorResult: StateFlow<ColorExtractor.Result?>
+}

@@ -15,6 +15,8 @@ struct TokenFeedView: View {
     }
 
     @State private var tokenTagsGridMeasuredHeight: CGFloat = 120
+    
+    @Environment(\.cryptoSphereTheme) private var theme
 
     init(_ component: TokenFeedComponent) {
         self.component = component
@@ -34,6 +36,7 @@ struct TokenFeedView: View {
         }
         .animation(.default, value: loadStates?.refresh)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(theme.color(\.surfaceContainer))
     }
 
     var feedView: some View {
@@ -49,7 +52,6 @@ struct TokenFeedView: View {
             }
             .scrollPosition(id: $scrolledItemId, anchor: .top)
             .ignoresSafeArea(.container, edges: .all)
-            .background(Color(.systemGroupedBackground))
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
             .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)

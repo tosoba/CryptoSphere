@@ -4,16 +4,19 @@ import SwiftUI
 struct TokenFeedParameterCardView: View {
     let parameter: TokenFeedParameter
     let cornerRadius: (top: CGFloat, bottom: CGFloat)
+    
+    @Environment(\.cryptoSphereTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(String(parameter.label))
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundColor(theme.color(\.onSurfaceVariant))
 
             HStack(spacing: 8) {
                 Text(parameter.valueFormat(parameter.value))
                     .font(.headline)
+                    .foregroundColor(theme.color(\.onSurface))
 
                 if let valueChange = parameter.valueChange as? Double,
                    let valueChangeFormat = parameter.valueChangeFormat
@@ -37,7 +40,7 @@ struct TokenFeedParameterCardView: View {
                 bottomTrailingRadius: cornerRadius.bottom,
                 topTrailingRadius: cornerRadius.top
             )
-            .fill(Color(uiColor: .systemBackground))
+            .fill(theme.color(\.surface))
         )
     }
 }

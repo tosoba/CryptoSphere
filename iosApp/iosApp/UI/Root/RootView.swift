@@ -32,5 +32,6 @@ struct RootView: View {
             \.cryptoSphereTheme,
             CryptoSphereTheme(colorScheme: colorScheme, colorExtractorResult: colorExtractorResult)
         )
+        .environment(\.colorExtractorResultProvider, component)
     }
 }

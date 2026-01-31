@@ -52,6 +52,7 @@ kotlin {
       api(libs.androidx.work.runtime.ktx)
       implementation(libs.androidx.core.ktx)
       implementation(libs.androidx.browser)
+      implementation(libs.androidx.compose.ui.googleFonts)
 
       implementation(libs.android.ktor.client.android)
 

@@ -6,15 +6,17 @@ struct TokenTagsGridViewController: UIViewControllerRepresentable {
     let mainTokenTagNames: Set<String>
     let rowCount: Int32
     @Binding var measuredHeight: CGFloat
+    
+    @Environment(\.colorExtractorResultProvider) private var colorExtractorResultProvider
 
     func makeUIViewController(context _: Context) -> ContainerViewController {
         let containerVC = ContainerViewController()
 
-        let composeVC = TokenTagsGridViewControllerKt.TokenTagsGridViewController(
+        let composeVC = TokenTagsGridViewControllerKt.tokenTagsGridViewController(
             token: token,
             mainTokenTagNames: mainTokenTagNames,
             rowCount: rowCount,
-            selectedChipContainerColor: .tertiarySystemBackground,
+            colorExtractorResultProvider: colorExtractorResultProvider,
             heightChanged: { height in
                 measuredHeight = CGFloat(truncating: height) / UIScreen.main.scale
             },

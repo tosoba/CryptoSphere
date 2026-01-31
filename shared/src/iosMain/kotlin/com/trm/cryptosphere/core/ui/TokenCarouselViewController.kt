@@ -12,17 +12,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.window.ComposeUIViewController
+import com.trm.cryptosphere.core.ui.theme.ColorExtractorResultProvider
+import com.trm.cryptosphere.core.ui.theme.CryptoSphereDynamicTheme
 import com.trm.cryptosphere.domain.model.TokenItem
 import platform.UIKit.UIViewController
 
-fun TokenCarouselViewController(
+fun tokenCarouselViewController(
   tokens: List<TokenItem>,
+  colorExtractorResultProvider: ColorExtractorResultProvider,
   onItemClick: (TokenItem) -> Unit,
   heightChanged: (Int) -> Unit,
 ): UIViewController =
   @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
   ComposeUIViewController(configure = { opaque = false }) {
-    MaterialTheme {
+    CryptoSphereDynamicTheme(colorExtractorResultProvider = colorExtractorResultProvider) {
       TokenCarousel(
         tokens = tokens,
         onItemClick = onItemClick,

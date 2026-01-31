@@ -9,6 +9,7 @@ struct TokenFeedItemView: View {
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.cryptoSphereTheme) private var theme
 
     var body: some View {
         Group {
@@ -104,7 +105,7 @@ struct TokenFeedItemView: View {
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .padding(.horizontal, 2)
-                .background(Color(.systemBackground))
+                .background(theme.color(\.surface))
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Text(token.symbol)

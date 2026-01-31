@@ -31,3 +31,17 @@ extension EnvironmentValues {
         set { self[CryptoSphereThemeKey.self] = newValue }
     }
 }
+
+// Needed for compose views used in SwiftUI.
+// This way, their theme can update based on StateFlow<ColorExtractor.Result> on compose side.
+// Colors retrieved via CryptoSphereTheme in swift do not update when passed via UIViewControllerRepresentable's makeUIViewController.
+struct ColorExtractorResultProviderKey: EnvironmentKey {
+    static let defaultValue: ColorExtractorResultProvider = EmptyColorExtractorResultProvider()
+}
+
+extension EnvironmentValues {
+    var colorExtractorResultProvider: ColorExtractorResultProvider {
+        get { self[ColorExtractorResultProviderKey.self] }
+        set { self[ColorExtractorResultProviderKey.self] = newValue }
+    }
+}
