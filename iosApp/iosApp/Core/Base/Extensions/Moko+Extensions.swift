@@ -34,7 +34,7 @@ extension Font {
     init(resource: KeyPath<MR.fonts, FontResource>, withSizeOf textStyle: UIFont.TextStyle) {
         self.init(
             resource: resource,
-            withSize: UIFont.preferredFont(forTextStyle: textStyle).pointSize,
+            withSize: UIFont.preferredFont(forTextStyle: textStyle).pointSize
         )
     }
 }

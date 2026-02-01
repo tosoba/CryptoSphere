@@ -1,11 +1,11 @@
 import SwiftUI
 
-func historyListItemShape(index: Int, count: Int, firstForDate: Bool, lastForDate: Bool) -> AnyShape {
+func historyListItemShape(for index: Int, outOf count: Int, firstOnDate: Bool, lastOnDate: Bool) -> AnyShape {
     if count == 2 {
         AnyShape(RoundedRectangle(cornerRadius: 16))
-    } else if firstForDate {
+    } else if firstOnDate {
         topOnlyRoundedCornersShape()
-    } else if index == count - 1 || lastForDate {
+    } else if index == count - 1 || lastOnDate {
         bottomOnlyRoundedCornersShape()
     } else {
         AnyShape(Rectangle())

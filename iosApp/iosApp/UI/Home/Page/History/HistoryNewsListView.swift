@@ -56,16 +56,16 @@ struct HistoryNewsListView: View {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(news):
-                            let firstForDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
-                            let lastForDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
-                            
+                            let firstOnDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
+                            let lastOnDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
+
                             HistoryNewsItemView(
                                 item: news.data,
                                 shape: historyListItemShape(
-                                    index: index,
-                                    count: items.count,
-                                    firstForDate: firstForDate,
-                                    lastForDate: lastForDate
+                                    for: index,
+                                    outOf: items.count,
+                                    firstOnDate: firstOnDate,
+                                    lastOnDate: lastOnDate
                                 ),
                                 onClick: { onItemClick(news.data) },
                                 onDelete: { onDelete(news.data.id) }

@@ -57,16 +57,16 @@ struct HistoryTokensListView: View {
                         case let .dateHeader(header):
                             HistoryDateHeaderView(date: header.date)
                         case let .item(token):
-                            let firstForDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
-                            let lastForDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
-                            
+                            let firstOnDate = if case .dateHeader = onEnum(of: index > 0 ? items[index - 1] : nil) { true } else { false }
+                            let lastOnDate = if case .dateHeader = onEnum(of: index < items.count - 1 ? items[index + 1] : nil) { true } else { false }
+
                             HistoryTokenItemView(
                                 item: token.data,
                                 shape: historyListItemShape(
-                                    index: index,
-                                    count: items.count,
-                                    firstForDate: firstForDate,
-                                    lastForDate: lastForDate
+                                    for: index,
+                                    outOf: items.count,
+                                    firstOnDate: firstOnDate,
+                                    lastOnDate: lastOnDate
                                 ),
                                 onClick: { onItemClick(token.data.token) },
                                 onDelete: { onDelete(token.data.id) }
