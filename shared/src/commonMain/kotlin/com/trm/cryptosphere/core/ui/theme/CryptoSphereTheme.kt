@@ -32,6 +32,7 @@ fun CryptoSphereDynamicTheme(
       error = if (colorExtractorResult == null) MaterialTheme.colorScheme.error else null,
       isDark = useDarkTheme,
       animate = colorExtractorResult.let { it != null && !it.cached },
+      typography = typography,
       content = content,
     )
   }
