@@ -26,10 +26,14 @@ struct TokenFeedItemView: View {
     @ViewBuilder
     private var compactLayout: some View {
         HStack(spacing: 16) {
-            VStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .center) {
                 tokenLogo
+                
+                Spacer().frame(height: 8)
 
                 symbolWithRank
+                
+                Spacer().frame(height: 8)
 
                 if !token.tagNames.isEmpty {
                     TokenTagsGridViewController(
@@ -50,10 +54,14 @@ struct TokenFeedItemView: View {
 
     @ViewBuilder
     private var regularLayout: some View {
-        VStack(spacing: 16) {
+        VStack {
             tokenLogo
+            
+            Spacer().frame(height: 8)
 
             symbolWithRank
+            
+            Spacer().frame(height: 8)
 
             if !token.tagNames.isEmpty {
                 TokenTagsGridViewController(
@@ -69,6 +77,8 @@ struct TokenFeedItemView: View {
                 )
                 .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
             }
+            
+            Spacer().frame(height: 16)
 
             tokenFeedParameters
         }

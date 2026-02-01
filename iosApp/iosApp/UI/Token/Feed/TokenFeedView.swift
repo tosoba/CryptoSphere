@@ -14,7 +14,7 @@ struct TokenFeedView: View {
         scrolledItemId != nil && navigationToken?.id != scrolledItemId
     }
 
-    @State private var tokenTagsGridMeasuredHeight: CGFloat = 120
+    @State private var tokenTagsGridMeasuredHeight: CGFloat = 108
 
     @Environment(\.cryptoSphereTheme) private var theme
 
