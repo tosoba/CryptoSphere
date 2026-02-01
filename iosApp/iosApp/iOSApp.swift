@@ -6,10 +6,26 @@ struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate: AppDelegate
 
+    init() {
+        configureGlobalStyles()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView(component: appDelegate.rootComponent)
         }
+    }
+
+    private func configureGlobalStyles() {
+        configureSegmentedControlStyle()
+    }
+
+    private func configureSegmentedControlStyle() {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.from(\.manrope_regular, withSize: 14),
+        ]
+        UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .normal)
+        UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
     }
 }
 

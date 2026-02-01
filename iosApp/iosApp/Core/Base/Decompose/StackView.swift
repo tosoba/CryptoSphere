@@ -76,6 +76,8 @@ private struct StackViewUIKit<T: AnyObject, Content: View>: UIViewControllerRepr
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.shadowColor = .clear
+        appearance.largeTitleTextAttributes = [.font: UIFont.from(\.spacegrotesk_bold, withSize: 34)]
+        appearance.titleTextAttributes = [.font: UIFont.from(\.spacegrotesk_medium, withSize: 17)]
         navigationController.navigationBar.standardAppearance = appearance
         navigationController.navigationBar.scrollEdgeAppearance = appearance
         navigationController.navigationBar.compactAppearance = appearance

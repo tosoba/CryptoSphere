@@ -14,6 +14,7 @@ struct SearchBarView: View {
                 .foregroundColor(theme.color(\.onSurfaceVariant))
 
             TextField(placeholder, text: $query)
+                .font(Font(\.manrope_regular, withSizeOf: .headline))
                 .autocorrectionDisabled()
 
             Button(action: { query = "" }) {

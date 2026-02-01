@@ -81,6 +81,8 @@ struct HistoryView: View {
             }
             .padding(.horizontal)
 
+            Spacer().frame(height: 12)
+
             historyPagePickerView
 
             Spacer()

@@ -2,7 +2,7 @@ import SwiftUI
 
 extension Text {
     func valueChangeText(isPositive: Bool) -> some View {
-        font(Font(resource: \.spacegrotesk_regular, withSizeOf: .subheadline))
+        font(Font(\.spacegrotesk_regular, withSizeOf: .subheadline))
             .padding(.horizontal, 2)
             .foregroundColor(isPositive ? .black : .white)
             .background(isPositive ? .green : .red)

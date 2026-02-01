@@ -28,11 +28,11 @@ struct TokenFeedItemView: View {
         HStack(spacing: 16) {
             VStack(alignment: .center) {
                 tokenLogo
-                
+
                 Spacer().frame(height: 8)
 
                 symbolWithRank
-                
+
                 Spacer().frame(height: 8)
 
                 if !token.tagNames.isEmpty {
@@ -56,11 +56,11 @@ struct TokenFeedItemView: View {
     private var regularLayout: some View {
         VStack {
             tokenLogo
-            
+
             Spacer().frame(height: 8)
 
             symbolWithRank
-            
+
             Spacer().frame(height: 8)
 
             if !token.tagNames.isEmpty {
@@ -77,7 +77,7 @@ struct TokenFeedItemView: View {
                 )
                 .frame(height: $tokenTagsGridMeasuredHeight.wrappedValue)
             }
-            
+
             Spacer().frame(height: 16)
 
             tokenFeedParameters
@@ -112,13 +112,13 @@ struct TokenFeedItemView: View {
     private var symbolWithRank: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text(" #\(token.cmcRank) ")
-                .font(Font(resource: \.spacegrotesk_regular, withSizeOf: .subheadline))
+                .font(Font(\.spacegrotesk_regular, withSizeOf: .subheadline))
                 .padding(.horizontal, 2)
                 .background(theme.color(\.surface))
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Text(token.symbol)
-                .font(Font(resource: \.spacegrotesk_bold, withSizeOf: .largeTitle))
+                .font(Font(\.spacegrotesk_bold, withSizeOf: .largeTitle))
         }
     }
 

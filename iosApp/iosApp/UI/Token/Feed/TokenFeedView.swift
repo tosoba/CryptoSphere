@@ -79,6 +79,8 @@ struct TokenFeedView: View {
             if let item = currentPresentedToken {
                 HStack(spacing: 4) {
                     Text(item.symbol)
+                        .font(Font(\.spacegrotesk_regular, withSize: 17))
+
                     Image(systemName: "chevron.forward")
                 }
             } else {

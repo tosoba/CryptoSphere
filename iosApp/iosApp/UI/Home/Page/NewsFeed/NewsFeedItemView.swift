@@ -72,14 +72,14 @@ struct NewsFeedItemView: View {
         VStack(alignment: .leading) {
             textView(
                 text: item.news.title,
-                font: Font(resource: \.spacegrotesk_medium, withSizeOf: .title1)
+                font: Font(\.spacegrotesk_medium, withSizeOf: .title1)
             )
 
             Spacer().frame(height: 8)
 
             textView(
                 text: item.news.source,
-                font: Font(resource: \.manrope_regular, withSizeOf: .subheadline)
+                font: Font(\.manrope_regular, withSizeOf: .subheadline)
             )
 
             if !item.relatedTokens.isEmpty {

@@ -21,7 +21,7 @@ struct HistoryItemView<S: Shape>: View {
                 Spacer()
 
                 Text(visitedAt.formatted())
-                    .font(Font(resource: \.manrope_regular, withSizeOf: .caption1))
+                    .font(Font(\.manrope_regular, withSizeOf: .caption1))
                     .foregroundColor(.secondary)
             }
             .padding()

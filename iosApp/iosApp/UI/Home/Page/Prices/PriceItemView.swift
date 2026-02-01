@@ -12,7 +12,7 @@ struct PriceItemView<S: Shape>: View {
         Button(action: onClick) {
             HStack(spacing: 16) {
                 Text("\(token.cmcRank)")
-                    .font(Font(resource: \.spacegrotesk_regular, withSizeOf: .title2))
+                    .font(Font(\.spacegrotesk_regular, withSizeOf: .title2))
                     .foregroundColor(theme.color(\.onSurfaceVariant))
 
                 ListItemImageView(imageUrl: token.logoUrl)
@@ -33,7 +33,7 @@ struct PriceItemView<S: Shape>: View {
     private var priceInfo: some View {
         VStack(alignment: .trailing) {
             Text("$\(token.quote.price.fullDecimalFormat(significantDecimals: 3, signed: false))")
-                .font(Font(resource: \.spacegrotesk_medium, withSizeOf: .headline))
+                .font(Font(\.spacegrotesk_medium, withSizeOf: .headline))
                 .foregroundColor(theme.color(\.onSurface))
 
             let percentChange24h = token.quote.percentChange24h

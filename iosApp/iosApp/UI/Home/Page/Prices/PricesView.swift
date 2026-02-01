@@ -81,7 +81,7 @@ struct PricesView: View {
         ScrollView {
             LazyVStack(spacing: 2) {
                 Spacer()
-                    .frame(height: topPadding)
+                    .frame(height: topPadding + 8)
 
                 ForEach(Array(tokens.enumerated()), id: \.element.id) { index, token in
                     PriceItemView(

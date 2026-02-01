@@ -10,12 +10,12 @@ struct TokenFeedParameterCardView<S: Shape>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(String(parameter.label))
-                .font(Font(resource: \.manrope_medium, withSizeOf: .caption1))
+                .font(Font(\.manrope_medium, withSizeOf: .caption1))
                 .foregroundColor(theme.color(\.onSurfaceVariant))
 
             HStack(spacing: 8) {
                 Text(parameter.valueFormat(parameter.value))
-                    .font(Font(resource: \.spacegrotesk_medium, withSizeOf: .headline))
+                    .font(Font(\.spacegrotesk_medium, withSizeOf: .headline))
                     .foregroundColor(theme.color(\.onSurface))
 
                 if let valueChange = parameter.valueChange as? Double,

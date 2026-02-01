@@ -6,19 +6,17 @@ extension String {
         self.init(ResourcesKt.getString(stringResource: resource).localized())
     }
 
-    init(_ resourceKey: KeyPath<MR.strings, StringResource>) {
+    init(_ resourceKeyPath: KeyPath<MR.strings, StringResource>) {
         self.init(
-            ResourcesKt.getString(
-                stringResource: MR.strings()[keyPath: resourceKey]
-            )
-            .localized()
+            ResourcesKt.getString(stringResource: MR.strings()[keyPath: resourceKeyPath])
+                .localized()
         )
     }
 
-    init(_ resourceKey: KeyPath<MR.strings, StringResource>, parameter: Any) {
+    init(_ resourceKeyPath: KeyPath<MR.strings, StringResource>, parameter: Any) {
         self.init(
             ResourcesKt.getString(
-                stringResource: MR.strings()[keyPath: resourceKey],
+                stringResource: MR.strings()[keyPath: resourceKeyPath],
                 parameter: parameter
             )
             .localized()
@@ -27,14 +25,20 @@ extension String {
 }
 
 extension Font {
-    init(resource: KeyPath<MR.fonts, FontResource>, withSize: Double) {
-        self.init(MR.fonts()[keyPath: resource].uiFont(withSize: withSize))
+    init(_ resourceKeyPath: KeyPath<MR.fonts, FontResource>, withSize size: Double) {
+        self.init(UIFont.from(resourceKeyPath, withSize: size))
     }
 
-    init(resource: KeyPath<MR.fonts, FontResource>, withSizeOf textStyle: UIFont.TextStyle) {
+    init(_ resourceKeyPath: KeyPath<MR.fonts, FontResource>, withSizeOf textStyle: UIFont.TextStyle) {
         self.init(
-            resource: resource,
+            resourceKeyPath,
             withSize: UIFont.preferredFont(forTextStyle: textStyle).pointSize
         )
+    }
+}
+
+extension UIFont {
+    static func from(_ resourceKeyPath: KeyPath<MR.fonts, FontResource>, withSize size: Double) -> UIFont {
+        MR.fonts()[keyPath: resourceKeyPath].uiFont(withSize: size)
     }
 }
