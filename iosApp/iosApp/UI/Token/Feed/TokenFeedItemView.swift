@@ -6,6 +6,7 @@ struct TokenFeedItemView: View {
     let mainTokenTagNames: Set<String>
     let safeAreaInsets: EdgeInsets
     @Binding var tokenTagsGridMeasuredHeight: CGFloat
+    let onOpenClick: () -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -47,8 +48,13 @@ struct TokenFeedItemView: View {
             }
             .frame(maxWidth: .infinity)
 
-            tokenFeedParameters
-                .frame(maxWidth: .infinity)
+            VStack(alignment: .trailing) {
+                tokenFeedParameters
+                    .frame(maxWidth: .infinity)
+                
+                SafariButtonView(action: onOpenClick)
+                    .padding(.top, 8)
+            }
         }
     }
 
@@ -81,6 +87,13 @@ struct TokenFeedItemView: View {
             Spacer().frame(height: 16)
 
             tokenFeedParameters
+
+            HStack {
+                Spacer()
+                
+                SafariButtonView(action: onOpenClick)
+            }
+            .padding(.top, 8)
         }
     }
 
@@ -103,7 +116,7 @@ struct TokenFeedItemView: View {
                     .scaledToFit()
             }
         }
-        .frame(maxWidth: 108, maxHeight: 108)
+        .frame(maxWidth: 96, maxHeight: 96)
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }

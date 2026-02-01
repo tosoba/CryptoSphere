@@ -14,7 +14,7 @@ struct TokenFeedView: View {
         scrolledItemId != nil && navigationToken?.id != scrolledItemId
     }
 
-    @State private var tokenTagsGridMeasuredHeight: CGFloat = 108
+    @State private var tokenTagsGridMeasuredHeight: CGFloat = 96
 
     @Environment(\.cryptoSphereTheme) private var theme
 
@@ -96,7 +96,8 @@ struct TokenFeedView: View {
             token: item,
             mainTokenTagNames: Set(feedItems.first?.tagNames ?? []),
             safeAreaInsets: geometry.safeAreaInsets,
-            tokenTagsGridMeasuredHeight: $tokenTagsGridMeasuredHeight
+            tokenTagsGridMeasuredHeight: $tokenTagsGridMeasuredHeight,
+            onOpenClick: { PlatformContext.shared.openUrl(url: item.shareUrl) }
         )
         .containerRelativeFrame([.vertical, .horizontal])
         .onAppear {

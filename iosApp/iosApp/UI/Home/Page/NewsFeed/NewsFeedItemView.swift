@@ -108,16 +108,9 @@ struct NewsFeedItemView: View {
             .buttonStyle(.bordered)
             .feedShadow()
             .clipShape(.circle)
-
-            Button(action: onOpenClick) {
-                Image(systemName: "safari")
-                    .font(.largeTitle)
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-            .feedShadow()
-            .clipShape(.circle)
-            .padding(.top, 16)
+            
+            SafariButtonView(action: onOpenClick)
+                .padding(.top, 16)
 
             Spacer().frame(height: insets.bottom)
         }
