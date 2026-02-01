@@ -9,11 +9,11 @@ struct ListItemInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.headline)
+                .font(Font(resource: \.spacegrotesk_medium, withSizeOf: .headline))
                 .foregroundColor(theme.color(\.onSurface))
 
             Text(subtitle)
-                .font(.subheadline)
+                .font(Font(resource: \.spacegrotesk_medium, withSizeOf: .subheadline))
                 .foregroundColor(theme.color(\.onSurfaceVariant))
         }
         .lineLimit(1)

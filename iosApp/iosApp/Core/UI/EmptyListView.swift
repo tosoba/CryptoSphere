@@ -11,7 +11,7 @@ struct EmptyListView: View {
                 .foregroundColor(.secondary)
 
             Text(text)
-                .font(.title3)
+                .font(Font(resource: \.spacegrotesk_regular, withSizeOf: .title3))
                 .foregroundColor(.secondary)
         }
     }
