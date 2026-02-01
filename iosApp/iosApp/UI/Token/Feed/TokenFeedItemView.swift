@@ -102,15 +102,13 @@ struct TokenFeedItemView: View {
     private var symbolWithRank: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text(" #\(token.cmcRank) ")
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(Font(resource: \.spacegrotesk_regular, withSizeOf: .subheadline))
                 .padding(.horizontal, 2)
                 .background(theme.color(\.surface))
                 .clipShape(RoundedRectangle(cornerRadius: 4))
 
             Text(token.symbol)
-                .font(.largeTitle)
-                .fontWeight(.medium)
+                .font(Font(resource: \.spacegrotesk_bold, withSizeOf: .largeTitle))
         }
     }
 
