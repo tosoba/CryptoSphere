@@ -56,7 +56,6 @@ struct HistoryView: View {
         }
     }
 
-    @ViewBuilder
     private func topSearchBarView(insets: EdgeInsets) -> some View {
         VStack {
             Spacer()

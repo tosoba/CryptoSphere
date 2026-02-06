@@ -8,8 +8,14 @@ struct TokenFeedView: View {
     @StateObject @KotlinOptionalStateFlow private var loadStates: CombinedLoadStates?
 
     @State private var scrolledItemId: Int32?
-    private var navigationToken: TokenItem? { feedItems.first }
-    private var currentPresentedToken: TokenItem? { feedItems.first(where: { $0.id == scrolledItemId }) }
+    private var navigationToken: TokenItem? {
+        feedItems.first
+    }
+
+    private var currentPresentedToken: TokenItem? {
+        feedItems.first(where: { $0.id == scrolledItemId })
+    }
+
     private var navigateToTokenFeedToolbarItemVisible: Bool {
         scrolledItemId != nil && navigationToken?.id != scrolledItemId
     }
@@ -67,7 +73,6 @@ struct TokenFeedView: View {
         .animation(.default, value: navigateToTokenFeedToolbarItemVisible)
     }
 
-    @ViewBuilder
     private var navigateToTokenFeedButton: some View {
         Button(
             action: {
@@ -90,7 +95,6 @@ struct TokenFeedView: View {
         .transition(.opacity.combined(with: .scale))
     }
 
-    @ViewBuilder
     private func itemView(_ item: TokenItem, at index: Int, in geometry: GeometryProxy) -> some View {
         TokenFeedItemView(
             token: item,

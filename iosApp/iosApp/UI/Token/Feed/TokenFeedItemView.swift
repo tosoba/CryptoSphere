@@ -24,7 +24,6 @@ struct TokenFeedItemView: View {
         .padding()
     }
 
-    @ViewBuilder
     private var compactLayout: some View {
         HStack(spacing: 16) {
             VStack(alignment: .center) {
@@ -51,14 +50,13 @@ struct TokenFeedItemView: View {
             VStack(alignment: .trailing) {
                 tokenFeedParameters
                     .frame(maxWidth: .infinity)
-                
+
                 SafariButtonView(action: onOpenClick)
                     .padding(.top, 8)
             }
         }
     }
 
-    @ViewBuilder
     private var regularLayout: some View {
         VStack {
             tokenLogo
@@ -90,14 +88,13 @@ struct TokenFeedItemView: View {
 
             HStack {
                 Spacer()
-                
+
                 SafariButtonView(action: onOpenClick)
             }
             .padding(.top, 8)
         }
     }
 
-    @ViewBuilder
     private var tokenLogo: some View {
         AsyncImage(
             url: URL(string: token.logoUrl),
@@ -121,7 +118,6 @@ struct TokenFeedItemView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
-    @ViewBuilder
     private var symbolWithRank: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text(" #\(token.cmcRank) ")
@@ -135,7 +131,6 @@ struct TokenFeedItemView: View {
         }
     }
 
-    @ViewBuilder
     private var tokenFeedParameters: some View {
         GeometryReader { geometry in
             let totalHeight = geometry.size.height

@@ -34,12 +34,10 @@ struct HistoryNewsListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    @ViewBuilder
     private var errorView: some View {
         ErrorListView(text: String(\.error_occurred), onRetryClick: retry)
     }
 
-    @ViewBuilder
     private var emptyView: some View {
         EmptyListView(icon: "clock.arrow.circlepath", text: String(\.no_news_history))
     }

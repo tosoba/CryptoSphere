@@ -17,7 +17,9 @@ struct StackView<T: AnyObject, Content: View>: View {
         self.content = content
     }
 
-    private var stack: [Child<AnyObject, T>] { stackValue.items }
+    private var stack: [Child<AnyObject, T>] {
+        stackValue.items
+    }
 
     var body: some View {
         // Decompose's navigation.pushToFront is not working properly with SwiftUI-based StackView.
@@ -32,7 +34,6 @@ struct StackView<T: AnyObject, Content: View>: View {
         // Sharing just the navigation state but not actual implementation (like with compose multiplatform) between android/iOS is a pain.
     }
 
-    @ViewBuilder
     private var stackViewUIKit: some View {
         StackViewUIKit(
             components: stack.map { $0.instance! },
@@ -42,7 +43,6 @@ struct StackView<T: AnyObject, Content: View>: View {
         .ignoresSafeArea()
     }
 
-    @ViewBuilder
     private var stackViewSwiftUI: some View {
         NavigationStack(
             path: Binding(

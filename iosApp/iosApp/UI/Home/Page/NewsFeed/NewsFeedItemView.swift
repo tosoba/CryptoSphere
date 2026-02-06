@@ -35,7 +35,6 @@ struct NewsFeedItemView: View {
         }
     }
 
-    @ViewBuilder
     private var contentView: some View {
         VStack {
             Spacer().frame(height: insets.top)
@@ -67,7 +66,6 @@ struct NewsFeedItemView: View {
         }
     }
 
-    @ViewBuilder
     private var informationView: some View {
         VStack(alignment: .leading) {
             textView(
@@ -98,7 +96,6 @@ struct NewsFeedItemView: View {
         .padding(.leading, 8)
     }
 
-    @ViewBuilder
     private var actionsView: some View {
         VStack(alignment: .trailing) {
             Button(action: onShareClick) {
@@ -108,7 +105,7 @@ struct NewsFeedItemView: View {
             .buttonStyle(.bordered)
             .feedShadow()
             .clipShape(.circle)
-            
+
             SafariButtonView(action: onOpenClick)
                 .padding(.top, 16)
 
@@ -131,7 +128,6 @@ struct NewsFeedItemView: View {
             .foregroundStyle(.white)
     }
 
-    @ViewBuilder
     private func textView(text: String, font: Font) -> some View {
         Text(text)
             .font(font)

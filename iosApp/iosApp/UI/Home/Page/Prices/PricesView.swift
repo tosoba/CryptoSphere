@@ -33,7 +33,6 @@ struct PricesView: View {
         }
     }
 
-    @ViewBuilder
     private func topSearchBarView(insets: EdgeInsets) -> some View {
         VStack {
             Spacer()
@@ -52,7 +51,6 @@ struct PricesView: View {
         }
     }
 
-    @ViewBuilder
     private func tokensLoadStatesView(topPadding: CGFloat) -> some View {
         ZStack {
             switch onEnum(of: loadStates?.refresh) {
@@ -76,7 +74,6 @@ struct PricesView: View {
         .background(theme.color(\.surfaceContainer))
     }
 
-    @ViewBuilder
     private func tokensScrollView(topPadding: CGFloat) -> some View {
         ScrollView {
             LazyVStack(spacing: 2) {
@@ -107,7 +104,6 @@ struct PricesView: View {
         .indeterminateLinearProgressViewOverlay(loadState: loadStates?.append)
     }
 
-    @ViewBuilder
     private var errorView: some View {
         ErrorListView(
             text: String(\.error_occurred),

@@ -32,14 +32,12 @@ struct NewsFeedView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    @ViewBuilder
     private var loadingView: some View {
         LargeCircularProgressView()
             .background(.black)
             .tint(.white)
     }
 
-    @ViewBuilder
     private var feedView: some View {
         GeometryReader { geometry in
             ScrollView(.vertical) {
@@ -68,7 +66,6 @@ struct NewsFeedView: View {
         }
     }
 
-    @ViewBuilder
     private func itemView(_ item: NewsFeedItem, at index: Int, alignedTo insets: EdgeInsets) -> some View {
         NewsFeedItemView(
             item: item,
@@ -98,7 +95,6 @@ struct NewsFeedView: View {
         }
     }
 
-    @ViewBuilder
     private var errorView: some View {
         ErrorListView(
             text: String(\.error_occurred),
