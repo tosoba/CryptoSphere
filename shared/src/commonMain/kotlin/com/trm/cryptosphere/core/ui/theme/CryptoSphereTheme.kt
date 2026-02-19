@@ -37,4 +37,4 @@ fun CryptoSphereTheme(
   )
 }
 
-private val fallbackSeedColor = Color(0xFF324463)
+val fallbackSeedColor = Color(0xFF324463)

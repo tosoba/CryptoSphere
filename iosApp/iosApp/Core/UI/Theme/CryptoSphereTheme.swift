@@ -5,15 +5,13 @@ struct CryptoSphereTheme {
     let colorScheme: ColorScheme
     let colorExtractorResult: ColorExtractor.Result?
 
-    private var colorSet: Material3ColorScheme {
-        guard let scheme = colorExtractorResult?.color.toColorScheme(isDark: colorScheme == .dark) else {
-            return colorScheme == .dark ? DarkColorSchemeKt.darkColorScheme : LightColorSchemeKt.lightColorScheme
-        }
-        return scheme
+    private var materialColorScheme: Material3ColorScheme {
+        let color = colorExtractorResult?.color ?? CryptoSphereThemeKt.fallbackSeedColor
+        return color.toColorScheme(isDark: colorScheme == .dark)
     }
 
     func uiColor(_ keyPath: KeyPath<Material3ColorScheme, UInt64>) -> UIColor {
-        colorSet[keyPath: keyPath].toUIColor()
+        materialColorScheme[keyPath: keyPath].toUIColor()
     }
 
     func color(_ keyPath: KeyPath<Material3ColorScheme, UInt64>) -> Color {
