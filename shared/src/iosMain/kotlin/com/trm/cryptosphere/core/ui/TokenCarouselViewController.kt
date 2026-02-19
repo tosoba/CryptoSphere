@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.window.ComposeUIViewController
 import com.trm.cryptosphere.core.ui.theme.ColorExtractorResultProvider
-import com.trm.cryptosphere.core.ui.theme.CryptoSphereDynamicTheme
+import com.trm.cryptosphere.core.ui.theme.CryptoSphereTheme
 import com.trm.cryptosphere.domain.model.TokenItem
 import platform.UIKit.UIViewController
 
@@ -25,7 +25,7 @@ fun tokenCarouselViewController(
 ): UIViewController =
   @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
   ComposeUIViewController(configure = { opaque = false }) {
-    CryptoSphereDynamicTheme(colorExtractorResultProvider = colorExtractorResultProvider) {
+    CryptoSphereTheme(colorExtractorResultProvider = colorExtractorResultProvider) {
       TokenCarousel(
         tokens = tokens,
         onItemClick = onItemClick,

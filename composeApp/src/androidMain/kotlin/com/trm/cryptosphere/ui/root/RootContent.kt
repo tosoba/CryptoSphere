@@ -20,14 +20,14 @@ import com.trm.cryptosphere.core.ui.LocalSharedTransition
 import com.trm.cryptosphere.core.ui.SharedTransition
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearance
 import com.trm.cryptosphere.core.ui.StatusBarContentAppearanceEffect
-import com.trm.cryptosphere.core.ui.theme.CryptoSphereDynamicTheme
+import com.trm.cryptosphere.core.ui.theme.CryptoSphereTheme
 import com.trm.cryptosphere.ui.home.HomeContent
 import com.trm.cryptosphere.ui.token.navigation.TokenNavigationContent
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable
 fun RootContent(component: RootComponent) {
-  CryptoSphereDynamicTheme(
+  CryptoSphereTheme(
     colorExtractorResult = component.colorExtractorResult.collectAsStateWithLifecycle().value
   ) {
     StatusBarContentAppearanceEffect(

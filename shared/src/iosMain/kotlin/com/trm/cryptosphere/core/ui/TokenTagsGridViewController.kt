@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.window.ComposeUIViewController
 import com.trm.cryptosphere.core.ui.theme.ColorExtractorResultProvider
-import com.trm.cryptosphere.core.ui.theme.CryptoSphereDynamicTheme
+import com.trm.cryptosphere.core.ui.theme.CryptoSphereTheme
 import com.trm.cryptosphere.domain.model.TokenItem
 import kotlinx.coroutines.flow.collectLatest
 import platform.UIKit.UIViewController
@@ -26,7 +26,7 @@ fun tokenTagsGridViewController(
 ): UIViewController =
   @OptIn(ExperimentalComposeUiApi::class)
   ComposeUIViewController(configure = { opaque = false }) {
-    CryptoSphereDynamicTheme(colorExtractorResultProvider = colorExtractorResultProvider) {
+    CryptoSphereTheme(colorExtractorResultProvider = colorExtractorResultProvider) {
       val gridState = rememberLazyStaggeredGridState()
 
       LaunchedEffect(gridState) {
