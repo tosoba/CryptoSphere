@@ -1,20 +1,35 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+<div style="text-align: center; width: 100%;">
+<h1>Cryptosphere</h1>
+</div>
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - `commonMain` is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the
-      folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      `iosMain` would be the right folder for such calls.
+<p style="text-align: center; width: 100%; line-height: 0; font-size: 0;">
+<img src="screenshots/top_banner.png" width="100%" style="vertical-align: bottom;">
+</p>
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for
-  your project.
+## About
+**CryptoSphere** is a **Kotlin Multiplatform** cryptocurrency news feed app that utilizes [Coinstats](https://coinstats.app/) and [CoinMarketCap](https://coinmarketcap.com/) APIs.
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the
-  platform-specific folders here too.
+<details>
+    <summary>Table of Contents</summary>
+    <ol>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#used-technologies">Used technologies</a></li>
+    </ol>
+</details>
 
-Learn more
-about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Features
+- **Native UI** in 
+  - **Jetpack Compose** on Android
+  - **Swift UI** on iOS
+- Intuitive **feed** for both news and related tokens
+- **Browser-like** token discovery navigation mechanism with **in-app history**
+- Tokens' **price list**
+- **Dynamic** light/dark **themes**
+
+## Used technologies
+- [Decompose](https://arkivanov.github.io/Decompose/) - screen flows definition, state and backstack management
+- [Skie](https://skie.touchlab.co/) - bridging certain kotlin features to swift
+- [Moko resources](https://github.com/icerockdev/moko-resources) - common resource access on Android/iOS
+- [Room](https://developer.android.com/jetpack/androidx/releases/room) - database for on-device token/browsing history storage
+- [Ktor](https://ktor.io/) - network requests
+- [Coroutines](https://kotlinlang.org/docs/coroutines-guide.html) - asynchronous/concurrent programming
