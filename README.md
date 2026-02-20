@@ -9,14 +9,6 @@
 ## About
 **CryptoSphere** is a **Kotlin Multiplatform** cryptocurrency news feed app that utilizes [Coinstats](https://coinstats.app/) and [CoinMarketCap](https://coinmarketcap.com/) APIs.
 
-<details>
-    <summary>Table of Contents</summary>
-    <ol>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#used-technologies">Used technologies</a></li>
-    </ol>
-</details>
-
 ## Features
 - **Native UI** in 
   - **Jetpack Compose** on Android
