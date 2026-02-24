@@ -9,6 +9,13 @@
 ## About
 **CryptoSphere** is a **Kotlin Multiplatform** cryptocurrency news feed app that utilizes [Coinstats](https://coinstats.app/) and [CoinMarketCap](https://coinmarketcap.com/) APIs.
 
+## Setup
+Create local.properties file in project root directory with keys for both CoinMarketCap and Coinstats APIs. 
+```properties
+cmc_api_key=<cmc_api_key>
+coin_news_api_key=<coin_news_api_key>
+```
+
 ## Features
 - **Native UI** in 
   - **Jetpack Compose** on Android
