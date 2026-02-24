@@ -20,8 +20,11 @@
 
 ## Used technologies
 - [Decompose](https://arkivanov.github.io/Decompose/) - screen flows definition, state and backstack management
-- [Skie](https://skie.touchlab.co/) - bridging certain kotlin features to swift
-- [Moko resources](https://github.com/icerockdev/moko-resources) - common resource access on Android/iOS
-- [Room](https://developer.android.com/jetpack/androidx/releases/room) - database for on-device token/browsing history storage
-- [Ktor](https://ktor.io/) - network requests
 - [Coroutines](https://kotlinlang.org/docs/coroutines-guide.html) - asynchronous/concurrent programming
+- [Skie](https://skie.touchlab.co/) - bridging certain kotlin features to swift
+- [Room](https://developer.android.com/jetpack/androidx/releases/room) - database for on-device token/browsing history storage
+- [WorkManager](https://developer.android.com/jetpack/androidx/releases/work) - periodic background token data sync
+- [Ktor](https://ktor.io/) - network requests
+- [MaterialKolor](https://materialkolor.com/) - dynamic theme 
+- [Coil](https://coil-kt.github.io/coil/) - image loading
+- [Moko resources](https://github.com/icerockdev/moko-resources) - common resource access on Android/iOS
