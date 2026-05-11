@@ -33,7 +33,14 @@ kotlin {
     androidResources { enable = true }
     withHostTestBuilder {}
 
-    compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_11)
+      freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+  }
+
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 
   listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->

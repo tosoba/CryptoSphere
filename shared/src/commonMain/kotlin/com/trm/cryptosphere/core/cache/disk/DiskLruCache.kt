@@ -142,7 +142,7 @@ internal class DiskLruCache(
       }
     }
 
-  private fun initialize() =
+  private fun initialize() {
     synchronized(this) {
       if (initialized) return
 
@@ -183,6 +183,7 @@ internal class DiskLruCache(
       writeJournal()
       initialized = true
     }
+  }
 
   /** Reads the journal and initializes [lruEntries]. */
   private fun readJournal() {
@@ -419,7 +420,7 @@ internal class DiskLruCache(
     return size
   }
 
-  private fun completeEdit(editor: Editor, success: Boolean) =
+  private fun completeEdit(editor: Editor, success: Boolean) {
     synchronized(this) {
       val entry = editor.entry
       check(entry.currentEditor == editor)
@@ -484,6 +485,7 @@ internal class DiskLruCache(
         launchCleanup()
       }
     }
+  }
 
   /** We rewrite [lruEntries] to the on-disk journal after a sufficient number of operations. */
   private fun journalRewriteRequired() = operationsSinceRewrite >= 2000
