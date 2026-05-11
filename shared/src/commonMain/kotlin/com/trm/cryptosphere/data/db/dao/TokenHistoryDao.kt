@@ -6,6 +6,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.Transaction
 import com.trm.cryptosphere.data.db.entity.TokenHistoryEntity
 import com.trm.cryptosphere.data.db.entity.junction.TokenHistoryWithTokenJunction
 
@@ -27,5 +29,7 @@ interface TokenHistoryDao {
         ORDER BY visited_at DESC
     """
   )
+  @Transaction
+  @RewriteQueriesToDropUnusedColumns
   fun selectAll(query: String): PagingSource<Int, TokenHistoryWithTokenJunction>
 }
