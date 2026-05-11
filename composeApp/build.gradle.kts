@@ -1,48 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  alias(libs.plugins.kotlinMultiplatform)
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
-}
-
-kotlin {
-  androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
-
-  sourceSets {
-    androidMain.dependencies {
-      implementation(libs.androidx.activity.compose)
-      implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
-      implementation(libs.androidx.constraintLayout.compose)
-      implementation(libs.androidx.lifecycle.process)
-      implementation(libs.androidx.paging.compose)
-      implementation(libs.androidx.startup.runtime)
-
-      implementation(libs.android.kotlinx.coroutines.android)
-
-      implementation(libs.common.compose.material.icons.extended)
-      implementation(libs.common.compose.ui.tooling.preview)
-      implementation(libs.common.decompose.extensions.compose)
-      implementation(libs.common.decompose.extensions.compose.experimental)
-      implementation(libs.common.material.kolor)
-    }
-
-    commonMain.dependencies {
-      implementation(projects.shared)
-
-      implementation(libs.common.compose.components.resources)
-      implementation(libs.common.compose.foundation)
-      implementation(libs.common.compose.material.icons.core)
-      implementation(libs.common.compose.material3)
-      implementation(libs.common.compose.runtime)
-      implementation(libs.common.compose.ui)
-
-      implementation(libs.common.lifecycle.runtimeCompose)
-    }
-
-    commonTest.dependencies { implementation(libs.common.kotlin.test) }
-  }
 }
 
 android {
@@ -66,4 +27,34 @@ android {
   }
 }
 
-dependencies { debugImplementation(libs.common.compose.ui.tooling) }
+kotlin { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
+
+dependencies {
+  implementation(projects.shared)
+
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
+  implementation(libs.androidx.constraintLayout.compose)
+  implementation(libs.androidx.lifecycle.process)
+  implementation(libs.androidx.paging.compose)
+  implementation(libs.androidx.startup.runtime)
+
+  implementation(libs.android.kotlinx.coroutines.android)
+
+  implementation(libs.common.compose.material.icons.extended)
+  implementation(libs.common.compose.ui.tooling.preview)
+  implementation(libs.common.decompose.extensions.compose)
+  implementation(libs.common.decompose.extensions.compose.experimental)
+  implementation(libs.common.material.kolor)
+
+  implementation(libs.common.compose.components.resources)
+  implementation(libs.common.compose.foundation)
+  implementation(libs.common.compose.material.icons.core)
+  implementation(libs.common.compose.material3)
+  implementation(libs.common.compose.runtime)
+  implementation(libs.common.compose.ui)
+
+  implementation(libs.common.lifecycle.runtimeCompose)
+
+  debugImplementation(libs.common.compose.ui.tooling)
+}
