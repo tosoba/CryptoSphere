@@ -31,7 +31,7 @@ material-icons = "1.7.3"
 material-kolor = "4.1.1"
 moko-resources = "0.26.0"
 paging = "3.5.0"
-skie = "0.10.9"
+skie = "0.10.11"
 sqlite = "2.6.2"
 
 [libraries]
