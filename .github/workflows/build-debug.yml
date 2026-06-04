@@ -47,6 +47,9 @@ jobs:
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
 
+      - name: Pre-compile Kotlin iOS Framework
+        run: ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
+
       - name: Build iOS simulator app
         run: |
           xcodebuild build \
