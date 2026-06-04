@@ -1,0 +1,64 @@
+name: build-debug
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096M -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true -Dorg.gradle.configuration-cache=false"
+
+jobs:
+  build-android:
+    name: Build Android Debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Build Android debug APK
+        env:
+          CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
+          COIN_NEWS_API_KEY: ${{ secrets.COIN_NEWS_API_KEY }}
+        run: ./gradlew :composeApp:assembleDebug -Pcmc_api_key=$CMC_API_KEY -Pcoin_news_api_key=$COIN_NEWS_API_KEY
+
+      - name: Upload Android debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-apk
+          path: composeApp/build/outputs/apk/debug/*.apk
+
+  build-ios:
+    name: Build iOS simulator debug app
+    runs-on: macos-latest
+    env:
+      cmc_api_key: ${{ secrets.CMC_API_KEY }}
+      coin_news_api_key: ${{ secrets.COIN_NEWS_API_KEY }}
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Build iOS simulator app
+        run: |
+          xcodebuild build \
+          -project iosApp/iosApp.xcodeproj \
+          -configuration Debug \
+          -scheme iosApp \
+          -sdk iphonesimulator \
+          -derivedDataPath ./build \
+          -verbose
+
+      - name: Upload App Folder
+        uses: actions/upload-artifact@v7
+        with:
+          name: iphonesimulator-app
+          path: build/Build/Products/Debug-iphonesimulator/*

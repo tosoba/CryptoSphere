@@ -127,22 +127,30 @@ buildkonfig {
 
   defaultConfigs {
     val localProperties = gradleLocalProperties(rootDir, providers)
+
+    val cmcApiKey =
+      requireNotNull(
+        project.findProperty("cmc_api_key")?.toString()
+          ?: System.getenv("cmc_api_key")
+          ?: localProperties.getProperty("cmc_api_key")
+      )
     buildConfigField(
       type = FieldSpec.Type.STRING,
       name = "CMC_API_KEY",
-      value =
-        requireNotNull(localProperties.getProperty("cmc_api_key")) {
-          "A property cmc_api_key with CoinMarketCap API key must be set in local.properties."
-        },
+      value = cmcApiKey,
       const = true,
     )
+
+    val coinNewsApiKey =
+      requireNotNull(
+        project.findProperty("coin_news_api_key")?.toString()
+          ?: System.getenv("coin_news_api_key")
+          ?: localProperties.getProperty("coin_news_api_key")
+      )
     buildConfigField(
       type = FieldSpec.Type.STRING,
       name = "COIN_NEWS_API_KEY",
-      value =
-        requireNotNull(localProperties.getProperty("coin_news_api_key")) {
-          "A property coin_news_api_key with CoinNews API key must be set in local.properties."
-        },
+      value = coinNewsApiKey,
       const = true,
     )
   }
