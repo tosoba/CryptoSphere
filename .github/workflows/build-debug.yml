@@ -29,39 +29,3 @@ jobs:
         with:
           name: android-apk
           path: composeApp/build/outputs/apk/debug/*.apk
-
-  build-ios:
-    name: Build iOS simulator debug app
-    runs-on: macos-latest
-    env:
-      cmc_api_key: ${{ secrets.CMC_API_KEY }}
-      coin_news_api_key: ${{ secrets.COIN_NEWS_API_KEY }}
-    steps:
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
-
-      - name: Pre-compile Kotlin iOS Framework
-        run: ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
-
-      - name: Build iOS simulator app
-        run: |
-          xcodebuild build \
-          -project iosApp/iosApp.xcodeproj \
-          -configuration Debug \
-          -scheme iosApp \
-          -sdk iphonesimulator \
-          -derivedDataPath ./build \
-          -verbose
-
-      - name: Upload App Folder
-        uses: actions/upload-artifact@v7
-        with:
-          name: iphonesimulator-app
-          path: build/Build/Products/Debug-iphonesimulator/*
