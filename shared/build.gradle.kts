@@ -182,3 +182,9 @@ skie {
 ktorfit { compilerPluginVersion.set("2.3.3") }
 
 multiplatformResources { resourcesPackage.set("com.trm.cryptosphere.shared") }
+
+tasks
+  .matching { it.name == "syncComposeResourcesForIos" }
+  .configureEach {
+    enabled = false
+  }
