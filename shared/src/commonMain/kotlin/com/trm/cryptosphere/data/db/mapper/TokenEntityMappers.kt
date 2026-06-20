@@ -25,7 +25,7 @@ fun CmcTokenItem.toEntity() =
     selfReportedMarketCap = selfReportedMarketCap,
     tvlRatio = tvlRatio,
     lastUpdated = lastUpdated,
-    usdQuote = quote.usd.toEmbedded(),
+    usdQuote = (quote.find { it.symbol == "USD" } ?: quote.first()).toEmbedded(),
   )
 
 private fun CmcTokenQuote.toEmbedded() =

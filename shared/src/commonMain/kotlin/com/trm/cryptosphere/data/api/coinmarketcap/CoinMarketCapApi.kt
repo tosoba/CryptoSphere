@@ -10,7 +10,7 @@ import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.Query
 
 interface CoinMarketCapApi {
-  @GET("v1/cryptocurrency/listings/latest")
+  @GET("v3/cryptocurrency/listings/latest")
   @Headers("X-CMC_PRO_API_KEY: ${BuildKonfig.CMC_API_KEY}")
   suspend fun getTokens(@Query("limit") limit: Int): NetworkResult<CmcTokensResponse>
 

@@ -22,5 +22,10 @@ data class CmcTokenItem(
   @SerialName("self_reported_market_cap") val selfReportedMarketCap: Double?,
   @SerialName("tvl_ratio") val tvlRatio: Double?,
   @SerialName("last_updated") val lastUpdated: String,
-  val quote: CmcTokenQuotes,
+  val quote: List<CmcTokenQuote>,
+  @SerialName("is_active") val isActive: Int?,
+  @SerialName("is_market_cap_included_in_calc") val isMarketCapIncludedInCalc: Int?,
+  @SerialName("is_fiat") val isFiat: Int?,
+  @SerialName("unlocked_circulating_supply") val unlockedCirculatingSupply: Double?,
+  @SerialName("unlocked_market_cap") val unlockedMarketCap: Double?,
 )
