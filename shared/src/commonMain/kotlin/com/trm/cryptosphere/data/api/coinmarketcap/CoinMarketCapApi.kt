@@ -11,42 +11,28 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 
-interface CoinMarketCapApi {
-  suspend fun getTokens(limit: Int): NetworkResult<CmcTokensResponse>
-
-  suspend fun getTokensInfo(
-    id: String,
-    skipInvalid: Boolean = true,
-  ): NetworkResult<CmcTokensInfoResponse>
-
-  companion object {
-    private const val BASE_URL = "https://pro-api.coinmarketcap.com/"
-    const val MAX_LIMIT = 5_000
-
-    operator fun invoke(): CoinMarketCapApi =
-      CoinMarketCapApiImpl(client = buildHttpClient(), baseUrl = BASE_URL)
-  }
-}
-
-private class CoinMarketCapApiImpl(
-  private val client: HttpClient,
-  private val baseUrl: String,
-) : CoinMarketCapApi {
-  override suspend fun getTokens(limit: Int): NetworkResult<CmcTokensResponse> = resultOf {
-    client.get("${baseUrl}v3/cryptocurrency/listings/latest") {
+class CoinMarketCapApi(private val client: HttpClient = buildHttpClient()) {
+  suspend fun getTokens(limit: Int): NetworkResult<CmcTokensResponse> = resultOf {
+    client.get("${BASE_URL}v3/cryptocurrency/listings/latest") {
       header("X-CMC_PRO_API_KEY", BuildKonfig.CMC_API_KEY)
       parameter("limit", limit)
     }
   }
 
-  override suspend fun getTokensInfo(
+  suspend fun getTokensInfo(
     id: String,
-    skipInvalid: Boolean,
+    skipInvalid: Boolean = true,
   ): NetworkResult<CmcTokensInfoResponse> = resultOf {
-    client.get("${baseUrl}v2/cryptocurrency/info") {
+    client.get("${BASE_URL}v2/cryptocurrency/info") {
       header("X-CMC_PRO_API_KEY", BuildKonfig.CMC_API_KEY)
       parameter("id", id)
       parameter("skip_invalid", skipInvalid)
     }
+  }
+
+  companion object {
+    private const val BASE_URL = "https://pro-api.coinmarketcap.com/"
+
+    const val MAX_LIMIT = 5_000
   }
 }
