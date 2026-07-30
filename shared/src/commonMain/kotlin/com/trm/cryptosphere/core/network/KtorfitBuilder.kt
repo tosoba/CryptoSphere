@@ -1,45 +1,51 @@
 package com.trm.cryptosphere.core.network
 
-import de.jensklingenberg.ktorfit.Ktorfit
-import de.jensklingenberg.ktorfit.ktorfit
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-fun buildKtorfit(
-  baseUrl: String,
+fun buildHttpClient(
   loggingEnabled: Boolean = true,
   cacheStorage: CacheStorage? = null,
-): Ktorfit = ktorfit {
-  baseUrl(baseUrl)
-  httpClient(
-    HttpClient {
-      install(ContentNegotiation) {
-        json(
-          Json {
-            isLenient = true
-            ignoreUnknownKeys = true
-            explicitNulls = false
-          }
-        )
+): HttpClient = HttpClient {
+  install(ContentNegotiation) {
+    json(
+      Json {
+        isLenient = true
+        ignoreUnknownKeys = true
+        explicitNulls = false
       }
-      if (loggingEnabled) {
-        install(Logging) {
-          logger =
-            object : Logger {
-              override fun log(message: String) = co.touchlab.kermit.Logger.i(message)
-            }
-          level = LogLevel.ALL
+    )
+  }
+  if (loggingEnabled) {
+    install(Logging) {
+      logger =
+        object : Logger {
+          override fun log(message: String) = co.touchlab.kermit.Logger.i(message)
         }
-      }
-      cacheStorage?.let { install(HttpCache) { publicStorage(it) } }
+      level = LogLevel.ALL
     }
-  )
-  converterFactories(NetworkResultConverterFactory())
+  }
+  cacheStorage?.let { install(HttpCache) { publicStorage(it) } }
 }
+
+suspend inline fun <reified T : Any> safeApiCall(block: () -> HttpResponse): NetworkResult<T> =
+  try {
+    val response = block()
+    if (response.status.isSuccess()) {
+      NetworkResult.Success(response.body<T>())
+    } else {
+      NetworkResult.HttpError(response)
+    }
+  } catch (e: Throwable) {
+    NetworkResult.Exception(e)
+  }

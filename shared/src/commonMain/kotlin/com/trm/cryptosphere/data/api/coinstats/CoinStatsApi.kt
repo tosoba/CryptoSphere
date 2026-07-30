@@ -1,20 +1,20 @@
 package com.trm.cryptosphere.data.api.coinstats
 
 import com.trm.cryptosphere.core.network.NetworkResult
-import com.trm.cryptosphere.core.network.buildKtorfit
+import com.trm.cryptosphere.core.network.buildHttpClient
+import com.trm.cryptosphere.core.network.safeApiCall
 import com.trm.cryptosphere.data.api.coinstats.model.CoinStatsNewsResponse
 import com.trm.cryptosphere.shared.BuildKonfig
-import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.Headers
-import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.storage.CacheStorage
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.parameter
 
 interface CoinStatsApi {
-  @GET("news")
-  @Headers("X-API-KEY: ${BuildKonfig.COIN_NEWS_API_KEY}")
   suspend fun getNews(
-    @Query page: Int = PAGE_OFFSET,
-    @Query limit: Int = MAX_LIMIT,
+    page: Int = PAGE_OFFSET,
+    limit: Int = MAX_LIMIT,
   ): NetworkResult<CoinStatsNewsResponse>
 
   companion object {
@@ -24,6 +24,20 @@ interface CoinStatsApi {
     const val MAX_PAGE = 100
 
     operator fun invoke(cacheStorage: CacheStorage?): CoinStatsApi =
-      buildKtorfit(baseUrl = BASE_URL, cacheStorage = cacheStorage).createCoinStatsApi()
+      CoinStatsApiImpl(client = buildHttpClient(cacheStorage = cacheStorage), baseUrl = BASE_URL)
   }
+}
+
+private class CoinStatsApiImpl(
+  private val client: HttpClient,
+  private val baseUrl: String,
+) : CoinStatsApi {
+  override suspend fun getNews(page: Int, limit: Int): NetworkResult<CoinStatsNewsResponse> =
+    safeApiCall {
+      client.get("${baseUrl}news") {
+        header("X-API-KEY", BuildKonfig.COIN_NEWS_API_KEY)
+        parameter("page", page)
+        parameter("limit", limit)
+      }
+    }
 }

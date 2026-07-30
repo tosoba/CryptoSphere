@@ -15,7 +15,6 @@ plugins {
   alias(libs.plugins.androidKotlinMultiplatform)
   alias(libs.plugins.skie)
   alias(libs.plugins.kotlinKsp)
-  alias(libs.plugins.ktorfit)
   alias(libs.plugins.room)
   alias(libs.plugins.buildkonfig)
   alias(libs.plugins.moko.resources)
@@ -100,7 +99,6 @@ kotlin {
       implementation(libs.common.ktor.client.contentNegotiation)
       implementation(libs.common.ktor.client.logging)
       implementation(libs.common.ktor.serialization.kotlinx.json)
-      implementation(libs.common.ktorfit)
 
       implementation(libs.common.material.kolor)
       api(libs.common.moko.resources)
@@ -179,7 +177,6 @@ skie {
   }
 }
 
-ktorfit { compilerPluginVersion.set("2.3.3") }
 
 multiplatformResources { resourcesPackage.set("com.trm.cryptosphere.shared") }
 
