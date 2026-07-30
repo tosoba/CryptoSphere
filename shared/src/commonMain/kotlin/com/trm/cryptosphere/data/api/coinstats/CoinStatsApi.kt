@@ -2,7 +2,7 @@ package com.trm.cryptosphere.data.api.coinstats
 
 import com.trm.cryptosphere.core.network.NetworkResult
 import com.trm.cryptosphere.core.network.buildHttpClient
-import com.trm.cryptosphere.core.network.safeApiCall
+import com.trm.cryptosphere.core.network.resultOf
 import com.trm.cryptosphere.data.api.coinstats.model.CoinStatsNewsResponse
 import com.trm.cryptosphere.shared.BuildKonfig
 import io.ktor.client.HttpClient
@@ -33,7 +33,7 @@ private class CoinStatsApiImpl(
   private val baseUrl: String,
 ) : CoinStatsApi {
   override suspend fun getNews(page: Int, limit: Int): NetworkResult<CoinStatsNewsResponse> =
-    safeApiCall {
+    resultOf {
       client.get("${baseUrl}news") {
         header("X-API-KEY", BuildKonfig.COIN_NEWS_API_KEY)
         parameter("page", page)

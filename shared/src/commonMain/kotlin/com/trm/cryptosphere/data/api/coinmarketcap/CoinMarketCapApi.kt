@@ -2,7 +2,7 @@ package com.trm.cryptosphere.data.api.coinmarketcap
 
 import com.trm.cryptosphere.core.network.NetworkResult
 import com.trm.cryptosphere.core.network.buildHttpClient
-import com.trm.cryptosphere.core.network.safeApiCall
+import com.trm.cryptosphere.core.network.resultOf
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokensInfoResponse
 import com.trm.cryptosphere.data.api.coinmarketcap.model.CmcTokensResponse
 import com.trm.cryptosphere.shared.BuildKonfig
@@ -32,7 +32,7 @@ private class CoinMarketCapApiImpl(
   private val client: HttpClient,
   private val baseUrl: String,
 ) : CoinMarketCapApi {
-  override suspend fun getTokens(limit: Int): NetworkResult<CmcTokensResponse> = safeApiCall {
+  override suspend fun getTokens(limit: Int): NetworkResult<CmcTokensResponse> = resultOf {
     client.get("${baseUrl}v3/cryptocurrency/listings/latest") {
       header("X-CMC_PRO_API_KEY", BuildKonfig.CMC_API_KEY)
       parameter("limit", limit)
@@ -42,7 +42,7 @@ private class CoinMarketCapApiImpl(
   override suspend fun getTokensInfo(
     id: String,
     skipInvalid: Boolean,
-  ): NetworkResult<CmcTokensInfoResponse> = safeApiCall {
+  ): NetworkResult<CmcTokensInfoResponse> = resultOf {
     client.get("${baseUrl}v2/cryptocurrency/info") {
       header("X-CMC_PRO_API_KEY", BuildKonfig.CMC_API_KEY)
       parameter("id", id)

@@ -1,15 +1,12 @@
 package com.trm.cryptosphere.core.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -35,17 +32,9 @@ fun buildHttpClient(
       level = LogLevel.ALL
     }
   }
-  cacheStorage?.let { install(HttpCache) { publicStorage(it) } }
-}
-
-suspend inline fun <reified T : Any> safeApiCall(block: () -> HttpResponse): NetworkResult<T> =
-  try {
-    val response = block()
-    if (response.status.isSuccess()) {
-      NetworkResult.Success(response.body<T>())
-    } else {
-      NetworkResult.HttpError(response)
+  cacheStorage?.let {
+    install(HttpCache) {
+      publicStorage(it)
     }
-  } catch (e: Throwable) {
-    NetworkResult.Exception(e)
   }
+}

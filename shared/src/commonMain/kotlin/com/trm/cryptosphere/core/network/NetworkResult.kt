@@ -1,6 +1,8 @@
 package com.trm.cryptosphere.core.network
 
+import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 
 sealed interface NetworkResult<out T : Any> {
   data class Success<out T : Any>(val data: T) : NetworkResult<T>
@@ -16,3 +18,15 @@ sealed interface NetworkResult<out T : Any> {
       is Exception -> throw throwable
     }
 }
+
+suspend inline fun <reified T : Any> resultOf(block: () -> HttpResponse): NetworkResult<T> =
+  try {
+    val response = block()
+    if (response.status.isSuccess()) {
+      NetworkResult.Success(response.body<T>())
+    } else {
+      NetworkResult.HttpError(response)
+    }
+  } catch (e: Throwable) {
+    NetworkResult.Exception(e)
+  }
